@@ -157,6 +157,19 @@ what works against a real appliance.
 
 About three hours end to end.
 
+## Running the workshop
+
+If you are teaching from this rather than working through it:
+
+| | |
+| --- | --- |
+| [`docs/handout.md`](docs/handout.md) | **Give this to attendees.** One page: the seven requests, the envelope, the error model, and the six things that catch people out. |
+| [`docs/run-sheet.md`](docs/run-sheet.md) | Timings for a three-hour session, what to demo live rather than let people read, and where they actually get stuck. |
+| [`docs/slides-outline.md`](docs/slides-outline.md) | One heading per slide, with what to say. ~25 minutes of talking across the session. |
+
+**The day before: open the Binder badge once and let it finish.** The first build after a push
+takes 5–15 minutes; pre-warming means the room gets a cached image instead of a progress bar.
+
 ## Development
 
 ```bash
