@@ -6,6 +6,9 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 
+# Written by binder/start when the simulator runs from inside the repository.
+maprt-sim.log
+
 # The simulator's per-run state: the generated API token lives here. Never commit a token,
 # even a throwaway one — it teaches the wrong habit.
 .maprt_sim/

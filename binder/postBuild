@@ -1,0 +1,17 @@
+#!/bin/bash
+# repo2docker runs this once, at image build time, after requirements.txt is installed.
+#
+# Installs the workshop itself from the checkout. --no-deps because binder/requirements.txt
+# already pinned every dependency from uv.lock; letting pip resolve again here could pull a
+# different version than a local `uv sync` gets, which is the whole thing this setup avoids.
+#
+# Non-editable on purpose: an editable install in a container buys nothing (nobody is editing
+# src/ during a workshop) and adds a .pth indirection that can confuse imports.
+set -euo pipefail
+
+pip install --no-deps .
+
+# Fail the build here rather than leave a student with a session that looks fine until the
+# first cell. A broken image is obvious; a broken session at 9am is not.
+python -c "import maprt_sim, maprt_workshop; print('workshop packages import')"
+maprt-sim --help > /dev/null && echo "maprt-sim console script works"

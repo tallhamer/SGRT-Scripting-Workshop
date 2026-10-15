@@ -29,6 +29,11 @@ jobs:
       - name: Notebooks are up to date with their source
         run: uv run python scripts/build_notebooks.py --check
 
+      # Binder installs from binder/requirements.txt, not from uv.lock. If the two drift, a
+      # Binder session runs different code from every local clone.
+      - name: Binder requirements are up to date with the lockfile
+        run: uv run python scripts/export_requirements.py --check
+
       # Runs everything, including the nine notebooks executed against a live simulator.
       - name: Test
         run: uv run pytest
