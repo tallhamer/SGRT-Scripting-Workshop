@@ -1,0 +1,115 @@
+[project]
+name = "maprt-scripting-workshop"
+version = "0.1.0"
+description = "A local simulator of the Vision RT MapRT API 2.0, plus Jupyter notebooks for a scripting workshop. Teaching only — not a medical device."
+readme = "README.md"
+# 3.12 is what Google Colab runs, so the local, Binder and Colab paths all land on the same
+# minor version. Nothing here needs 3.12 features; the code stays 3.11-compatible so a student
+# on an older interpreter is not stuck.
+requires-python = ">=3.11,<3.14"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Michael J. Tallhamer" },
+]
+keywords = ["maprt", "radiotherapy", "collision", "fastapi", "teaching"]
+
+# The simulator and the student-facing client library. numpy carries the collision-map array.
+#
+# httpx2 rather than httpx: it is what current starlette wants (the test client warns otherwise),
+# and the HTTP library is not load-bearing for what this workshop teaches. A MapRT client can be
+# written with anything that can set three headers and read a body — requests, urllib, httpx,
+# QNetworkAccessManager, curl. The notebooks say so and show a couple of them.
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "httpx2>=2.13",
+    "numpy>=1.26",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+]
+
+[project.optional-dependencies]
+# Everything the notebooks need, kept separate so a bare `maprt-sim` install stays small
+# (this is what the Binder and Colab bootstraps install).
+notebooks = [
+    "jupyterlab>=4.2",
+    "matplotlib>=3.8",
+    "pandas>=2.2",
+    "plotly>=5.22",
+    "pydicom>=2.4",
+    # Not used by the library — carried so a notebook can make the same call with a second,
+    # more widely known HTTP client and show that nothing about MapRT depends on the choice.
+    "requests>=2.31",
+]
+
+[project.scripts]
+# Terminal 1 in the workshop: the simulated appliance.
+maprt-sim = "maprt_sim.cli:main"
+# The single-terminal fallback: starts the simulator, waits for it, then launches Jupyter Lab.
+workshop-up = "maprt_sim.cli:up"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.6",
+    "nbclient>=0.10",
+    "nbformat>=5.10",
+]
+
+# The notebook dependencies, pulled in by reference rather than relisted. They are declared above
+# as the `notebooks` *extra* because Colab installs with pip, and pip can install an extra
+# (`pip install ".[notebooks]"`) but has no way to install a dependency group. This group exists
+# only so `uv sync` installs them too: a plain `uv sync` has to give a student everything the
+# workshop needs, or the README's quickstart grows a flag that half the room will miss.
+workshop = ["maprt-scripting-workshop[notebooks]"]
+
+[tool.uv]
+# Both installed by a bare `uv sync`. `--no-group workshop` gives the lean server-only install,
+# which is what a deployment that only serves the API wants.
+default-groups = ["dev", "workshop"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/maprt_sim", "src/maprt_workshop"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "W"]
+
+[tool.ruff.lint.per-file-ignores]
+# The notebook content modules are mostly Markdown held in Python strings. A table row cannot be
+# wrapped without breaking the table, and the 120-column rule is there to keep *code* readable.
+# Everything else in those files is still linted.
+"scripts/notebook_content/*" = ["E501"]
+
+# Ruff lints the generated notebooks too, which is worth keeping: an undefined name or a silent
+# `zip` truncation in a notebook breaks the workshop in front of a room. But several style rules
+# fight the idiom of a teaching notebook, and the notebook is right:
+#   E402/I001 — imports appear where they are first relevant, not hoisted to the top
+#   E401      — a compact `import os, sys, time` in a bootstrap cell nobody is meant to read
+#   F811      — every "Your turn" stub is deliberately redefined by the answer cell below it
+#   E501      — a git URL in the Colab bootstrap cannot be wrapped
+"notebooks/*.ipynb" = ["E402", "I001", "E401", "F811", "E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+# Starlette deprecates things loudly and we want to act on them rather than read past them — the
+# test client's httpx-vs-httpx2 warning is what moved this project to httpx2. Promoted to an
+# error so the next one is not scrolled past either. Scoped to this one category on purpose:
+# erroring on every DeprecationWarning makes an unrelated upstream release break the build.
+markers = [
+    # The notebook suite runs nine Jupyter kernels against a live server; it is minutes, not
+    # seconds. `-m "not slow"` skips it while iterating. CI runs everything.
+    "slow: takes long enough that you will want to skip it while iterating",
+]
+filterwarnings = [
+    "error::starlette.exceptions.StarletteDeprecationWarning",
+]

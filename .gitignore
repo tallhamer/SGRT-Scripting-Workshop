@@ -1,0 +1,24 @@
+# uv / Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# The simulator's per-run state: the generated API token lives here. Never commit a token,
+# even a throwaway one — it teaches the wrong habit.
+.maprt_sim/
+
+# Maintainer-only data overlay: real exported surfaces and recorded clearance maps. This is
+# where patient-derived data goes so that it can never become a commit candidate. Everything
+# the public repo needs is the synthetic data under data/ instead.
+data/local/
+
+# Notebooks
+.ipynb_checkpoints/
+# The capstone notebook saves its report beside itself when it runs. Output, not source.
+notebooks/plan_qa_report.png
+
+# OS
+.DS_Store
