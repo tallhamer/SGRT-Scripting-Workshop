@@ -1,7 +1,9 @@
 """Pieces shared by every notebook: the banner, the bootstrap, and the connect block."""
 
-#: Edit this when the repository is published. The Colab bootstrap clones it.
-REPO_URL = "https://github.com/REPLACE-ME/maprt-scripting-workshop"
+#: The published repository. The Colab bootstrap pip-installs from it and clones it, and the
+#: Binder badge points at it — so this has to match the real remote, and the repository has
+#: to be reachable without credentials for either path to work.
+REPO_URL = "https://github.com/tallhamer/SGRT-Scripting-Workshop"
 
 BANNER = """\
 > **Not a medical device. Teaching use only.** Everything here talks to a *simulator* running on
