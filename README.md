@@ -132,7 +132,7 @@ Neither exists on a real appliance.
 | --- | --- |
 | `src/maprt_sim` | The FastAPI simulator: the seven REST endpoints, Bearer auth, the streaming collision-map format, fault injection |
 | `src/maprt_workshop` | The client side: response parsing, request building, an HTTP client, an OBJ reader, beam-vs-map checking, plotting |
-| `data/` | The catalog the simulator serves — rooms, patients, surfaces, recorded maps, a synthetic RT Plan |
+| `data/` | The catalog the simulator serves — rooms, patients, surfaces, recorded maps, a synthetic RT Plan. Adding your own: [`docs/adding-data.md`](docs/adding-data.md) |
 | `notebooks/` | The workshop, in order. Start at `00_start_here.ipynb`. |
 | `scripts/` | Data generators, and the builders the notebooks and Binder requirements are generated from |
 | `binder/` | The Binder configuration — generated requirements, and the build/start hooks |
@@ -166,6 +166,7 @@ If you are teaching from this rather than working through it:
 | [`docs/handout.md`](docs/handout.md) | **Give this to attendees.** One page: the seven requests, the envelope, the error model, and the six things that catch people out. |
 | [`docs/run-sheet.md`](docs/run-sheet.md) | Timings for a three-hour session, what to demo live rather than let people read, and where they actually get stuck. |
 | [`docs/slides-outline.md`](docs/slides-outline.md) | One heading per slide, with what to say. ~25 minutes of talking across the session. |
+| [`docs/adding-data.md`](docs/adding-data.md) | Putting your own rooms, patients, surfaces, maps and plans into the simulator — including recording real appliance responses. |
 
 **The day before: open the Binder badge once and let it finish.** The first build after a push
 takes 5–15 minutes; pre-warming means the room gets a cached image instead of a progress bar.
@@ -176,7 +177,12 @@ takes 5–15 minutes; pre-warming means the room gets a cached image instead of 
 uv run pytest                      # everything, including the notebooks
 uv run pytest -m "not slow"        # skip the notebook execution while iterating
 uv run ruff check
+uv run maprt-sim --check-data      # validate the data catalog without starting a server
 ```
+
+**Adding your own data** — rooms, patients, surfaces, recorded clearance maps, RT Plans — is
+[`docs/adding-data.md`](docs/adding-data.md). Anything patient-derived goes in `data/local/`,
+which is git-ignored and overlays `data/`.
 
 `binder/requirements.txt` is generated too — `uv run python scripts/export_requirements.py` —
 so a Binder session installs the same locked versions `uv sync` does. CI checks both.

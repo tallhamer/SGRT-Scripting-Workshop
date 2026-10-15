@@ -131,6 +131,8 @@ def _parser():
                         help="refuse requests without a VisionRT.Integration.Saturn/ User-Agent")
     parser.add_argument("--open-ping", action="store_true",
                         help="serve /integration/ping without a token (debugging aid)")
+    parser.add_argument("--check-data", action="store_true",
+                        help="validate the data directory and exit, without starting a server")
     parser.add_argument("--reload", action="store_true", help="reload on code changes (developing)")
     parser.add_argument("--log-level", default="info", help="uvicorn log level")
     return parser
@@ -174,6 +176,12 @@ def settings_from_args(args):
 def main(argv=None):
     args = _parser().parse_args(argv)
     settings = settings_from_args(args)
+
+    if args.check_data:
+        # Before the catalog load below, because that one raises on the first problem it meets.
+        # The checker reports everything at once, which is what you want while editing data.
+        from maprt_sim.check import main as check_main
+        raise SystemExit(check_main(settings.data_dir))
 
     # Load the catalog here, before uvicorn starts, so a data problem is a clear message at the
     # prompt rather than a traceback inside a worker during someone's first notebook cell.

@@ -3,6 +3,12 @@
 `maprt_sim` serves everything in here. Adding data is a file drop plus a line of JSON — no code
 change, no restart flag beyond restarting the server.
 
+> **Adding your own rooms, patients, surfaces, maps or plans?**
+> → **[`docs/adding-data.md`](../docs/adding-data.md)** is the step-by-step guide.
+> Then check it with `uv run maprt-sim --check-data`.
+
+This file describes what is *here* and why.
+
 | File | What it is |
 | --- | --- |
 | `rooms.json` | Treatment room configurations: `id` (GUID), `machineName`, `name`, `coordinateSystem` |
