@@ -1,6 +1,6 @@
 """00 — Start here. The index every other notebook hangs off."""
 
-from ._common import BANNER, REPO_URL
+from ._common import BANNER, REPO_URL, bootstrap_cells
 
 CELLS = [
     ("md", f"""\
@@ -13,6 +13,8 @@ without a network.*
 
 This is the table of contents. Work through the notebooks in order; each one assumes the one
 before it. **Start by making sure the simulator is running** — the cell below tells you."""),
+
+    *bootstrap_cells(),
 
     ("md", """\
 ## Is everything running?
@@ -52,8 +54,20 @@ else:
 Roughly three hours end to end. Notebooks 01–05 are the core; 06–08 build on them.
 
 > The links above open in JupyterLab and on Binder. On **Google Colab** they will not — Colab has
-> no shared file browser — so open each notebook from the Colab *File → Open notebook → GitHub*
-> dialog instead."""),
+> no shared file browser — so use these instead, one per notebook:
+>
+> [01](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/01_setup_and_token.ipynb) ·
+> [02](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/02_connect_and_errors.ipynb) ·
+> [03](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/03_treatment_rooms.ipynb) ·
+> [04](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/04_patient_surfaces.ipynb) ·
+> [05](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/05_clearance_maps.ipynb) ·
+> [06](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/06_beams_and_plans.ipynb) ·
+> [07](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/07_robustness.ipynb) ·
+> [08](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/08_capstone_plan_qa.ipynb)
+>
+> Each one installs the workshop and starts the simulator in its first cell, so they work
+> independently — but **the first cell takes about 20 seconds**, every time, in every notebook.
+> Colab gives each one a fresh machine."""),
 
     ("md", """\
 ## The seven requests, on one page

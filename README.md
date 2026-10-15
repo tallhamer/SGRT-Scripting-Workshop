@@ -71,8 +71,36 @@ What to know before relying on it:
 
 The simulator's API docs are reachable in a session at `<your-binder-url>/proxy/8000/docs`.
 
+### Google Colab
+
+Colab works too, and is the most reliable fallback — most people already have a Google account,
+and there is no build step to wait for.
+
+| | Notebook | |
+| --- | --- | --- |
+| 00 | Start here | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/00_start_here.ipynb) |
+| 01 | Setup and the token | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/01_setup_and_token.ipynb) |
+| 02 | Connecting, and what goes wrong | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/02_connect_and_errors.ipynb) |
+| 03 | Treatment rooms | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/03_treatment_rooms.ipynb) |
+| 04 | Patient surfaces | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/04_patient_surfaces.ipynb) |
+| 05 | Clearance maps | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/05_clearance_maps.ipynb) |
+| 06 | Beams and plans | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/06_beams_and_plans.ipynb) |
+| 07 | When things go wrong | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/07_robustness.ipynb) |
+| 08 | Capstone: plan QA | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/08_capstone_plan_qa.ipynb) |
+
+Each notebook's first cell installs the workshop and starts the simulator inside the Colab
+runtime, then works from the cloned checkout so relative paths behave as they do locally.
+
+What to know:
+
+- **Every notebook pays the setup cost — about 20 seconds — because Colab gives each one its own
+  machine.** There is no shared state between them.
+- The runtime is discarded when you close the tab or it goes idle. Nothing is saved.
+- Colab's Python is currently 3.12; this project needs 3.11–3.13. If Colab moves past that, the
+  install in the first cell will fail with a version error rather than silently misbehave.
+
 **Recommended order:** local first (it is the only one that matches a real site), Binder as the
-no-install fallback, Google Colab if Binder is busy.
+no-install fallback, Google Colab if Binder is busy or still building.
 
 ## Troubleshooting
 
@@ -92,6 +120,8 @@ built and tested.
 | Notebook edits keep disappearing | **The notebooks are generated** — see *Development* below. | Edit `scripts/notebook_content/`, then `uv run python scripts/build_notebooks.py`. |
 | Binder session died mid-workshop | Idle timeout, or the memory cap. | Relaunch from the badge. Nothing was saved, so start the notebook again. |
 | Binder is building and building | First launch after a push rebuilds the image. | Wait it out, or work locally. Pre-warm by opening the badge a day early. |
+| Colab: `InvalidClientToken` on the first call | The simulator and the notebook disagree about the token. | Runtime → Restart, then re-run the first cell. It passes the token to the simulator explicitly. |
+| Colab: `FileNotFoundError: ../data/...` | The first cell did not run, so the working directory was never moved into the checkout. | Run the first cell. Every notebook has one. |
 
 The simulator's own state is readable at `/sim/state`, and its interactive API docs at `/docs`.
 Neither exists on a real appliance.

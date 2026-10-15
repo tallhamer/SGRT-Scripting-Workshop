@@ -13,21 +13,53 @@ BANNER = """\
 """
 
 BOOTSTRAP = f'''\
-# Running on Google Colab or Binder? This installs the workshop and starts the simulator.
-# On your own machine it does nothing — you already started the simulator in the other terminal.
-import os, subprocess, sys, time
+# Running on Google Colab? This installs the workshop and starts the simulator.
+# Anywhere else it does nothing: locally you already started it in the other terminal, and on
+# Binder it was started for you before this notebook opened.
+import os, subprocess, sys, time, urllib.request
 
 if "COLAB_RELEASE_TAG" in os.environ:
-    subprocess.run([sys.executable, "-m", "pip", "-q", "install",
-                    "maprt-scripting-workshop[notebooks] @ git+{REPO_URL}"], check=True)
-    if not os.path.isdir("/content/workshop"):
-        subprocess.run(["git", "clone", "-q", "--depth", "1",
-                        "{REPO_URL}", "/content/workshop"], check=True)
-    os.environ.setdefault("MAPRT_SIM_TOKEN", "workshop-colab-token")
-    subprocess.Popen(["maprt-sim", "--port", "8000", "--data-dir", "/content/workshop/data"])
-    time.sleep(4)
+    REPO = "{REPO_URL}"
+    CHECKOUT = "/content/workshop"
 
-print(sys.version.split()[0])
+    subprocess.run([sys.executable, "-m", "pip", "-q", "install",
+                    f"maprt-scripting-workshop[notebooks] @ git+{{REPO}}"], check=True)
+
+    if not os.path.isdir(CHECKOUT):
+        subprocess.run(["git", "clone", "-q", "--depth", "1", REPO, CHECKOUT], check=True)
+
+    # Work from the checkout's notebooks/ directory. Colab opens a notebook detached from its
+    # repository, so every relative path would otherwise be wrong — the capstone reads
+    # "../data/plans/..." and would look in /data. One chdir makes Colab match a local clone
+    # instead of special-casing paths in each notebook.
+    os.chdir(f"{{CHECKOUT}}/notebooks")
+
+    os.environ["MAPRT_SIM_TOKEN"] = "workshop-colab-token"
+    os.environ["MAPRT_SIM_URL"] = "http://127.0.0.1:8000"
+
+    # --token matters: without it the simulator mints a random token, while the environment
+    # above advertises a different one, and every call fails with InvalidClientToken. The
+    # simulator must be given the same secret this notebook is going to send.
+    log = open("/content/maprt-sim.log", "w")
+    subprocess.Popen(["maprt-sim", "--port", "8000",
+                      "--token", os.environ["MAPRT_SIM_TOKEN"],
+                      "--data-dir", f"{{CHECKOUT}}/data",
+                      "--map-seconds", "1"],
+                     stdout=log, stderr=subprocess.STDOUT)
+
+    # Poll rather than sleep. A fixed wait is either too short on a slow runtime (the first cell
+    # fails for no visible reason) or wasted time on a fast one.
+    for _attempt in range(60):
+        try:
+            urllib.request.urlopen(os.environ["MAPRT_SIM_URL"] + "/sim/state", timeout=1)
+            print("simulator ready")
+            break
+        except Exception:
+            time.sleep(0.5)
+    else:
+        print("The simulator did not start. See /content/maprt-sim.log")
+
+print("Python", sys.version.split()[0])
 '''
 
 CONNECT = '''\
