@@ -20,7 +20,7 @@ example files in their product's `data/` folder.
 
 ## Getting started
 
-Requires [uv](https://docs.astral.sh/uv/). Nothing else — uv fetches the right Python itself.
+Requires [uv](https://docs.astral.sh/uv/getting-started/installation/). Nothing else — uv fetches the right Python itself.
 
 ```bash
 git clone https://github.com/tallhamer/SGRT-Scripting-Workshop
