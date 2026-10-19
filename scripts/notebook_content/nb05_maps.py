@@ -56,7 +56,7 @@ wrong and the map is confidently incorrect.
 
 > **A discrepancy worth knowing.** §5.2.6 of the specification says to send the *numeric*
 > `PatientPosition` enum — `1` for HFS. The live-verified desktop client sends the **DICOM
-> string** `"HFS"`, and the appliance accepts it. Both work; the simulator takes either. If you
+> string** `"HFS"`, and the appliance accepts it. Both work; the emulator takes either. If you
 > are writing against a real appliance, try the string and keep the number in your back pocket."""),
     ("code", '''\
 body["PatientPosition"] = "HFS"          # or 1 — see above
@@ -279,7 +279,7 @@ for gantry in (0, 180):
     ("md", """\
 ## Where is the map actually from?
 
-The simulator tells you, in a header of its own. Recorded means real bytes from a real response;
+The emulator tells you, in a header of its own. Recorded means real bytes from a real response;
 synthetic means the model computed it."""),
     ("code", '''\
 response.headers["X-Emulator-Map-Source"]

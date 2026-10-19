@@ -85,12 +85,12 @@ In rough order of how often you will see it.
 
 | | What they will say | What is happening | Fix |
 | --- | --- | --- | --- |
-| 1 | "Address already in use" | Something holds port 8000 — usually a simulator they started earlier and forgot | `uv run maprt-emulator --port 8001`. **Nothing else to change** — the simulator records its port and the notebooks find it. |
+| 1 | "Address already in use" | Something holds port 8000 — usually an emulator they started earlier and forgot | `uv run maprt-emulator --port 8001`. **Nothing else to change** — the emulator records its port and the notebooks find it. |
 | 2 | "It says EmulatorNotRunning" | They closed terminal 1, or they are running Jupyter from outside the repo | Restart it. The error message names which address it tried and where that came from — read it to them rather than guessing. |
 | 3 | "`nodename nor servname provided`" | **A hospital proxy** routing even 127.0.0.1 through itself. Reads like DNS, is not | `os.environ['NO_PROXY'] = '127.0.0.1,localhost'`. The error message says this too. |
 | 4 | "My numbers are all wrong" | Buffers in cm where the API wants mm | Factor of ten. Ask what units they typed. |
 | 5 | "Nothing happens / it's frozen" | GetMap streaming, which takes a few seconds by design | Wait. Over ~30 s, check terminal 1. |
-| 6 | "Everything broke after notebook 07" | A scenario left armed | Last cell of 07, or restart the simulator. |
+| 6 | "Everything broke after notebook 07" | A scenario left armed | Last cell of 07, or restart the emulator. |
 | 7 | "jupyter: command not found" | They ran `uv sync --no-group workshop`, or an old uv | Plain `uv sync`. |
 
 **Have a spare laptop with it already running.** Someone's machine will not cooperate and you
@@ -100,7 +100,7 @@ cannot debug corporate IT in a workshop.
 
 ## Framing — the things worth saying out loud
 
-**Say early:** everything here talks to a simulator on their own machine. The surfaces are
+**Say early:** everything here talks to an emulator on their own machine. The surfaces are
 synthetic, the maps are plausible rather than physical, nothing came from a patient. Say it once,
 properly, and nobody spends the session wondering.
 
@@ -111,7 +111,7 @@ they see will be right. The absolute numbers are invented. Both halves matter.
 **Say at the capstone:** sixty lines. That is the pitch. Ten minutes a plan by hand, or a script
 that does it while you read the next one.
 
-**Do not oversell it as a QA tool.** It is a teaching simulator. Anyone who goes back and points
+**Do not oversell it as a QA tool.** It is a teaching emulator. Anyone who goes back and points
 this code at a real appliance is doing clinical work and needs their own validation. Being clear
 about that costs you nothing and protects everyone.
 
@@ -131,7 +131,7 @@ on them.
 **"Why is the map not just JSON?"** Because it streams as it computes, over minutes, so a client
 can show progress. That is also why its errors are JSON and its successes are not.
 
-**"How accurate is the simulated map?"** It is not. Say so plainly. It is geometry chosen to
+**"How accurate is the emulator's map?"** It is not. Say so plainly. It is geometry chosen to
 behave correctly, not physics. Point at `data/MapRT/README.md`.
 
 **"Can we get real maps in here?"** Yes — `scripts/record_map.py --from-url` captures a real
@@ -146,7 +146,7 @@ Point them at:
 
 - **Notebook 07** if they are going to write anything real.
 - `data/MapRT/README.md` for what the model is and is not.
-- The repository itself — the simulator is ~1,500 lines and reading it is a decent way to
+- The repository itself — the emulator is ~1,500 lines and reading it is a decent way to
   understand the API.
 
 The repo is public and nothing in it is patient-derived, so there is no reason they cannot take

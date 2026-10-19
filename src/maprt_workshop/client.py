@@ -31,7 +31,7 @@ from maprt_workshop import wire
 # refuse a request without it, so there is no sensible empty default.
 DEFAULT_USER_AGENT = "VisionRT.Integration.Saturn/2.0.workshop"
 
-# Where the simulator records itself at startup. Read rather than typed so the Binder and Colab
+# Where the emulator records itself at startup. Read rather than typed so the Binder and Colab
 # paths work, where the startup banner is in a log file nobody reads.
 STATE_DIR = Path(".maprt_emulator")
 TOKEN_FILE = STATE_DIR / "token"
@@ -58,7 +58,7 @@ class MapRTClient:
         # verify=False because a real MapRT appliance presents a self-signed certificate. It is
         # the right call for an appliance on a clinical VLAN whose certificate you cannot replace,
         # and the wrong call for anything on the open internet — know which one you are doing.
-        # The simulator speaks plain HTTP by default, where this has no effect. Every HTTP library
+        # The emulator speaks plain HTTP by default, where this has no effect. Every HTTP library
         # spells this differently (requests: verify=False; urllib: an ssl context; QNetwork:
         # PeerVerifyMode.VerifyNone) but it is the same decision whichever you use.
         #
@@ -186,12 +186,12 @@ class MapRTClient:
 # -- workshop convenience -------------------------------------------------------------------
 
 def find_server(start=None):
-    """What the running simulator recorded about itself, or ``{}``.
+    """What the running emulator recorded about itself, or ``{}``.
 
     Reads ``.maprt_emulator/server.json``, found by walking up from ``start`` (the working directory by
     default) — so it works whether a notebook runs from the repository root or from
     ``notebooks/``. The file carries the **URL** as well as the token, which is what makes a
-    non-default port work: a student whose port 8000 is busy starts the simulator elsewhere, and
+    non-default port work: a student whose port 8000 is busy starts the emulator elsewhere, and
     nothing they typed tells the notebook where it went.
     """
     here = Path(start or Path.cwd()).resolve()
@@ -206,7 +206,7 @@ def find_server(start=None):
 
 
 def find_token(start=None):
-    """The simulator's current token, or ``None``.
+    """The emulator's current token, or ``None``.
 
     Resolution order: ``MAPRT_EMULATOR_TOKEN`` in the environment (how Binder and Colab supply it),
     then ``.maprt_emulator/server.json``, then the plain ``.maprt_emulator/token`` beside it.
@@ -228,7 +228,7 @@ def find_token(start=None):
 
 
 def find_url(start=None):
-    """Where the simulator is: ``MAPRT_EMULATOR_URL``, then what the server recorded, then the default."""
+    """Where the emulator is: ``MAPRT_EMULATOR_URL``, then what the server recorded, then the default."""
     from_env = os.environ.get("MAPRT_EMULATOR_URL")
     if from_env:
         return from_env.strip()
@@ -236,14 +236,14 @@ def find_url(start=None):
 
 
 class EmulatorNotRunning(RuntimeError):
-    """:func:`connect` could not reach a simulator, with a message naming the likely fix."""
+    """:func:`connect` could not reach an emulator, with a message naming the likely fix."""
 
 
 def connect(api_url=None, token=None, user_agent=None, check=True):
-    """A :class:`MapRTClient` pointed at the running simulator, verified with a ping.
+    """A :class:`MapRTClient` pointed at the running emulator, verified with a ping.
 
     Resolves the base URL from ``api_url``, then ``MAPRT_EMULATOR_URL``, then whatever the running
-    simulator recorded in ``.maprt_emulator/server.json``, then ``http://127.0.0.1:8000``; and the
+    emulator recorded in ``.maprt_emulator/server.json``, then ``http://127.0.0.1:8000``; and the
     token the same way. One call that works unchanged in all three workshop environments — local,
     Binder and Colab — so a student whose session dies can switch without editing a cell.
 
@@ -255,11 +255,11 @@ def connect(api_url=None, token=None, user_agent=None, check=True):
     if token is None:
         raise EmulatorNotRunning(
             "No API token found.\n\n"
-            "Start the simulator in another terminal:\n"
+            "Start the emulator in another terminal:\n"
             "    uv run maprt-emulator\n\n"
             "It writes .maprt_emulator/server.json, which this cell finds by walking up from the "
             "notebook's directory. If you are running from somewhere else entirely, paste in "
-            "the MAPRT_EMULATOR_TOKEN line the simulator printed:\n"
+            "the MAPRT_EMULATOR_TOKEN line the emulator printed:\n"
             "    import os; os.environ['MAPRT_EMULATOR_TOKEN'] = '...'"
         )
 
@@ -281,13 +281,13 @@ def _unreachable_message(resolved_url, explicit_url, exc):
     elif os.environ.get("MAPRT_EMULATOR_URL"):
         source = "the MAPRT_EMULATOR_URL environment variable"
     elif find_server().get("url"):
-        source = (".maprt_emulator/server.json, written by a simulator that has since stopped — so "
+        source = (".maprt_emulator/server.json, written by an emulator that has since stopped — so "
                   "this is probably a stale file from an earlier run")
     else:
-        source = "the default, because no running simulator was found to ask"
+        source = "the default, because no running emulator was found to ask"
 
     message = (
-        f"Could not reach a MapRT simulator at {resolved_url} ({type(exc).__name__}).\n\n"
+        f"Could not reach a MapRT emulator at {resolved_url} ({type(exc).__name__}).\n\n"
         f"That address came from: {source}.\n\n"
         "Is `uv run maprt-emulator` still running in the other terminal? If you started it on a "
         "different port it records that itself, so check you are running this notebook from "

@@ -52,11 +52,11 @@ class Report:
                 lines.append(f"{prefix}{item}")
         if self.errors:
             lines += ["", f"{_count(len(self.errors), 'error')} — fix these before serving this "
-                          f"data. Some of them will not stop the simulator starting; it will "
+                          f"data. Some of them will not stop the emulator starting; it will "
                           f"start and give wrong answers, which is worse."]
         elif self.warnings:
             lines += ["", f"No errors, {_count(len(self.warnings), 'warning')}. "
-                          f"The simulator will run."]
+                          f"The emulator will run."]
         else:
             lines += ["", "No problems found."]
         return "\n".join(lines)

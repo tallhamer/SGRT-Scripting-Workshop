@@ -1,6 +1,6 @@
-"""``maprt-emulator`` and ``workshop-up`` — starting the simulator, and the token banner.
+"""``maprt-emulator`` and ``workshop-up`` — starting the emulator, and the token banner.
 
-The simulator mints a **fresh token every time it starts** and makes it available two ways:
+The emulator mints a **fresh token every time it starts** and makes it available two ways:
 
 * printed in a banner, for someone watching a terminal;
 * written to ``.maprt_emulator/token``, for everyone else.
@@ -72,7 +72,7 @@ def banner(settings, catalog, token_path, maps=None):
         warnings.append("  Ping        served WITHOUT a token")
 
     lines = [
-        "  MapRT API Simulator  —  NOT a medical device. Teaching only.",
+        "  MapRT Emulator  —  NOT a medical device. Teaching only.",
         "",
         f"  Base URL    {settings.base_url}",
         f"  Docs        {settings.base_url}/docs",
@@ -99,7 +99,7 @@ def banner(settings, catalog, token_path, maps=None):
 def _parser():
     parser = argparse.ArgumentParser(
         prog="maprt-emulator",
-        description="Run a local simulator of the Vision RT MapRT API 2.0. Teaching use only.",
+        description="Run a local emulator of the Vision RT MapRT API 2.0. Teaching use only.",
     )
     parser.add_argument("--host", default=None, help="interface to bind (default 127.0.0.1)")
     parser.add_argument("--port", type=int, default=None, help="port to bind (default 8000)")
@@ -240,7 +240,7 @@ def _wait_for_port(host, port, timeout=30.0):
 
 
 def up(argv=None):
-    """Start the simulator in the background, wait for it, then launch Jupyter Lab.
+    """Start the emulator in the background, wait for it, then launch Jupyter Lab.
 
     The two-terminal version (``maprt-emulator`` in one, ``jupyter lab`` in the other) is what the
     workshop teaches, because that separation is what the real thing looks like: an appliance
@@ -250,7 +250,7 @@ def up(argv=None):
     # argv=None means "read sys.argv", which is what both of these need. An earlier version wrote
     # `parse_args(argv or [])` and passed `*(argv or [])` to the subprocess — so as a console
     # script, where argv is None, BOTH silently discarded the command line and
-    # `workshop-up --port 8812` started the simulator on 8000. Exactly the bug Phase 2 fixed in
+    # `workshop-up --port 8812` started the emulator on 8000. Exactly the bug Phase 2 fixed in
     # `main()`, reintroduced here because nothing ran this function until Phase 7.
     forwarded = list(sys.argv[1:] if argv is None else argv)
     args = _parser().parse_args(forwarded)
@@ -264,11 +264,11 @@ def up(argv=None):
 
     notebooks = _notebooks_dir()
 
-    # start_new_session puts the simulator in its own process group, so the terminal's Ctrl+C
-    # does NOT reach it. Without that, one Ctrl+C kills the simulator immediately while Jupyter
+    # start_new_session puts the emulator in its own process group, so the terminal's Ctrl+C
+    # does NOT reach it. Without that, one Ctrl+C kills the emulator immediately while Jupyter
     # survives (Jupyter asks you to confirm shutdown) — leaving a live notebook server talking
     # to a dead appliance, which is the most confusing possible state to be in. This way the
-    # simulator outlives Ctrl+C and is stopped by the `finally` below, once Jupyter has actually
+    # emulator outlives Ctrl+C and is stopped by the `finally` below, once Jupyter has actually
     # exited.
     server = subprocess.Popen([sys.executable, "-m", "maprt_emulator", *forwarded],
                               start_new_session=True)
@@ -276,10 +276,10 @@ def up(argv=None):
         if not _wait_for_port(settings.host, settings.port):
             server.terminate()
             raise SystemExit(
-                f"workshop-up: the simulator did not come up on {settings.host}:{settings.port}. "
+                f"workshop-up: the emulator did not come up on {settings.host}:{settings.port}. "
                 f"Something may already be using that port — try --port 8001."
             )
-        print(f"\nSimulator is up on {settings.base_url}. Starting Jupyter Lab...\n", flush=True)
+        print(f"\nEmulator is up on {settings.base_url}. Starting Jupyter Lab...\n", flush=True)
         subprocess.run(["jupyter", "lab", str(notebooks)], check=False)
     except KeyboardInterrupt:
         # Ctrl+C reaches both processes; swallow it here so the shutdown below is the last word

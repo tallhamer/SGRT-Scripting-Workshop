@@ -1,6 +1,6 @@
 """Authentication: the three headers, and how a rejected token is reported.
 
-The split the simulator implements, and why:
+The split the emulator implements, and why:
 
 * no credential presented  -> HTTP 401  (nothing reached the appliance's result logic)
 * credential presented, wrong -> HTTP 200 + success:false + InvalidClientToken  (spec §5.3)

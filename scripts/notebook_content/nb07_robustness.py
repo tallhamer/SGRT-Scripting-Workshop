@@ -18,7 +18,7 @@ throttled server needs a busy one; a timeout needs patience.
 So it gets written once, guessed at, and never exercised — and then it is what fails during
 treatment planning on a Friday afternoon.
 
-The simulator can be *told* to fail. Everything below is armed deliberately."""),
+The emulator can be *told* to fail. Everything below is armed deliberately."""),
     ("code", '''\
 import httpx2
 
@@ -41,7 +41,7 @@ for scenario in httpx2.get(SIM + "/scenarios").json()["scenarios"]:
     print(f"{scenario['name']:<22} {scenario['description']}")
 '''),
     ("md", """\
-> `/emulator` is **not part of the MapRT API.** It is the simulator's own control surface, and it is
+> `/emulator` is **not part of the MapRT API.** It is the emulator's own control surface, and it is
 > deliberately unauthenticated — the `bad-token` scenario rejects every token, so if disarming it
 > needed a working one you would have to restart the server to get out."""),
 

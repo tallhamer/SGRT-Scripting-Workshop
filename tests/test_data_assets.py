@@ -1,6 +1,6 @@
 """The committed data: the synthetic plan, the surfaces, and the repository's size budget.
 
-These guard the things that break a workshop quietly — a plan referencing a patient the simulator
+These guard the things that break a workshop quietly — a plan referencing a patient the emulator
 does not have, a surface that stopped parsing, a repo that grew until a conference-wifi clone
 times out.
 """
@@ -26,8 +26,8 @@ class TestTheSyntheticPlan:
         assert plan.Modality == "RTPLAN"
         assert plan.SOPClassUID == "1.2.840.10008.5.1.4.1.1.481.5"
 
-    def test_its_patient_exists_in_the_simulators_catalog(self, plan):
-        # A plan naming a patient the simulator has never heard of makes the capstone notebook
+    def test_its_patient_exists_in_the_emulators_catalog(self, plan):
+        # A plan naming a patient the emulator has never heard of makes the capstone notebook
         # fail on its second cell, which is a miserable way to start the exercise.
         import json
         patients = json.loads((ROOT / "data" / "MapRT" / "patients.json").read_text(encoding="utf-8"))

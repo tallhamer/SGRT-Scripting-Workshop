@@ -18,13 +18,13 @@ from maprt_emulator.store import Catalog
 logger = logging.getLogger("maprt_emulator")
 
 DESCRIPTION = """
-A **simulator** of the Vision RT MapRT API 2.0, for teaching and practice.
+A **emulator** of the Vision RT MapRT API 2.0, for teaching and practice.
 
 > **Not a medical device. Teaching use only.** Surfaces are synthetic and clearance maps are
 > plausible rather than physical. Not affiliated with or endorsed by Vision RT.
 
 Endpoints under `/integration` mirror the documented REST API. Endpoints under `/emulator` are this
-simulator's own and have no counterpart on a real appliance.
+emulator's own and have no counterpart on a real appliance.
 
 **A real MapRT appliance does not publish an OpenAPI document, so this page does not exist
 there.** It is here because it is a useful way to read the API's shape — but you cannot discover
@@ -45,12 +45,12 @@ def create_app(settings=None):
     settings = settings or EmulatorSettings()
 
     app = FastAPI(
-        title="MapRT API Simulator",
+        title="MapRT Emulator",
         version="2.0.0",
         description=DESCRIPTION,
         openapi_tags=[
             {"name": "integration", "description": "The documented MapRT REST API."},
-            {"name": "emulator", "description": "Simulator-only. No counterpart on a real appliance."},
+            {"name": "emulator", "description": "Emulator-only. No counterpart on a real appliance."},
         ],
     )
 
@@ -83,7 +83,7 @@ def create_app(settings=None):
         wrong, and a real appliance's rejection is far less helpful than this.
         """
         return JSONResponse(
-            envelope.fail("InvalidArgument", envelope.SIMULATED,
+            envelope.fail("InvalidArgument", envelope.EMULATED,
                           error_data=[_readable(error) for error in exc.errors()]),
             status_code=400,
         )
@@ -109,7 +109,7 @@ def create_app(settings=None):
             # the client if it cannot process immediately and the request should be repeated".
             # Retry-After tells a client how long to wait instead of hammering.
             response = JSONResponse(
-                envelope.fail("ServerBusy", envelope.SIMULATED,
+                envelope.fail("ServerBusy", envelope.EMULATED,
                               error_data="Throttled. Retry after the interval in Retry-After."),
                 status_code=503,
             )

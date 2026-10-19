@@ -1,4 +1,4 @@
-"""``/emulator/*`` — the simulator's own control surface. **No counterpart on a real appliance.**
+"""``/emulator/*`` — the emulator's own control surface. **No counterpart on a real appliance.**
 
 Namespaced away from ``/integration`` so there is no chance of mistaking one for the other: if a
 path starts with ``/emulator``, nothing you learn from it transfers.
@@ -22,18 +22,18 @@ class ArmScenario(BaseModel):
     name: str = Field(..., description="a name from GET /emulator/scenarios")
 
 
-@router.get("/scenarios", summary="SIMULATOR ONLY — the faults you can arm")
+@router.get("/scenarios", summary="EMULATOR ONLY — the faults you can arm")
 async def list_scenarios():
     return {"scenarios": scenarios.catalogue()}
 
 
-@router.post("/scenario", summary="SIMULATOR ONLY — arm a fault")
+@router.post("/scenario", summary="EMULATOR ONLY — arm a fault")
 async def arm_scenario(body: ArmScenario, request: Request):
     try:
         scenario = request.app.state.scenarios.arm(body.name)
     except KeyError:
         raise envelope.MapRTFailure(
-            ("UnknownScenario", envelope.SIMULATED),
+            ("UnknownScenario", envelope.EMULATED),
             status_code=400,
             error_data=f"No scenario {body.name!r}. Available: {sorted(scenarios.SCENARIOS)}",
         ) from None
@@ -41,7 +41,7 @@ async def arm_scenario(body: ArmScenario, request: Request):
             "teaches": scenario.teaches}
 
 
-@router.get("/state", summary="SIMULATOR ONLY — what this server is serving and doing")
+@router.get("/state", summary="EMULATOR ONLY — what this server is serving and doing")
 async def state(request: Request):
     app = request.app
     settings = app.state.settings

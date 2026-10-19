@@ -7,7 +7,7 @@ reader (:mod:`~maprt_workshop.obj`) and client-side beam checking
 
 The parsers and request builders are ported from the live-verified ``maprt_client`` package in
 the surface_tools project, so what you learn here is what works against a real appliance. The
-simulator in :mod:`maprt_emulator` is written to satisfy *these* parsers, not the other way round.
+emulator in :mod:`maprt_emulator` is written to satisfy *these* parsers, not the other way round.
 
 Not a medical device. Teaching use only. Not affiliated with or endorsed by Vision RT.
 """

@@ -24,7 +24,7 @@ class TestPing:
         assert isinstance(body["data"], str)
 
     def test_every_response_carries_the_saturn_server_header(self, client):
-        # Spec §5.1. It is how a client can tell what it is talking to, and the simulator has to
+        # Spec §5.1. It is how a client can tell what it is talking to, and the emulator has to
         # replace uvicorn's own header to be honest about mimicking an appliance.
         response = client.get("/integration/ping")
         assert response.headers["server"] == SERVER_VERSION
@@ -121,7 +121,7 @@ class TestSurface:
         assert b"\nv " in raw and b"\nf " in raw
 
     def test_the_payload_parses_with_the_workshop_obj_reader(self, client, envelope_of):
-        # End to end: what the simulator serves is what the client library can read.
+        # End to end: what the emulator serves is what the client library can read.
         from maprt_workshop.obj import parse_obj
         data = envelope_of(client.get(f"/integration/surfaces/{SURFACE_1}"))["data"]
         vertices, faces, _normals = parse_obj(base64.b64decode(data.split(",")[-1]))

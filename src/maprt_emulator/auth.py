@@ -10,7 +10,7 @@ The token is a **shared secret** issued per appliance — not a login, not a ses
 refresh. It is the whole of the authentication story, which is why a real deployment puts the
 appliance behind TLS on a controlled network and treats the token like a password.
 
-How a rejected token is reported is worth reading closely, because the simulator can do it both
+How a rejected token is reported is worth reading closely, because the emulator can do it both
 ways and real clients have to cope with both:
 
 * **No credential at all** (no ``Authorization`` header, or not a ``Bearer`` one) → HTTP **401**.
@@ -43,7 +43,7 @@ def bearer_token(request):
 def check_user_agent(request, settings):
     """Enforce the ``User-Agent`` requirement when ``--strict-user-agent`` is on.
 
-    A real appliance expects ``VisionRT.Integration.Saturn/a.b.x``. The simulator only warns by
+    A real appliance expects ``VisionRT.Integration.Saturn/a.b.x``. The emulator only warns by
     default, because making a beginner's first bare GET fail on a header nobody
     mentioned yet is a bad first lesson — the notebooks turn this on deliberately instead.
     """
@@ -53,7 +53,7 @@ def check_user_agent(request, settings):
     if settings.strict_user_agent:
         # A malformed request, which §5.3 puts at 4xx — not a negative result at 200.
         raise envelope.MapRTFailure(
-            ("InvalidUserAgent", envelope.SIMULATED),
+            ("InvalidUserAgent", envelope.EMULATED),
             status_code=400,
             error_data=(f"User-Agent must start with {USER_AGENT_PREFIX!r}; "
                         f"got {agent or '(none)'!r}."),

@@ -1,7 +1,7 @@
 [project]
 name = "maprt-scripting-workshop"
 version = "0.1.0"
-description = "A local simulator of the Vision RT MapRT API 2.0, plus Jupyter notebooks for a scripting workshop. Teaching only — not a medical device."
+description = "A local emulator of the Vision RT MapRT API 2.0, plus Jupyter notebooks for a scripting workshop. Teaching only — not a medical device."
 readme = "README.md"
 # 3.12 is what Google Colab runs, so the local, Binder and Colab paths all land on the same
 # minor version. Nothing here needs 3.12 features; the code stays 3.11-compatible so a student
@@ -13,7 +13,7 @@ authors = [
 ]
 keywords = ["maprt", "radiotherapy", "collision", "fastapi", "teaching"]
 
-# The simulator and the student-facing client library. numpy carries the collision-map array.
+# The emulator and the student-facing client library. numpy carries the collision-map array.
 #
 # httpx2 rather than httpx: it is what current starlette wants (the test client warns otherwise),
 # and the HTTP library is not load-bearing for what this workshop teaches. A MapRT client can be
@@ -43,9 +43,9 @@ notebooks = [
 ]
 
 [project.scripts]
-# Terminal 1 in the workshop: the simulated appliance.
+# Terminal 1 in the workshop: the emulated appliance.
 maprt-emulator = "maprt_emulator.cli:main"
-# The single-terminal fallback: starts the simulator, waits for it, then launches Jupyter Lab.
+# The single-terminal fallback: starts the emulator, waits for it, then launches Jupyter Lab.
 workshop-up = "maprt_emulator.cli:up"
 
 [dependency-groups]

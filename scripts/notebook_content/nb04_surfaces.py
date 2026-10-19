@@ -23,7 +23,7 @@ meshes are large. You look before you fetch."""),
     ("md", """\
 ## 1. What has this patient got?
 
-Patient ids are DICOM patient ids, up to 64 characters. The simulator's catalog has three."""),
+Patient ids are DICOM patient ids, up to 64 characters. The emulator's catalog has three."""),
     ("code", '''\
 import httpx2
 
@@ -72,7 +72,7 @@ print(f"\\nnewest: {SURFACE_ID}")
     ("md", """\
 ## Two answers that look the same and are not
 
-`ANON003` is in the simulator's catalog but has no surfaces. `NOBODY` is not in it at all.
+`ANON003` is in the emulator's catalog but has no surfaces. `NOBODY` is not in it at all.
 These are *different situations* and the API reports them differently — a client that collapses
 them will tell a planner the wrong thing."""),
     ("code", '''\
@@ -91,10 +91,10 @@ for patient in ("ANON003", "NOBODY"):
 One sends someone to the CT room; the other sends them to check their code. "No surfaces found"
 for both would be wrong twice.
 
-> The error code there, `PatientNotFound`, is **invented by this simulator.** The REST
+> The error code there, `PatientNotFound`, is **invented by this emulator.** The REST
 > specification names codes only for authentication, licensing and room administration — it says
 > nothing about an unknown patient. Do not match on that string in production code. You can see
-> everything the simulator made up at `/emulator/state` under `inventedErrorCodes`."""),
+> everything the emulator made up at `/emulator/state` under `inventedErrorCodes`."""),
 
     ("md", """\
 ## 2. Fetch the mesh

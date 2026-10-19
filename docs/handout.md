@@ -2,7 +2,7 @@
 
 *Workshop handout. Keep this open while you work.*
 
-> Not a medical device. The simulator's clearance maps are plausible, not physical.
+> Not a medical device. The emulator's clearance maps are plausible, not physical.
 
 ## Every call carries these three headers
 

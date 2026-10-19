@@ -19,7 +19,7 @@ success:     False
 errorCode:   InvalidClientToken
 ```
 
-**HTTP 200, and the call did not work.** This is not a quirk of the simulator. It is what the
+**HTTP 200, and the call did not work.** This is not a quirk of the emulator. It is what the
 specification says the appliance does, and it is the single most common way people get MapRT
 integrations wrong.
 
@@ -131,7 +131,7 @@ You cannot test error handling you cannot trigger. An unlicensed appliance, a bu
 dropped connection — all real, none of them arrangeable at 4pm on a Tuesday. So error handling
 gets written once, guessed at, and never exercised.
 
-The simulator has a control surface for exactly this. **It is not part of the MapRT API** — it
+The emulator has a control surface for exactly this. **It is not part of the MapRT API** — it
 lives under `/emulator`, and nothing you learn from it transfers to a real appliance."""),
     ("code", '''\
 scenarios = httpx2.get(maprt.api_url + "/emulator/scenarios").json()["scenarios"]
@@ -189,7 +189,7 @@ own sample is C#. None of that changes the request.
 certificate, so every client has to be told to accept it — `verify=False` in httpx and requests,
 an `ssl` context in urllib, `PeerVerifyMode.VerifyNone` in Qt. That is the right call for an
 appliance on a clinical VLAN whose certificate you cannot replace, and the wrong call for
-anything on the open internet. Know which one you are doing. (The simulator speaks plain HTTP, so
+anything on the open internet. Know which one you are doing. (The emulator speaks plain HTTP, so
 it does not arise here.)"""),
 
     ("md", """\

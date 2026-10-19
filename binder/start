@@ -1,11 +1,11 @@
 #!/bin/bash
 # repo2docker sources this before starting the notebook server, with the command to run as "$@".
 #
-# Its job: get the simulator running so a student's first cell works, then hand off. On Binder
-# the simulator cannot be a second terminal — there is only one container and one process tree —
+# Its job: get the emulator running so a student's first cell works, then hand off. On Binder
+# the emulator cannot be a second terminal — there is only one container and one process tree —
 # so it runs here, in the background, for the life of the session.
 #
-# Deliberately NOT `set -e`. If the simulator fails to start, the notebook server must still
+# Deliberately NOT `set -e`. If the emulator fails to start, the notebook server must still
 # come up: a live session whose first cell reports "EmulatorNotRunning" is recoverable and
 # explains itself, whereas a container that refuses to start is a blank stare.
 
@@ -15,7 +15,7 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # for anyone to read a banner from, and each Binder session is a private throwaway container, so
 # a known value costs nothing and removes a step. Exported so maprt_workshop.connect() finds it
 # without touching the filesystem — which also sidesteps a race, since the notebook server may
-# start before the simulator has written .maprt_emulator/server.json.
+# start before the emulator has written .maprt_emulator/server.json.
 export MAPRT_EMULATOR_TOKEN="${MAPRT_EMULATOR_TOKEN:-workshop-binder-token}"
 export MAPRT_EMULATOR_URL="http://127.0.0.1:8000"
 
@@ -40,14 +40,14 @@ else
     # "InvalidClientToken", which points nowhere near the actual problem.
     for _ in $(seq 1 60); do
         if curl -sf -o /dev/null "$MAPRT_EMULATOR_URL/emulator/state" 2>/dev/null; then
-            echo "start: simulator is up on $MAPRT_EMULATOR_URL"
+            echo "start: emulator is up on $MAPRT_EMULATOR_URL"
             break
         fi
         sleep 0.5
     done
 
     if ! curl -sf -o /dev/null "$MAPRT_EMULATOR_URL/emulator/state" 2>/dev/null; then
-        echo "start: WARNING — the simulator did not come up. See maprt-emulator.log." >&2
+        echo "start: WARNING — the emulator did not come up. See maprt-emulator.log." >&2
         tail -5 "$REPO_DIR/maprt-emulator.log" >&2 2>/dev/null
     fi
 fi

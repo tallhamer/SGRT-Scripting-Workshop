@@ -6,7 +6,7 @@ Spec §5.3: a failed call returns HTTP 200 with ``success: false`` and an ``erro
 message auth / license / server / client failures instead of a blind ``data['data']`` blowing up
 later with a meaningless TypeError.
 
-Carried over from the surface_tools `maprt-client` suite; these pin the behaviour the simulator
+Carried over from the surface_tools `maprt-client` suite; these pin the behaviour the emulator
 has to reproduce.
 """
 

@@ -1,4 +1,4 @@
-"""The catalog the simulator serves: treatment rooms, patients, surfaces.
+"""The catalog the emulator serves: treatment rooms, patients, surfaces.
 
 Everything comes out of a folder, so adding data is a file drop and a line of JSON — no code
 change. The layout::
@@ -81,7 +81,7 @@ class Catalog:
         # Seeded from the full patient list, not from the surfaces, so a patient with an empty
         # surface list survives loading. That patient is the difference between "I know them and
         # they have nothing" (an empty list, success) and "I've never heard of them" (an error),
-        # which is a distinction a client has to handle and so one the simulator has to offer.
+        # which is a distinction a client has to handle and so one the emulator has to offer.
         self._by_patient = {patient_id: [] for patient_id in patient_ids}
         for surface in self._surfaces:
             self._by_patient.setdefault(surface.patient_id, []).append(surface)

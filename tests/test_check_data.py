@@ -159,7 +159,7 @@ class TestTheReport:
     def test_it_does_not_claim_errors_always_stop_the_server(self, catalog):
         """Several errors load fine and then serve wrong answers.
 
-        An earlier version of the summary said "the simulator will not start", which was false
+        An earlier version of the summary said "the emulator will not start", which was false
         for the duplicate-GUID and truncated-map cases — and reassuring in exactly the wrong
         direction, since those are worse than a refusal to start.
         """

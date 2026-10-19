@@ -11,7 +11,7 @@ What was verified by hand (there is no way to assert it here, so it is recorded)
   packages, no conflicts.
 * `binder/postBuild` against that venv: the project installs, both packages import, and the
   `maprt-emulator` console script runs.
-* `binder/start` launches the simulator, exports the environment a notebook needs, and
+* `binder/start` launches the emulator, exports the environment a notebook needs, and
   `05_clearance_maps.ipynb` then executes all 58 cells in 10 seconds using only that venv.
 * `/docs` answers HTTP 200, which is what jupyter-server-proxy serves through the Binder URL.
 * repo2docker 2026.4.0 ships an environment for the Python version `runtime.txt` asks for.
@@ -80,7 +80,7 @@ class TestRequirements:
             assert re.search(rf"(?m)^{package}==", text), f"{package} is missing"
 
     def test_carries_jupyter_server_proxy(self):
-        # Binder-only, so it is not in pyproject.toml. Without it the simulator is reachable from
+        # Binder-only, so it is not in pyproject.toml. Without it the emulator is reachable from
         # a notebook cell but /docs cannot be opened in a browser tab.
         assert "jupyter-server-proxy" in (BINDER / "requirements.txt").read_text()
 
@@ -138,7 +138,7 @@ class TestStartScript:
 
     def test_it_exports_what_connect_reads(self, start):
         # On Binder the environment is the channel — the notebook server may start before the
-        # simulator has written .maprt_emulator/server.json, so the file would be a race.
+        # emulator has written .maprt_emulator/server.json, so the file would be a race.
         assert "export MAPRT_EMULATOR_TOKEN" in start
         assert "export MAPRT_EMULATOR_URL" in start
 
@@ -155,7 +155,7 @@ class TestStartScript:
         assert '--data-dir "$REPO_DIR/data/MapRT"' in start
         assert (ROOT / "data" / "MapRT" / "rooms.json").is_file()
 
-    def test_it_waits_and_reports_whether_the_simulator_came_up(self, start):
+    def test_it_waits_and_reports_whether_the_emulator_came_up(self, start):
         # The failure this catches is silent: nohup returns happily even when the port is busy,
         # and the student-facing error then points nowhere near the cause.
         assert "WARNING" in start

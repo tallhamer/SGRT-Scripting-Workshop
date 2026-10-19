@@ -1,4 +1,4 @@
-# The simulator's data catalog
+# The MapRT Emulator's data catalog
 
 `maprt_emulator` serves everything in here. Adding data is a file drop plus a line of JSON — no code
 change, no restart flag beyond restarting the server.
@@ -42,7 +42,7 @@ The meshes here are **synthetic**. No patient data is in this repository.
 | `recorded-nearest` | Same surface, room and resolution, different isocenter — the closest recording was served. The answer is **not** for the setup you asked about. |
 | `synthetic` | Nothing matched, so `maprt_emulator.mapgen` computed one. |
 
-The map shipped here is a **synthetic snapshot** — the simulator's own model, saved to a file so
+The map shipped here is a **synthetic snapshot** — the emulator's own model, saved to a file so
 the recorded code path is exercised out of the box. Its `note` field says so, and so does the
 header it is served under. It is not a measurement.
 
@@ -93,7 +93,7 @@ decimated surface mesh — chosen so the map *responds to a request the way a re
 
 So you can reason about what you see and be right about the reasoning. Do not read anything into
 the absolute numbers. Not modelled: the couch pedestal and support arm, which are a real source
-of collisions at large couch kicks — the simulator is more optimistic than reality there.
+of collisions at large couch kicks — the emulator is more optimistic than reality there.
 
 ## Using your own exported data
 

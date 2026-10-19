@@ -6,7 +6,7 @@ point of the exercise is practising `pydicom` against the tag layout a planning 
 emits — not against a dictionary someone typed out.
 
 So this writes a genuine, parseable RT Plan whose *contents* are invented: a made-up patient id
-matching the simulator's catalog, a plausible isocenter, and a beam list with the shapes that
+matching the emulator's catalog, a plausible isocenter, and a beam list with the shapes that
 matter for collision work — static beams, an arc, and a setup field.
 
     uv run python scripts/make_synthetic_plan.py data/MapRT/plans/ANON001_plan.dcm
@@ -23,7 +23,7 @@ from pydicom.dataset import Dataset, FileDataset, FileMetaDataset
 from pydicom.uid import ExplicitVRLittleEndian, generate_uid
 
 # (beam number, name, type, couch, gantry start, gantry stop, rotation direction)
-# A spread chosen so the capstone's pass/fail table has both outcomes against the simulator's
+# A spread chosen so the capstone's pass/fail table has both outcomes against the emulator's
 # clearance model: anterior and posterior clear, a kicked-couch lateral that does not.
 BEAMS = [
     (1, "SETUP AP", "SETUP", 0.0, 0.0, None, "NONE"),
@@ -157,7 +157,7 @@ def main(argv=None):
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("output", help="where to write the .dcm")
     parser.add_argument("--patient-id", default="ANON001",
-                        help="must match a patient in the simulator's data/MapRT/patients.json")
+                        help="must match a patient in the emulator's data/MapRT/patients.json")
     parser.add_argument("--patient-name", default="WORKSHOP^SYNTHETIC")
     parser.add_argument("--position", default="HFS")
     args = parser.parse_args(argv)

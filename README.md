@@ -1,12 +1,12 @@
 # MapRT Scripting Workshop
 
-A **local simulator of the Vision RT MapRT API 2.0** plus a set of Jupyter notebooks that walk
-you through scripting against it — the same calls, headers and wire formats you would use against
+The **MapRT Emulator**, a local emulator of the Vision RT MapRT API 2.0, plus a set of Jupyter
+notebooks that walk you through scripting against it — the same calls, headers and wire formats you would use against
 a real MapRT appliance, with no appliance, no patient data and no network.
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tallhamer/SGRT-Scripting-Workshop/HEAD?urlpath=lab/tree/notebooks/00_start_here.ipynb)
 
-> **Not a medical device. Teaching use only.** The clearance maps this simulator returns are
+> **Not a medical device. Teaching use only.** The clearance maps this emulator returns are
 > plausible, not physical. Not affiliated with or endorsed by Vision RT.
 
 ## Quick start
@@ -33,31 +33,31 @@ links to everything else.
 ### One terminal, if you would rather
 
 ```bash
-uv run workshop-up      # starts the simulator, waits for it, then opens Jupyter Lab
+uv run workshop-up      # starts the emulator, waits for it, then opens Jupyter Lab
 ```
 
-Ctrl+C stops both. (Jupyter will ask you to confirm; the simulator shuts down once it exits.)
+Ctrl+C stops both. (Jupyter will ask you to confirm; the emulator shuts down once it exits.)
 
 ### About the token
 
-The simulator generates a **new API token every time it starts** — a workshop credential should be
+The emulator generates a **new API token every time it starts** — a workshop credential should be
 disposable. It reaches your notebook two ways, and you do not normally have to do anything:
 
-- it is printed in the box the simulator shows at startup, and
+- it is printed in the box the emulator shows at startup, and
 - it is written to `.maprt_emulator/server.json`, along with **the URL it is listening on**.
 
 `connect()` finds that file by walking up from the notebook's directory, so a non-default port
 works with no configuration. If you are running from outside the repository, paste the
-`MAPRT_EMULATOR_TOKEN=…` line the simulator printed.
+`MAPRT_EMULATOR_TOKEN=…` line the emulator printed.
 
 ## Running it without installing anything
 
 If uv will not install, or you are on a locked-down machine, **Binder** runs the whole thing in
-your browser — simulator included.
+your browser — emulator included.
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tallhamer/SGRT-Scripting-Workshop/HEAD?urlpath=lab/tree/notebooks/00_start_here.ipynb)
 
-Nothing to set up: the simulator starts with the session and the notebooks find it. You land on
+Nothing to set up: the emulator starts with the session and the notebooks find it. You land on
 the index.
 
 What to know before relying on it:
@@ -69,7 +69,7 @@ What to know before relying on it:
 - **Nothing is saved.** Close the tab and your edits are gone. Download anything you want to keep.
 - Binder is free, shared infrastructure. It is occasionally slow or full. Have a fallback.
 
-The simulator's API docs are reachable in a session at `<your-binder-url>/proxy/8000/docs`.
+The emulator's API docs are reachable in a session at `<your-binder-url>/proxy/8000/docs`.
 
 ### Google Colab
 
@@ -88,7 +88,7 @@ and there is no build step to wait for.
 | 07 | When things go wrong | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/07_robustness.ipynb) |
 | 08 | Capstone: plan QA | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/08_capstone_plan_qa.ipynb) |
 
-Each notebook's first cell installs the workshop and starts the simulator inside the Colab
+Each notebook's first cell installs the workshop and starts the emulator inside the Colab
 runtime, then works from the cloned checkout so relative paths behave as they do locally.
 
 What to know:
@@ -109,37 +109,37 @@ built and tested.
 
 | Symptom | What is happening | Fix |
 | --- | --- | --- |
-| `Address already in use` when starting the simulator | Something else holds port 8000 — often another copy of this simulator. | `uv run maprt-emulator --port 8001`. **You do not need to tell the notebooks** — the simulator records its port and they find it. |
-| `EmulatorNotRunning: No API token found` | No `.maprt_emulator/` anywhere above the notebook. The simulator is not running, or you are outside the repository. | Start it: `uv run maprt-emulator`. If you are deliberately elsewhere, `os.environ['MAPRT_EMULATOR_TOKEN'] = '…'`. |
-| `EmulatorNotRunning: … came from .maprt_emulator/server.json … stale file` | The simulator ran and has since stopped. | Restart it. The message tells you which address it tried and where that came from. |
+| `Address already in use` when starting the emulator | Something else holds port 8000 — often another copy of this emulator. | `uv run maprt-emulator --port 8001`. **You do not need to tell the notebooks** — the emulator records its port and they find it. |
+| `EmulatorNotRunning: No API token found` | No `.maprt_emulator/` anywhere above the notebook. The emulator is not running, or you are outside the repository. | Start it: `uv run maprt-emulator`. If you are deliberately elsewhere, `os.environ['MAPRT_EMULATOR_TOKEN'] = '…'`. |
+| `EmulatorNotRunning: … came from .maprt_emulator/server.json … stale file` | The emulator ran and has since stopped. | Restart it. The message tells you which address it tried and where that came from. |
 | `ConnectError: nodename nor servname provided` | A corporate/hospital **proxy** is set, and it is trying to route even `127.0.0.1` through itself. The error reads like DNS and is not. | `os.environ['NO_PROXY'] = '127.0.0.1,localhost'`, then re-run. `connect()` spots this and says so. |
-| macOS asks to allow incoming connections | The firewall prompt for a new listening process. | Allow it, or ignore it — the simulator binds `127.0.0.1` only and nothing outside your machine can reach it either way. |
+| macOS asks to allow incoming connections | The firewall prompt for a new listening process. | Allow it, or ignore it — the emulator binds `127.0.0.1` only and nothing outside your machine can reach it either way. |
 | A `GetMap` cell seems to hang | It streams over a few seconds by design — a real appliance takes **minutes**. | Wait. Over ~30 s, interrupt the kernel and check terminal 1. `--map-seconds 0` removes the delay. |
-| Everything fails after notebook 07 | You left a fault armed. | Run the last cell of notebook 07, or `POST /emulator/scenario` with `{"name": "ok"}`, or restart the simulator. |
+| Everything fails after notebook 07 | You left a fault armed. | Run the last cell of notebook 07, or `POST /emulator/scenario` with `{"name": "ok"}`, or restart the emulator. |
 | `jupyter: command not found` from `workshop-up` | The notebook dependencies are not installed. | `uv sync` — it installs Jupyter. If you used `--no-group workshop`, that is why. |
 | Notebook edits keep disappearing | **The notebooks are generated** — see *Development* below. | Edit `scripts/notebook_content/`, then `uv run python scripts/build_notebooks.py`. |
 | Binder session died mid-workshop | Idle timeout, or the memory cap. | Relaunch from the badge. Nothing was saved, so start the notebook again. |
 | Binder is building and building | First launch after a push rebuilds the image. | Wait it out, or work locally. Pre-warm by opening the badge a day early. |
-| Colab: `InvalidClientToken` on the first call | The simulator and the notebook disagree about the token. | Runtime → Restart, then re-run the first cell. It passes the token to the simulator explicitly. |
+| Colab: `InvalidClientToken` on the first call | The emulator and the notebook disagree about the token. | Runtime → Restart, then re-run the first cell. It passes the token to the emulator explicitly. |
 | Colab: `FileNotFoundError: ../data/...` | The first cell did not run, so the working directory was never moved into the checkout. | Run the first cell. Every notebook has one. |
 
-The simulator's own state is readable at `/emulator/state`, and its interactive API docs at `/docs`.
+The emulator's own state is readable at `/emulator/state`, and its interactive API docs at `/docs`.
 Neither exists on a real appliance.
 
 ## What's here
 
 | Path | Contents |
 | --- | --- |
-| `src/maprt_emulator` | The FastAPI simulator: the seven REST endpoints, Bearer auth, the streaming collision-map format, fault injection |
+| `src/maprt_emulator` | The FastAPI emulator: the seven REST endpoints, Bearer auth, the streaming collision-map format, fault injection |
 | `src/maprt_workshop` | The client side: response parsing, request building, an HTTP client, an OBJ reader, beam-vs-map checking, plotting |
 | `data/` | One folder per Vision RT product — see [`data/README.md`](data/README.md). |
-| `data/MapRT/` | The catalog the simulator serves — rooms, patients, surfaces, recorded maps, a synthetic RT Plan. Adding your own: [`docs/adding-data.md`](docs/adding-data.md) |
+| `data/MapRT/` | The catalog the emulator serves — rooms, patients, surfaces, recorded maps, a synthetic RT Plan. Adding your own: [`docs/adding-data.md`](docs/adding-data.md) |
 | `notebooks/` | The workshop, in order. Start at `00_start_here.ipynb`. |
 | `scripts/` | Data generators, and the builders the notebooks and Binder requirements are generated from |
 | `binder/` | The Binder configuration — generated requirements, and the build/start hooks |
 
 `src/maprt_workshop`'s parsers and request builders are ported from a live-verified MapRT
-integration, and the simulator is written to satisfy *those* parsers — so what you practice here is
+integration, and the emulator is written to satisfy *those* parsers — so what you practice here is
 what works against a real appliance.
 
 ## The workshop
@@ -167,7 +167,7 @@ If you are teaching from this rather than working through it:
 | [`docs/handout.md`](docs/handout.md) | **Give this to attendees.** One page: the seven requests, the envelope, the error model, and the six things that catch people out. |
 | [`docs/run-sheet.md`](docs/run-sheet.md) | Timings for a three-hour session, what to demo live rather than let people read, and where they actually get stuck. |
 | [`docs/slides-outline.md`](docs/slides-outline.md) | One heading per slide, with what to say. ~25 minutes of talking across the session. |
-| [`docs/adding-data.md`](docs/adding-data.md) | Putting your own rooms, patients, surfaces, maps and plans into the simulator — including recording real appliance responses. |
+| [`docs/adding-data.md`](docs/adding-data.md) | Putting your own rooms, patients, surfaces, maps and plans into the emulator — including recording real appliance responses. |
 
 **The day before: open the Binder badge once and let it finish.** The first build after a push
 takes 5–15 minutes; pre-warming means the room gets a cached image instead of a progress bar.

@@ -34,7 +34,7 @@ async def single_room(machine_name: str, request: Request):
     # not a negative result — the appliance was never asked a question it could answer.
     if len(machine_name) > 16:
         raise envelope.MapRTFailure(
-            ("InvalidArgument", envelope.SIMULATED),
+            ("InvalidArgument", envelope.EMULATED),
             status_code=400,
             error_data=f"machineName is limited to 16 characters; got {len(machine_name)}.",
         )

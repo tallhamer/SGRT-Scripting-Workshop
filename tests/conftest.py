@@ -1,4 +1,4 @@
-"""Fixtures for the simulator tests: a built app, and clients with and without a valid token."""
+"""Fixtures for the emulator tests: a built app, and clients with and without a valid token."""
 
 import json
 from pathlib import Path

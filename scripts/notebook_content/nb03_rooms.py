@@ -194,7 +194,7 @@ the conversions are vendor-specific and live in a separate Vision RT document. I
 comparing an angle from the API against an angle from a planning system or a console readout,
 **check which convention each one is in before you trust the comparison.**
 
-The simulator refuses angles in anything but IEC 61217 rather than silently converting them
+The emulator refuses angles in anything but IEC 61217 rather than silently converting them
 wrongly — see notebook 06."""),
 
     ("md", """\

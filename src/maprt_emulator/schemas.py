@@ -14,7 +14,7 @@ body that works here works against a real appliance.
 * **Unknown keys are ignored.** The surface_tools client puts a ``CoordinateSystem`` inside
   ``Isocenter``, which is not in the spec's example and which the appliance tolerates.
 
-Being strict where the appliance is lenient would make the simulator reject requests that work in
+Being strict where the appliance is lenient would make the emulator reject requests that work in
 the clinic, which is the opposite of useful.
 """
 
@@ -119,13 +119,13 @@ class ControlPoint(BaseModel):
         The API genuinely supports six couch coordinate systems (§4.3.1) and a real appliance
         converts between them — the conversion rules are vendor-specific and live in a separate
         Vision RT document. Quietly treating a ``Native`` angle as though it were IEC 61217 would
-        produce confident, wrong verdicts about whether a beam is deliverable, so the simulator
+        produce confident, wrong verdicts about whether a beam is deliverable, so the emulator
         refuses instead of pretending.
         """
         text = str(value).strip() if value is not None else "IEC_61217"
         if text.upper() not in {"IEC_61217", "1"}:
             raise ValueError(
-                f"coordinateSystem {value!r}: this simulator only implements IEC_61217. A real "
+                f"coordinateSystem {value!r}: this emulator only implements IEC_61217. A real "
                 f"appliance converts between the six systems in the specification; the "
                 f"conversions are vendor-specific and are not reproduced here."
             )
@@ -156,7 +156,7 @@ class GetMapAndBeamTransitionsRequest(GetMapRequest):
     """Spec §4.6.3 — a clearance map *plus* beam-transition safety.
 
     Documented in the C# interface (§4.2.1.4) with **no REST route in §5.2**, so both the path
-    and the response shape this simulator serves are invented. See
+    and the response shape this emulator serves are invented. See
     :mod:`maprt_emulator.routes.transitions`.
     """
 

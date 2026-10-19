@@ -1,4 +1,4 @@
-"""Run every notebook against a live simulator.
+"""Run every notebook against a live emulator.
 
 A notebook that does not execute is worse than no notebook: it fails in front of a room. So each
 one is run top to bottom with `nbclient`, against a real `maprt-emulator` subprocess, exactly as a
@@ -33,7 +33,7 @@ def _free_port():
 
 
 @pytest.fixture(scope="module")
-def simulator(tmp_path_factory):
+def emulator(tmp_path_factory):
     """A real `maprt-emulator` process the notebooks talk to.
 
     `--map-seconds 0` removes the deliberate streaming delay: the notebooks request several maps
@@ -74,8 +74,8 @@ def simulator(tmp_path_factory):
 
 @pytest.mark.slow
 @pytest.mark.parametrize("path", NOTEBOOKS, ids=lambda p: p.stem)
-def test_the_notebook_runs_top_to_bottom(path, simulator, monkeypatch):
-    for key, value in simulator.items():
+def test_the_notebook_runs_top_to_bottom(path, emulator, monkeypatch):
+    for key, value in emulator.items():
         monkeypatch.setenv(key, value)
 
     notebook = nbformat.read(path, as_version=4)

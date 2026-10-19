@@ -6,14 +6,14 @@
 REPO_URL = "https://github.com/tallhamer/SGRT-Scripting-Workshop"
 
 BANNER = """\
-> **Not a medical device. Teaching use only.** Everything here talks to a *simulator* running on
+> **Not a medical device. Teaching use only.** Everything here talks to a *emulator* running on
 > your own machine. The surfaces are synthetic, the clearance maps are plausible rather than
 > physical, and nothing in this repository came from a patient. Not affiliated with or endorsed
 > by Vision RT.
 """
 
 BOOTSTRAP = f'''\
-# Running on Google Colab? This installs the workshop and starts the simulator.
+# Running on Google Colab? This installs the workshop and starts the emulator.
 # Anywhere else it does nothing: locally you already started it in the other terminal, and on
 # Binder it was started for you before this notebook opened.
 import os, subprocess, sys, time, urllib.request
@@ -37,9 +37,9 @@ if "COLAB_RELEASE_TAG" in os.environ:
     os.environ["MAPRT_EMULATOR_TOKEN"] = "workshop-colab-token"
     os.environ["MAPRT_EMULATOR_URL"] = "http://127.0.0.1:8000"
 
-    # --token matters: without it the simulator mints a random token, while the environment
+    # --token matters: without it the emulator mints a random token, while the environment
     # above advertises a different one, and every call fails with InvalidClientToken. The
-    # simulator must be given the same secret this notebook is going to send.
+    # emulator must be given the same secret this notebook is going to send.
     log = open("/content/maprt-emulator.log", "w")
     subprocess.Popen(["maprt-emulator", "--port", "8000",
                       "--token", os.environ["MAPRT_EMULATOR_TOKEN"],
@@ -52,12 +52,12 @@ if "COLAB_RELEASE_TAG" in os.environ:
     for _attempt in range(60):
         try:
             urllib.request.urlopen(os.environ["MAPRT_EMULATOR_URL"] + "/emulator/state", timeout=1)
-            print("simulator ready")
+            print("emulator ready")
             break
         except Exception:
             time.sleep(0.5)
     else:
-        print("The simulator did not start. See /content/maprt-emulator.log")
+        print("The emulator did not start. See /content/maprt-emulator.log")
 
 print("Python", sys.version.split()[0])
 '''
@@ -65,7 +65,7 @@ print("Python", sys.version.split()[0])
 CONNECT = '''\
 from maprt_workshop import connect
 
-maprt = connect()          # finds the simulator and your token, and checks it answers
+maprt = connect()          # finds the emulator and your token, and checks it answers
 print(maprt.api_url)
 '''
 
@@ -86,7 +86,7 @@ def bootstrap_cells():
     """The two cells every notebook opens with after its header."""
     return [
         ("md", "First, make sure the environment is ready. On your own machine this cell does "
-               "nothing at all — it only matters on Colab and Binder, where the simulator has to "
+               "nothing at all — it only matters on Colab and Binder, where the emulator has to "
                "be installed and started from inside the notebook."),
         ("code", BOOTSTRAP),
     ]

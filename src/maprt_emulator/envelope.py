@@ -48,7 +48,7 @@ def fail(error_code, error_code_type, error_data=None):
 # The first group is quoted from spec §5.3, which gives these three as its worked examples. The
 # second group is INVENTED: the REST specification names no code for "I don't have that patient",
 # it only says the C# client throws InvalidArgumentException. Rather than guess at a real code
-# name, the simulator uses obviously-descriptive ones and labels them as its own invention here,
+# name, the emulator uses obviously-descriptive ones and labels them as its own invention here,
 # in /emulator/state, and in the notebooks — so nobody writes production code matching on a string
 # this project made up. If you have a real appliance response for these cases, replace them.
 # ---------------------------------------------------------------------------------------------
@@ -57,22 +57,22 @@ AUTH = "AuthErrorCodes"
 LICENSE = "LicenseErrorCodes"
 ROOM_ADMIN = "TreatmentRoomAdministrationErrorCodes"
 #: Not a real MapRT error-code type. See the note above.
-SIMULATED = "EmulatorErrorCodes"
+EMULATED = "EmulatorErrorCodes"
 
 INVALID_CLIENT_TOKEN = ("InvalidClientToken", AUTH)
 FEATURE_NOT_LICENSED = ("FeatureNotLicensed", LICENSE)
 DUPLICATE_KEY = ("DuplicateKey", ROOM_ADMIN)
 #: Invented — the spec documents no code for an unknown patient id.
-PATIENT_NOT_FOUND = ("PatientNotFound", SIMULATED)
+PATIENT_NOT_FOUND = ("PatientNotFound", EMULATED)
 #: Invented — the spec documents no code for an unknown surface id.
-SURFACE_NOT_FOUND = ("SurfaceNotFound", SIMULATED)
+SURFACE_NOT_FOUND = ("SurfaceNotFound", EMULATED)
 #: Invented — the spec documents no code for an unknown treatment room id.
-ROOM_NOT_FOUND = ("TreatmentRoomNotFound", SIMULATED)
+ROOM_NOT_FOUND = ("TreatmentRoomNotFound", EMULATED)
 #: Invented — stands in for the server-side faults /emulator/scenario can arm.
-INTERNAL_ERROR = ("InternalError", SIMULATED)
-#: Simulator-only: ``--map-source recorded`` is set and nothing matches. Has no analogue on a
+INTERNAL_ERROR = ("InternalError", EMULATED)
+#: Emulator-only: ``--map-source recorded`` is set and nothing matches. Has no analogue on a
 #: real appliance, which always computes.
-NO_RECORDED_MAP = ("NoRecordedMap", SIMULATED)
+NO_RECORDED_MAP = ("NoRecordedMap", EMULATED)
 
 #: Which of the above this project made up, for /emulator/state to report honestly.
 INVENTED_CODES = sorted({PATIENT_NOT_FOUND[0], SURFACE_NOT_FOUND[0], ROOM_NOT_FOUND[0],

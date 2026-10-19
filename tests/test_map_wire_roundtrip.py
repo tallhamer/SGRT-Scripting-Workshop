@@ -1,9 +1,9 @@
-"""**The Phase 3 gate.** What the simulator streams must parse with the real client's parser.
+"""**The Phase 3 gate.** What the emulator streams must parse with the real client's parser.
 
 The whole project rests on this: `maprt_workshop.wire.parse_collision_map` is the parser from a
-live MapRT integration, and the simulator is written to satisfy *it*, not the other way round. If
-the simulator's wire format drifts, a notebook that works here stops meaning anything about the
-clinic — so these tests take the simulator's own bytes and push them through the ported parser.
+live MapRT integration, and the emulator is written to satisfy *it*, not the other way round. If
+the emulator's wire format drifts, a notebook that works here stops meaning anything about the
+clinic — so these tests take the emulator's own bytes and push them through the ported parser.
 
 Also pinned here: the shapes. A 1-degree map parses to `(360, 181)`; the specification's coarse
 `37,36` sampling parses to `(360, 185)`, because the couch axis spans 180 degrees *inclusive* and

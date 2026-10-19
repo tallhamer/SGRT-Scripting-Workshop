@@ -3,7 +3,7 @@
 Colab cannot be driven from here, so this pins the things that were actually wrong when the cell
 was first written and never run — each of which would have failed every session:
 
-1. The simulator was started **without** ``--token`` while the environment advertised
+1. The emulator was started **without** ``--token`` while the environment advertised
    ``workshop-colab-token``, so it minted a random one and every call returned
    ``InvalidClientToken``.
 2. A fixed ``time.sleep(4)`` instead of waiting for the server: too short on a slow runtime, and
@@ -68,14 +68,14 @@ class TestTheBootstrapIsCorrect:
         return bootstrap_of(NOTEBOOKS[0])
 
     def test_it_only_fires_on_colab(self, source):
-        # Locally the simulator is already running in the other terminal; on Binder, start did it.
+        # Locally the emulator is already running in the other terminal; on Binder, start did it.
         assert 'if "COLAB_RELEASE_TAG" in os.environ:' in source
 
-    def test_it_gives_the_simulator_the_token_it_advertises(self, source):
+    def test_it_gives_the_emulator_the_token_it_advertises(self, source):
         """**The bug that would have broken every session.**
 
         Setting MAPRT_EMULATOR_TOKEN tells the notebook what secret to send. Without passing the same
-        value to the simulator, it mints a random one and rejects every call with
+        value to the emulator, it mints a random one and rejects every call with
         InvalidClientToken — which reads as a configuration problem and is not.
         """
         assert '"--token", os.environ["MAPRT_EMULATOR_TOKEN"]' in source
@@ -120,12 +120,12 @@ class TestTheBootstrapIsCorrect:
         # Re-running the first cell is the standard "have you tried restarting it" move.
         assert "if not os.path.isdir(CHECKOUT)" in source
 
-    def test_the_simulator_output_goes_to_a_file(self, source):
+    def test_the_emulator_output_goes_to_a_file(self, source):
         # uvicorn logs asynchronously; left on stdout they interleave with notebook output.
         assert "maprt-emulator.log" in source
         assert "stdout=log" in source
 
-    def test_it_says_so_when_the_simulator_does_not_start(self, source):
+    def test_it_says_so_when_the_emulator_does_not_start(self, source):
         assert "did not start" in source
 
 

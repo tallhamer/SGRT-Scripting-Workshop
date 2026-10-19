@@ -12,7 +12,7 @@ without a network.*
 {BANNER}
 
 This is the table of contents. Work through the notebooks in order; each one assumes the one
-before it. **Start by making sure the simulator is running** — the cell below tells you."""),
+before it. **Start by making sure the emulator is running** — the cell below tells you."""),
 
     *bootstrap_cells(),
 
@@ -31,7 +31,7 @@ except EmulatorNotRunning as problem:
 else:
     rooms = maprt.get_treatment_rooms()
     print("Ready.\\n")
-    print(f"  Simulator   {maprt.api_url}")
+    print(f"  Emulator   {maprt.api_url}")
     print(f"  API version {maprt.get_api_version()}")
     print(f"  Rooms       {len(rooms)}")
     print("\\n  Open 01_setup_and_token.ipynb to begin.")
@@ -65,7 +65,7 @@ Roughly three hours end to end. Notebooks 01–05 are the core; 06–08 build on
 > [07](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/07_robustness.ipynb) ·
 > [08](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/08_capstone_plan_qa.ipynb)
 >
-> Each one installs the workshop and starts the simulator in its first cell, so they work
+> Each one installs the workshop and starts the emulator in its first cell, so they work
 > independently — but **the first cell takes about 20 seconds**, every time, in every notebook.
 > Colab gives each one a fresh machine."""),
 
@@ -115,15 +115,15 @@ has to look at the body before deciding how to parse it. → notebook 05"""),
 | Symptom | Fix |
 | --- | --- |
 | `EmulatorNotRunning` | Start it: `uv run maprt-emulator` in another terminal, and leave it running. |
-| `No API token found` | Same — the token file appears when the simulator starts. |
+| `No API token found` | Same — the token file appears when the emulator starts. |
 | `Address already in use` | Something else holds port 8000. `uv run maprt-emulator --port 8001`, then set `MAPRT_EMULATOR_URL` to match. |
-| A cell hangs | `GetMap` takes a few seconds by design. If it is longer than ~30 s, interrupt the kernel and check the simulator's terminal. |
-| Everything fails after notebook 07 | You probably left a fault armed. Run `POST /emulator/scenario` with `{{"name": "ok"}}`, or just restart the simulator. |
+| A cell hangs | `GetMap` takes a few seconds by design. If it is longer than ~30 s, interrupt the kernel and check the emulator's terminal. |
+| Everything fails after notebook 07 | You probably left a fault armed. Run `POST /emulator/scenario` with `{{"name": "ok"}}`, or just restart the emulator. |
 
-The simulator's own state is always readable at
+The emulator's own state is always readable at
 [`{{BASE}}/emulator/state`](http://127.0.0.1:8000/emulator/state), and its interactive API docs are at
 [`{{BASE}}/docs`](http://127.0.0.1:8000/docs). Neither of those exists on a real appliance — they
-are the simulator's own, and notebook 02 explains why that matters.
+are the emulator's own, and notebook 02 explains why that matters.
 
 Source and issues: {REPO_URL}"""),
 ]

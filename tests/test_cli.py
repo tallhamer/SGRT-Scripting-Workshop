@@ -186,7 +186,7 @@ class TestAsEnv:
 
 
 class TestWorkshopUpForwardsItsFlags:
-    """`workshop-up --port N` must actually start the simulator on N.
+    """`workshop-up --port N` must actually start the emulator on N.
 
     Phase 2 fixed "every command-line flag is silently dropped" in `main()`. The same bug was
     sitting in `up()` the whole time — `parse_args(argv or [])` discards sys.argv when argv is
@@ -216,7 +216,7 @@ class TestWorkshopUpForwardsItsFlags:
         assert "--seed" in recorded["command"] and "7" in recorded["command"]
         assert recorded["waited_port"] == 8812, "it waited on the default port, not the given one"
 
-    def test_it_forwards_every_flag_to_the_simulator(self, monkeypatch, tmp_path):
+    def test_it_forwards_every_flag_to_the_emulator(self, monkeypatch, tmp_path):
         """The flags `up()` hands the subprocess must be the ones it was given."""
         recorded = {}
 
@@ -242,7 +242,7 @@ class TestWorkshopUpForwardsItsFlags:
         assert "8812" in recorded["command"]
         assert "--map-source" in recorded["command"]
         assert "synthetic" in recorded["command"]
-        assert recorded["terminated"], "the simulator must be stopped when Jupyter exits"
+        assert recorded["terminated"], "the emulator must be stopped when Jupyter exits"
 
     def test_it_waits_on_the_port_it_was_given(self, monkeypatch):
         waited = {}
@@ -324,13 +324,13 @@ class TestNotebooksDirIsFoundFromAnywhere:
 
 
 class TestWorkshopUpShutdownOrder:
-    def test_the_simulator_is_insulated_from_the_terminals_ctrl_c(self, monkeypatch):
-        """`start_new_session=True`, so Ctrl+C does not kill the simulator first.
+    def test_the_emulator_is_insulated_from_the_terminals_ctrl_c(self, monkeypatch):
+        """`start_new_session=True`, so Ctrl+C does not kill the emulator first.
 
-        Without it, one Ctrl+C stops the simulator immediately while Jupyter survives — Jupyter
+        Without it, one Ctrl+C stops the emulator immediately while Jupyter survives — Jupyter
         asks you to confirm shutdown — and the student is left with a live notebook server
         talking to a dead appliance. Verified by hand before this test was written: the
-        simulator's port closed while Jupyter kept running.
+        emulator's port closed while Jupyter kept running.
         """
         recorded = _record_subprocess(monkeypatch)
         captured = {}
@@ -345,12 +345,12 @@ class TestWorkshopUpShutdownOrder:
         cli.up([])
         assert captured["kwargs"].get("start_new_session") is True
 
-    def test_the_simulator_is_stopped_once_jupyter_exits(self, monkeypatch):
+    def test_the_emulator_is_stopped_once_jupyter_exits(self, monkeypatch):
         recorded = _record_subprocess(monkeypatch)
         cli.up([])
-        assert recorded["terminated"], "the simulator outlived the session"
+        assert recorded["terminated"], "the emulator outlived the session"
 
-    def test_a_ctrl_c_during_jupyter_still_stops_the_simulator(self, monkeypatch):
+    def test_a_ctrl_c_during_jupyter_still_stops_the_emulator(self, monkeypatch):
         recorded = _record_subprocess(monkeypatch)
 
         def interrupted(*args, **kwargs):

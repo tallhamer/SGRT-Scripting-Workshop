@@ -22,7 +22,7 @@ What it is built on:
   seen a real one.
 
 Not modelled: the couch pedestal and support arm. Those are a real source of collisions at large
-couch kicks, so the simulator is more optimistic than reality at the inferior end.
+couch kicks, so the emulator is more optimistic than reality at the inferior end.
 
 The geometry worth understanding is where the source ends up in the *patient's* frame. The gantry
 rotates in a fixed room plane and the couch rotates the patient, so with gantry ``g`` and couch
@@ -86,7 +86,7 @@ def couch_angles(step):
     Descending, because that is the order the specification's example uses (``90,180`` then
     ``85,180`` then ``80,180``). The order carries no meaning — §5.2.6 says the list is not
     ordered — but matching it means a client that wrongly depends on order still sees realistic
-    data from the simulator, and ``--shuffle-map`` is there to break that dependence on purpose.
+    data from the emulator, and ``--shuffle-map`` is there to break that dependence on purpose.
     """
     descending = list(range(90, -1, -step))                 # 90 .. 0
     wrapped = list(range(360 - step, 269, -step))           # 355 .. 270
@@ -140,7 +140,7 @@ class SurfaceModel:
     def isocenter_in_mesh_frame(self, isocenter):
         """Where a DICOM-coordinate isocenter sits in this mesh's own frame.
 
-        **This mapping is the simulator's invention, and it has to be.** A real appliance knows
+        **This mapping is the emulator's invention, and it has to be.** A real appliance knows
         how the acquired surface sits in the room and can place a DICOM isocenter in it. A bare
         ``.obj`` carries no such registration — §3.2.1 is explicit that the mesh has no patient
         position metadata at all — so there is nothing to derive it from.
@@ -287,7 +287,7 @@ def beam_verdicts(surface, request, seed=0):
 
     Which means: **the server only checks what you send it.** Two control points describe two
     angles, not the arc between them. A plan's arc sent as its start and stop will be reported
-    safe while sweeping straight through a collision. That is not a simulator quirk — it is what
+    safe while sweeping straight through a collision. That is not an emulator quirk — it is what
     the endpoint is for, and it is why a client-side sweep against a full map answers a different
     question.
     """

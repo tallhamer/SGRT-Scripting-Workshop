@@ -21,7 +21,7 @@ SLIDES = DOCS / "slides-outline.md"
 
 @pytest.fixture(scope="module")
 def api_paths():
-    """Every path the simulator actually serves, from its own OpenAPI document."""
+    """Every path the emulator actually serves, from its own OpenAPI document."""
     from maprt_emulator.app import create_app
     from maprt_emulator.settings import EmulatorSettings
     return set(create_app(EmulatorSettings(token="t")).openapi()["paths"])
@@ -64,7 +64,7 @@ class TestTheHandoutMatchesTheAPI:
         # reference beside the seven real ones would be actively misleading.
         assert "GetMapAndBeamTransitions" not in HANDOUT.read_text()
 
-    def test_it_does_not_document_the_simulator_only_routes(self):
+    def test_it_does_not_document_the_emulator_only_routes(self):
         # /emulator is this project's invention; nothing there transfers to an appliance.
         assert "/emulator/" not in HANDOUT.read_text()
 
@@ -93,7 +93,7 @@ class TestTheHandoutMatchesTheAPI:
         from maprt_emulator import envelope
         text = HANDOUT.read_text()
         for code in envelope.INVENTED_CODES:
-            assert code not in text, f"{code} is the simulator's invention, not MapRT's"
+            assert code not in text, f"{code} is the emulator's invention, not MapRT's"
 
 
 class TestTheRunSheet:
@@ -142,8 +142,8 @@ class TestTheSlides:
         assert "distance * sin_g * np.cos(c)" in source
         assert "distance * np.cos(g)" in source
 
-    def test_it_ends_on_the_teaching_simulator_caveat(self):
-        assert "teaching simulator" in SLIDES.read_text().lower()
+    def test_it_ends_on_the_teaching_emulator_caveat(self):
+        assert "teaching emulator" in SLIDES.read_text().lower()
 
 
 class TestCrossLinks:

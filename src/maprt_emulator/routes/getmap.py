@@ -66,7 +66,7 @@ async def get_map(body: GetMapRequest, request: Request):
         )
 
     if app.state.catalog.room_by_id(body.treatment_room_id) is None:
-        # The spec documents no code for an unknown room id; this one is the simulator's
+        # The spec documents no code for an unknown room id; this one is the emulator's
         # invention (see maprt_emulator.envelope). A real appliance would reject it somehow, and
         # silently computing a map for a room that does not exist would be worse than either.
         raise envelope.MapRTFailure(
@@ -88,7 +88,7 @@ async def get_map(body: GetMapRequest, request: Request):
         stream_map_body(text, settings, app.state.scenarios),
         media_type="text/plain",
         headers={
-            # Not a MapRT header. The simulator's own, so a notebook can always answer "am I
+            # Not a MapRT header. The emulator's own, so a notebook can always answer "am I
             # looking at a real recorded map or a computed one?".
             "X-Emulator-Map-Source": source,
         },
@@ -99,7 +99,7 @@ class MapCache:
     """Computed maps, keyed by the request fields that affect the result.
 
     Students re-run the same cell, and a high-resolution map costs about a second of CPU. The
-    cache also makes the simulator deterministic in a way that is easy to demonstrate: ask twice,
+    cache also makes the emulator deterministic in a way that is easy to demonstrate: ask twice,
     get byte-identical answers.
 
     ``shuffle_map`` deliberately opts out, because a shuffled map that came back identical the

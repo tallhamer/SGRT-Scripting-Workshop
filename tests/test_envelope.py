@@ -28,7 +28,7 @@ class TestFail:
 class TestMapRTFailure:
     def test_defaults_to_http_200_because_that_is_the_api_convention(self):
         # The headline fact about this API: a negative result is a 200. If this default ever
-        # becomes 4xx, the simulator has stopped teaching the thing it exists to teach.
+        # becomes 4xx, the emulator has stopped teaching the thing it exists to teach.
         assert envelope.MapRTFailure(envelope.FEATURE_NOT_LICENSED).status_code == 200
 
     def test_renders_to_an_envelope(self):
@@ -45,7 +45,7 @@ class TestMapRTFailure:
 class TestInventedCodesAreDeclared:
     def test_the_codes_this_project_made_up_are_listed(self):
         # So /emulator/state and the notebooks can say which codes are not real. A code added to
-        # SIMULATED without being listed here would quietly look authoritative — which is why
+        # EMULATED without being listed here would quietly look authoritative — which is why
         # this test is written as an exact list and is *meant* to fail when a code is added.
         assert envelope.INVENTED_CODES == [
             "InternalError", "NoRecordedMap", "PatientNotFound", "SurfaceNotFound",

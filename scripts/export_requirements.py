@@ -34,10 +34,10 @@ UV_EXPORT = [
 ]
 
 #: Needed on Binder and nowhere else, so they are not in pyproject.toml. jupyter-server-proxy is
-#: what lets a student open the simulator's /docs page through the Binder URL — without it the
-#: simulator is reachable from a notebook cell but not from a browser tab.
+#: what lets a student open the emulator's /docs page through the Binder URL — without it the
+#: emulator is reachable from a notebook cell but not from a browser tab.
 BINDER_ONLY = [
-    ("jupyter-server-proxy>=4.1", "serves the simulator's /docs through the Binder URL"),
+    ("jupyter-server-proxy>=4.1", "serves the emulator's /docs through the Binder URL"),
 ]
 
 HEADER = """\

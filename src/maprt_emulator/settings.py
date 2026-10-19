@@ -1,4 +1,4 @@
-"""How the simulator is configured, and how it finds its data and writes its token.
+"""How the emulator is configured, and how it finds its data and writes its token.
 
 Every field can be set three ways, in increasing priority: a default here, a
 ``MAPRT_EMULATOR_``-prefixed environment variable (how the Binder and Colab bootstraps do it), or a
@@ -52,7 +52,7 @@ def find_data_dir(start=None):
 
 
 class EmulatorSettings(BaseSettings):
-    """Simulator configuration."""
+    """Emulator configuration."""
 
     model_config = SettingsConfigDict(env_prefix="MAPRT_EMULATOR_", extra="ignore")
 
@@ -141,7 +141,7 @@ class EmulatorSettings(BaseSettings):
 
         * ``token`` — the bare token, for ``cat``-ing or pasting.
         * ``server.json`` — the **URL as well**, which is what makes a non-default port work.
-          Port 8000 is often taken, so a student starts the simulator with ``--port 8001`` and
+          Port 8000 is often taken, so a student starts the emulator with ``--port 8001`` and
           then every notebook fails against ``http://127.0.0.1:8000`` with nothing to suggest
           why. The server knows where it is; it should say so rather than leave the notebook
           guessing.

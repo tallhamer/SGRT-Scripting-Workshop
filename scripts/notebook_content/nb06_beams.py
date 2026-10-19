@@ -67,7 +67,7 @@ beam
 `coordinateSystem` is on every control point because the API supports six couch conventions. In
 practice, if your angles came from DICOM they are IEC 61217 and you say so.
 
-The simulator **refuses** anything else rather than converting it, because the conversions are
+The emulator **refuses** anything else rather than converting it, because the conversions are
 vendor-specific and guessing would produce a confident wrong answer about whether a beam is
 deliverable. Worth seeing:"""),
     ("code", '''\
@@ -173,7 +173,7 @@ for beam in checked:
 print("\\nagree:", all(server[b.number] == b.status for b in checked))
 '''),
     ("md", """\
-They agree, and not by luck: in this simulator both routes evaluate the same function, so the
+They agree, and not by luck: in this emulator both routes evaluate the same function, so the
 same angle cannot get two answers. A real appliance computes them separately, and you should
 expect agreement for the same reason — same geometry, same question."""),
 
@@ -211,7 +211,7 @@ print("appliance says:", "deliverable" if answer["data"]["statuses"][0]["isSafe"
 angles — not the 358 degrees between them. You described the arc's endpoints, so it checked the
 endpoints, and both happen to be clear.
 
-This is not a bug and it is not a simulator quirk. It is *why* the endpoint is fast. The
+This is not a bug and it is not an emulator quirk. It is *why* the endpoint is fast. The
 specification is explicit: it *"checks clearance for individual control points"*.
 
 Send the whole sweep and it agrees:"""),
@@ -276,7 +276,7 @@ A plan is not just its beams — the machine has to **move between** them, and t
 collide even when both beams are clear.
 
 The API has `GetMapAndBeamTransitions` for this. **But:** it is documented as a C# method and
-Appendix B does not list a REST route for it. So the simulator's version is an invention — the
+Appendix B does not list a REST route for it. So the emulator's version is an invention — the
 path, the response format, all of it."""),
     ("code", '''\
 response = httpx2.post(maprt.api_url + "/integration/GetMapAndBeamTransitions", headers=headers,

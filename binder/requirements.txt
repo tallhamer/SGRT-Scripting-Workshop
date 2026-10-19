@@ -411,4 +411,4 @@ websockets==17.2
     # via uvicorn
 
 # -- Binder-only additions, not in pyproject.toml ------------------------------
-jupyter-server-proxy>=4.1    # Binder only: serves the simulator's /docs through the Binder URL
+jupyter-server-proxy>=4.1    # Binder only: serves the emulator's /docs through the Binder URL

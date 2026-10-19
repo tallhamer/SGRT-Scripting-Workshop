@@ -19,7 +19,7 @@ handout.
 
 ## 2 — What we are doing today
 
-- A **simulator** of the MapRT API, running on your laptop
+- A **emulator** of the MapRT API, running on your laptop
 - Nine notebooks: authenticate → rooms → surfaces → **clearance maps** → beams → a plan QA script
 - No appliance, no patient data, no network
 
@@ -263,7 +263,7 @@ about it before you resolve it.*
 
 ## 19 — One last thing
 
-This is a **teaching simulator**. The maps behave correctly; the numbers are invented.
+This is a **teaching emulator**. The maps behave correctly; the numbers are invented.
 
 Anyone pointing this at a real appliance for clinical work owns the validation.
 

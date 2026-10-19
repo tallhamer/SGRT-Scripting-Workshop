@@ -29,7 +29,7 @@ async def patient_surfaces(patient_id: str, request: Request):
     # Spec §5.2.2: patient ids are DICOM ids, maximum 64 characters.
     if len(patient_id) > 64:
         raise envelope.MapRTFailure(
-            ("InvalidArgument", envelope.SIMULATED),
+            ("InvalidArgument", envelope.EMULATED),
             status_code=400,
             error_data=f"patientId is limited to 64 characters; got {len(patient_id)}.",
         )
@@ -38,7 +38,7 @@ async def patient_surfaces(patient_id: str, request: Request):
 
     if not catalog.knows_patient(patient_id):
         # An unknown patient is an error (the C# client throws InvalidArgumentException, §4.2.1.8).
-        # The code name here is this simulator's invention — the REST spec documents none for
+        # The code name here is this emulator's invention — the REST spec documents none for
         # this case. Do not match on it in production code; see maprt_emulator.envelope.
         raise envelope.MapRTFailure(
             envelope.PATIENT_NOT_FOUND,

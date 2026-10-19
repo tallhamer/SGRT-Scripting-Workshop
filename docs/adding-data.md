@@ -1,6 +1,6 @@
-# Adding data to the simulator
+# Adding data to the MapRT Emulator
 
-Everything the simulator serves comes out of one folder, `data/MapRT/`. Adding data is a file
+Everything the emulator serves comes out of one folder, `data/MapRT/`. Adding data is a file
 drop plus a line of JSON — no code change, and no restart flag beyond restarting the server.
 
 (`data/` itself holds one folder per Vision RT product; this guide is about MapRT's. See
@@ -33,7 +33,7 @@ That is the mechanism that lets you demo real data without it ever becoming a co
 If the data came off a clinical system, it goes in `data/MapRT/local/`. There is no second judgement
 call to make.
 
-A third option: `--data-dir /somewhere/else` points the simulator at an entirely separate folder,
+A third option: `--data-dir /somewhere/else` points the emulator at an entirely separate folder,
 which is useful for keeping a per-site catalog outside the repository.
 
 ---
@@ -129,7 +129,7 @@ public patient you still want, because the overlay replaces rather than merges.
 
 ## Clearance maps
 
-The simulator computes a plausible map for any request. A **recorded** map makes it serve real
+The emulator computes a plausible map for any request. A **recorded** map makes it serve real
 bytes instead — which is the only way to show anyone a map that came off a linac.
 
 ### Recording from a real appliance
@@ -142,7 +142,7 @@ uv run python scripts/record_map.py \
     --out data/MapRT/local/maps
 ```
 
-The response body is written verbatim, so what the simulator later serves is exactly what the
+The response body is written verbatim, so what the emulator later serves is exactly what the
 appliance sent. **Use `--out data/MapRT/local/maps`** — a real recording is patient-derived.
 
 ### Snapshotting the model
@@ -186,7 +186,7 @@ the header and that the terminator is there.
 | `recorded-nearest` | Same surface, room and resolution; **different isocenter**. The closest recording was served — so it is not an answer to the question asked. |
 | `synthetic` | Nothing matched; the model computed one. |
 
-`--map-source recorded` makes the simulator refuse to invent one, which is what you want for a
+`--map-source recorded` makes the emulator refuse to invent one, which is what you want for a
 demo where every map must be real.
 
 ---
@@ -233,7 +233,7 @@ PY
 # 4. Check it.
 uv run maprt-emulator --check-data
 
-# 5. Restart the simulator and try it.
+# 5. Restart the emulator and try it.
 uv run maprt-emulator
 ```
 
@@ -245,7 +245,7 @@ maprt.get_patient_surfaces("ANON004")
 
 ## What `--check-data` looks for
 
-**Errors** — these produce wrong behaviour. Some of them will not stop the simulator starting,
+**Errors** — these produce wrong behaviour. Some of them will not stop the emulator starting,
 which makes them worse, not better:
 
 - a data file missing, unreadable, or missing a required field
@@ -273,5 +273,5 @@ folder. It is a public repository. `data/MapRT/local/` is git-ignored and overla
 what it is for.
 
 **Label invented data as invented.** The `note` field on a recorded map exists so nobody mistakes
-a model snapshot for a measurement. The simulator reports its own invented error codes at
+a model snapshot for a measurement. The emulator reports its own invented error codes at
 `/emulator/state` for the same reason.

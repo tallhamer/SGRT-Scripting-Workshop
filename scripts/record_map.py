@@ -1,9 +1,9 @@
-"""Record a GetMap response body into ``data/MapRT/maps/`` so the simulator can serve it back.
+"""Record a GetMap response body into ``data/MapRT/maps/`` so the emulator can serve it back.
 
 Two sources:
 
 ``--from-emulator`` (default)
-    Snapshot the synthetic model. This is **circular** — the simulator serving back a map it
+    Snapshot the synthetic model. This is **circular** — the emulator serving back a map it
     computed — and exists only so the recorded-map code path is exercised by the shipped data and
     a notebook can see ``X-Emulator-Map-Source: recorded`` without anyone owning an appliance. Such
     entries are labelled as snapshots in ``index.json``, and the label is not decoration: a
@@ -11,7 +11,7 @@ Two sources:
 
 ``--from-url``
     Capture a **real** appliance's response. This is the one that matters. The bytes are written
-    verbatim, so what the simulator later serves is exactly what the appliance sent. Point it at
+    verbatim, so what the emulator later serves is exactly what the appliance sent. Point it at
     ``data/MapRT/local/maps`` (git-ignored) — a real recording is patient-derived and does not belong
     in a public repository.
 

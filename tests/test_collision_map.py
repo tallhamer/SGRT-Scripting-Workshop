@@ -1,6 +1,6 @@
 """The collision-map parser: the wire format, the display layout, and coarse-map upsampling.
 
-This is the parser the whole workshop turns on, and the contract the simulator in `maprt_emulator` has
+This is the parser the whole workshop turns on, and the contract the emulator in `maprt_emulator` has
 to satisfy. The builders here emit the GetMap wire format from scratch — a header line, triples,
 then `DONE` — so these tests describe the format independently of any server.
 """

@@ -5,7 +5,7 @@ clearance map as GetMap and additionally assesses whether the machine can move s
 consecutive beams of a plan. Appendix B lists seven REST requests and **this is not one of them**,
 so a real appliance may expose it at a different path, in a different shape, or not at all.
 
-Everything about this route is therefore this simulator's invention:
+Everything about this route is therefore this emulator's invention:
 
 * the path;
 * the response format — the map stream exactly as GetMap sends it, then a ``TRANSITIONS`` marker
@@ -75,6 +75,6 @@ async def get_map_and_beam_transitions(body: GetMapAndBeamTransitionsRequest, re
             "X-Emulator-Map-Source": source,
             # Loudly, in the response itself: nothing about this route is specified.
             "X-Emulator-Unofficial": "GetMapAndBeamTransitions has no documented REST route; this "
-                                "path and response shape are the simulator's invention",
+                                "path and response shape are the emulator's invention",
         },
     )

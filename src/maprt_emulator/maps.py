@@ -1,7 +1,7 @@
 """Recorded clearance maps: serving a real GetMap response body back out of a folder.
 
 The synthetic generator in :mod:`maprt_emulator.mapgen` is plausible but invented. When you have a
-*real* appliance response, you can drop it in here and the simulator will serve the real bytes —
+*real* appliance response, you can drop it in here and the emulator will serve the real bytes —
 which is what you want for a live demo, and the only way the workshop shows anyone a map that
 actually came off a linac.
 
@@ -89,7 +89,7 @@ class RecordedMap:
 
 
 class MapLibrary:
-    """The recorded maps available to the simulator."""
+    """The recorded maps available to the emulator."""
 
     def __init__(self, recordings):
         self.recordings = list(recordings)

@@ -4,7 +4,7 @@ from ._common import bootstrap_cells, header
 
 CELLS = [
     ("md", header("01", "Setup and the token",
-                  "Find the simulator, find your token, make one call.", "10 minutes")),
+                  "Find the emulator, find your token, make one call.", "10 minutes")),
     *bootstrap_cells(),
 
     ("md", """\
@@ -14,7 +14,7 @@ A **MapRT appliance** is a server on the clinical network. It holds the patient 
 in your CT room, the scanned geometry of each treatment room, and it computes clearance maps on
 request. You talk to it over HTTPS.
 
-For this workshop it is replaced by a simulator running on your own machine, which answers the
+For this workshop it is replaced by an emulator running on your own machine, which answers the
 same seven requests in the same formats. Nothing you learn about the requests will be wrong when
 you point your code at a real appliance.
 
@@ -31,7 +31,7 @@ We will get all three in this notebook and use them to make exactly one call."""
     ("md", """\
 ## 1. The base URL
 
-The simulator printed this when it started. If you are following the local setup, look at the
+The emulator printed this when it started. If you are following the local setup, look at the
 other terminal — you will see a box with `Base URL` in it."""),
     ("code", '''\
 import os
@@ -43,7 +43,7 @@ BASE_URL
     ("md", """\
 ## 2. The token
 
-The simulator generates a **new token every time it starts**. That is deliberate: a workshop
+The emulator generates a **new token every time it starts**. That is deliberate: a workshop
 credential should be disposable, so nobody ends up with a long-lived shared secret in their notes.
 
 It gets to you two ways. It is printed in that same box in the terminal:
@@ -53,7 +53,7 @@ MAPRT_EMULATOR_TOKEN=amIUvdlPP3AHAhx4dLH3vfW9sOjbK2KDM5E3pj-DahE
 ```
 
 ...and it is written to a file, `.maprt_emulator/token`, in the repository. The file matters: on Colab
-and Binder the simulator runs in the background and nobody ever sees its output, so a printed
+and Binder the emulator runs in the background and nobody ever sees its output, so a printed
 banner would be useless there.
 
 `find_token()` checks the `MAPRT_EMULATOR_TOKEN` environment variable first, then walks up from this
@@ -67,7 +67,7 @@ print("it looks like:", TOKEN[:8] + "..." if TOKEN else "nothing")
 '''),
 
     ("md", """\
-If that printed `False`, the simulator is not running or you are in a different directory from
+If that printed `False`, the emulator is not running or you are in a different directory from
 it. Start it with `uv run maprt-emulator` and re-run the cell. You can also paste the token in by hand:
 
 ```python
@@ -75,7 +75,7 @@ TOKEN = "paste-the-value-from-the-terminal-here"
 ```
 
 **Notice what you just did, though.** You put a credential in a notebook cell. That is fine for a
-throwaway token against a simulator, and it is a habit worth not carrying into anything real — a
+throwaway token against an emulator, and it is a habit worth not carrying into anything real — a
 notebook gets emailed, committed and screen-shared. Read it from the environment or a file."""),
 
     ("md", """\
