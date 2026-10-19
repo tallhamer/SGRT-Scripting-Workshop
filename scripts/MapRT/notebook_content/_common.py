@@ -23,7 +23,7 @@ if "COLAB_RELEASE_TAG" in os.environ:
     CHECKOUT = "/content/workshop"
 
     subprocess.run([sys.executable, "-m", "pip", "-q", "install",
-                    f"maprt-scripting-workshop[notebooks] @ git+{{REPO}}"], check=True)
+                    f"sgrt-scripting-workshop[notebooks] @ git+{{REPO}}"], check=True)
 
     if not os.path.isdir(CHECKOUT):
         subprocess.run(["git", "clone", "-q", "--depth", "1", REPO, CHECKOUT], check=True)

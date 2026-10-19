@@ -72,7 +72,7 @@ class TestRequirements:
         # postBuild does that, from the checkout. Listing it here would try to resolve it from
         # PyPI, where it does not exist.
         text = (BINDER / "requirements.txt").read_text()
-        assert not re.search(r"(?m)^maprt-scripting-workshop", text)
+        assert not re.search(r"(?m)^sgrt-scripting-workshop", text)
 
     def test_carries_the_notebook_dependencies(self):
         text = (BINDER / "requirements.txt").read_text()

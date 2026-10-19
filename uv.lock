@@ -1093,69 +1093,6 @@ wheels = [
 ]
 
 [[package]]
-name = "maprt-scripting-workshop"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "fastapi" },
-    { name = "httpx2" },
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
-    { name = "numpy", version = "2.5.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
-    { name = "pydantic" },
-    { name = "pydantic-settings" },
-    { name = "uvicorn", extra = ["standard"] },
-]
-
-[package.optional-dependencies]
-notebooks = [
-    { name = "jupyterlab" },
-    { name = "matplotlib" },
-    { name = "pandas" },
-    { name = "plotly" },
-    { name = "pydicom" },
-    { name = "requests" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "nbclient" },
-    { name = "nbformat" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "ruff" },
-]
-workshop = [
-    { name = "maprt-scripting-workshop", extra = ["notebooks"] },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "fastapi", specifier = ">=0.115" },
-    { name = "httpx2", specifier = ">=2.13" },
-    { name = "jupyterlab", marker = "extra == 'notebooks'", specifier = ">=4.2" },
-    { name = "matplotlib", marker = "extra == 'notebooks'", specifier = ">=3.8" },
-    { name = "numpy", specifier = ">=1.26" },
-    { name = "pandas", marker = "extra == 'notebooks'", specifier = ">=2.2" },
-    { name = "plotly", marker = "extra == 'notebooks'", specifier = ">=5.22" },
-    { name = "pydantic", specifier = ">=2.7" },
-    { name = "pydantic-settings", specifier = ">=2.3" },
-    { name = "pydicom", marker = "extra == 'notebooks'", specifier = ">=2.4" },
-    { name = "requests", marker = "extra == 'notebooks'", specifier = ">=2.31" },
-    { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
-]
-provides-extras = ["notebooks"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "nbclient", specifier = ">=0.10" },
-    { name = "nbformat", specifier = ">=5.10" },
-    { name = "pytest", specifier = ">=8.0" },
-    { name = "pytest-asyncio", specifier = ">=0.23" },
-    { name = "ruff", specifier = ">=0.6" },
-]
-workshop = [{ name = "maprt-scripting-workshop", extras = ["notebooks"] }]
-
-[[package]]
 name = "markupsafe"
 version = "3.0.4"
 source = { registry = "https://pypi.org/simple" }
@@ -2161,6 +2098,69 @@ sdist = { url = "https://files.pythonhosted.org/packages/c5/f0/184b4b5f8d00f2a92
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1c/78/504fdd027da3b84ff1aecd9f6957e65f35134534ccc6da8628eb71e76d3f/send2trash-2.1.0-py3-none-any.whl", hash = "sha256:0da2f112e6d6bb22de6aa6daa7e144831a4febf2a87261451c4ad849fe9a873c", size = 17610, upload-time = "2026-01-14T06:27:35.218Z" },
 ]
+
+[[package]]
+name = "sgrt-scripting-workshop"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "fastapi" },
+    { name = "httpx2" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "numpy", version = "2.5.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.optional-dependencies]
+notebooks = [
+    { name = "jupyterlab" },
+    { name = "matplotlib" },
+    { name = "pandas" },
+    { name = "plotly" },
+    { name = "pydicom" },
+    { name = "requests" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "nbclient" },
+    { name = "nbformat" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "ruff" },
+]
+workshop = [
+    { name = "sgrt-scripting-workshop", extra = ["notebooks"] },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastapi", specifier = ">=0.115" },
+    { name = "httpx2", specifier = ">=2.13" },
+    { name = "jupyterlab", marker = "extra == 'notebooks'", specifier = ">=4.2" },
+    { name = "matplotlib", marker = "extra == 'notebooks'", specifier = ">=3.8" },
+    { name = "numpy", specifier = ">=1.26" },
+    { name = "pandas", marker = "extra == 'notebooks'", specifier = ">=2.2" },
+    { name = "plotly", marker = "extra == 'notebooks'", specifier = ">=5.22" },
+    { name = "pydantic", specifier = ">=2.7" },
+    { name = "pydantic-settings", specifier = ">=2.3" },
+    { name = "pydicom", marker = "extra == 'notebooks'", specifier = ">=2.4" },
+    { name = "requests", marker = "extra == 'notebooks'", specifier = ">=2.31" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
+]
+provides-extras = ["notebooks"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "nbclient", specifier = ">=0.10" },
+    { name = "nbformat", specifier = ">=5.10" },
+    { name = "pytest", specifier = ">=8.0" },
+    { name = "pytest-asyncio", specifier = ">=0.23" },
+    { name = "ruff", specifier = ">=0.6" },
+]
+workshop = [{ name = "sgrt-scripting-workshop", extras = ["notebooks"] }]
 
 [[package]]
 name = "six"

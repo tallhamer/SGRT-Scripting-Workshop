@@ -1,7 +1,7 @@
 [project]
-name = "maprt-scripting-workshop"
+name = "sgrt-scripting-workshop"
 version = "0.1.0"
-description = "A local emulator of the Vision RT MapRT API 2.0, plus Jupyter notebooks for a scripting workshop. Teaching only — not a medical device."
+description = "Jupyter-notebook scripting workshops for Vision RT's SGRT products, starting with MapRT and a local emulator of its API 2.0. Teaching only — not a medical device."
 readme = "README.md"
 # 3.12 is what Google Colab runs, so the local, Binder and Colab paths all land on the same
 # minor version. Nothing here needs 3.12 features; the code stays 3.11-compatible so a student
@@ -11,7 +11,7 @@ license = { file = "LICENSE" }
 authors = [
     { name = "Michael J. Tallhamer" },
 ]
-keywords = ["maprt", "radiotherapy", "collision", "fastapi", "teaching"]
+keywords = ["sgrt", "maprt", "radiotherapy", "collision", "fastapi", "teaching"]
 
 # The emulator and the student-facing client library. numpy carries the collision-map array.
 #
@@ -64,7 +64,7 @@ dev = [
 # (`pip install ".[notebooks]"`) but has no way to install a dependency group. This group exists
 # only so `uv sync` installs them too: a plain `uv sync` has to give a student everything the
 # workshop needs, or the README's quickstart grows a flag that half the room will miss.
-workshop = ["maprt-scripting-workshop[notebooks]"]
+workshop = ["sgrt-scripting-workshop[notebooks]"]
 
 [tool.uv]
 # Both installed by a bare `uv sync`. `--no-group workshop` gives the lean server-only install,

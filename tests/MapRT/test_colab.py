@@ -105,7 +105,7 @@ class TestTheBootstrapIsCorrect:
 
     def test_it_installs_the_package_with_the_notebook_extra(self, source):
         # The extra, not the dependency group: pip cannot install a dependency group.
-        assert "maprt-scripting-workshop[notebooks] @ git+" in source
+        assert "sgrt-scripting-workshop[notebooks] @ git+" in source
 
     def test_it_points_at_the_real_repository(self, source):
         assert "REPLACE-ME" not in source
