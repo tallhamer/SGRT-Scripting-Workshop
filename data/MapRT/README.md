@@ -49,7 +49,7 @@ header it is served under. It is not a measurement.
 To record a real one:
 
 ```bash
-uv run python scripts/record_map.py --from-url https://maprt:5000 --token "$TOKEN"     --surface <guid> --room <guid> --out data/MapRT/local/maps
+uv run python scripts/MapRT/record_map.py --from-url https://maprt:5000 --token "$TOKEN"     --surface <guid> --room <guid> --out data/MapRT/local/maps
 ```
 
 `data/MapRT/local/maps/` is git-ignored and is read *before* this directory, so a real recording takes
@@ -73,9 +73,9 @@ Its beam list is chosen so the capstone's pass/fail table has something to say:
 | 8 | `VMAT CC KICK` | An arc at couch 45 that **fails the map sweep but passes GetBeamDeliveryStatus**, because only its start control point is sent |
 
 Beam 8 is the one to dwell on: the two ways of asking disagree, and both are right. See
-`notebooks/05`.
+`notebooks/MapRT/05`.
 
-Regenerate with `uv run python scripts/make_synthetic_plan.py data/MapRT/plans/ANON001_plan.dcm`. It is
+Regenerate with `uv run python scripts/MapRT/make_synthetic_plan.py data/MapRT/plans/ANON001_plan.dcm`. It is
 not a deliverable plan and no planning system should be asked to open it.
 
 ## What the synthetic model is and is not

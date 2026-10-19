@@ -12,7 +12,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
-NOTEBOOK_DIR = ROOT / "notebooks"
+NOTEBOOK_DIR = ROOT / "notebooks" / "MapRT"
 
 HANDOUT = DOCS / "handout.md"
 RUN_SHEET = DOCS / "run-sheet.md"

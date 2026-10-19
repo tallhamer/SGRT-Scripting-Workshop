@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------------------------
-# GENERATED — do not edit. Run: uv run python scripts/export_requirements.py
+# GENERATED — do not edit. Run: uv run python scripts/common/export_requirements.py
 #
 # Exported from uv.lock so a Binder session installs exactly what `uv sync` installs locally.
 # Binder builds with repo2docker, which understands requirements.txt and not uv.

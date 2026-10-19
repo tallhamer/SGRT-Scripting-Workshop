@@ -1,4 +1,4 @@
-"""Build the workshop notebooks from the content modules in ``scripts/notebook_content``.
+"""Build every workshop's notebooks from its content modules in ``scripts/<Product>/notebook_content``.
 
 **The ``.ipynb`` files are generated.** Edit the content modules and rebuild; a change made in
 Jupyter and not mirrored there will be overwritten the next time anyone runs this.
@@ -12,20 +12,42 @@ Why generate them at all, when the notebook is the thing students open:
 * **Drift is detectable.** ``--check`` rebuilds in memory and compares, so CI fails if the
   committed notebooks no longer match their source.
 
-    uv run python scripts/build_notebooks.py           # write notebooks/
-    uv run python scripts/build_notebooks.py --check   # verify they are up to date
+    uv run python scripts/common/build_notebooks.py           # write notebooks/<Product>/
+    uv run python scripts/common/build_notebooks.py --check   # verify they are up to date
+
+Every product in :data:`sgrt_workshop.products.PRODUCTS` is built, so a product whose content
+package is missing fails here rather than in front of a room.
 """
 
 import argparse
+import importlib.util
 import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+from sgrt_workshop.products import PRODUCTS
 
-from notebook_content import NOTEBOOKS  # noqa: E402
+ROOT = Path(__file__).resolve().parents[2]
 
-NOTEBOOK_DIR = Path(__file__).resolve().parent.parent / "notebooks"
+
+def load_content(product):
+    """``scripts/<Product>/notebook_content`` → its ``NOTEBOOKS`` list.
+
+    Every product's content package is called ``notebook_content``, so they cannot all be imported
+    by that name. Each is loaded under a name of its own instead; inside, the modules import each
+    other relatively, which is why they work under any name.
+    """
+    package_dir = ROOT / "scripts" / product.folder / "notebook_content"
+    if not (package_dir / "__init__.py").is_file():
+        raise SystemExit(f"{product.name} is registered in sgrt_workshop.products but has no "
+                         f"{package_dir.relative_to(ROOT)}/ — every workshop needs its notebooks.")
+    spec = importlib.util.spec_from_file_location(
+        f"{product.folder.lower()}_notebook_content", package_dir / "__init__.py",
+        submodule_search_locations=[str(package_dir)])
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module          # before exec_module, or relative imports cannot resolve
+    spec.loader.exec_module(module)
+    return module.NOTEBOOKS
 
 
 def markdown_cell(text, index):
@@ -85,27 +107,30 @@ def main(argv=None):
                         help="fail if the committed notebooks differ from their source")
     args = parser.parse_args(argv)
 
-    NOTEBOOK_DIR.mkdir(exist_ok=True)
-    stale = []
-    for name, cells in NOTEBOOKS:
-        path = NOTEBOOK_DIR / name
-        content = render(cells)
-        if args.check:
-            current = path.read_text(encoding="utf-8") if path.is_file() else ""
-            if current != content:
-                stale.append(name)
-        else:
-            path.write_text(content, encoding="utf-8")
-            print(f"{path.relative_to(NOTEBOOK_DIR.parent)}: {len(cells)} cells")
+    stale, total = [], 0
+    for product in PRODUCTS.values():
+        notebook_dir = ROOT / "notebooks" / product.folder
+        notebook_dir.mkdir(parents=True, exist_ok=True)
+        for name, cells in load_content(product):
+            total += 1
+            path = notebook_dir / name
+            content = render(cells)
+            if args.check:
+                current = path.read_text(encoding="utf-8") if path.is_file() else ""
+                if current != content:
+                    stale.append(str(path.relative_to(ROOT)))
+            else:
+                path.write_text(content, encoding="utf-8")
+                print(f"{path.relative_to(ROOT)}: {len(cells)} cells")
 
     if args.check:
         if stale:
             raise SystemExit(
-                "These notebooks are out of date with scripts/notebook_content:\n  "
+                "These notebooks are out of date with their scripts/<Product>/notebook_content:\n  "
                 + "\n  ".join(stale)
-                + "\n\nRun: uv run python scripts/build_notebooks.py"
+                + "\n\nRun: uv run python scripts/common/build_notebooks.py"
             )
-        print(f"{len(NOTEBOOKS)} notebooks are up to date.")
+        print(f"{total} notebooks are up to date.")
 
 
 if __name__ == "__main__":

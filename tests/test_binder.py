@@ -60,7 +60,7 @@ class TestRequirements:
         every local clone — which is the hardest kind of "works on my machine" to diagnose.
         """
         result = subprocess.run(
-            [sys.executable, str(ROOT / "scripts" / "export_requirements.py"), "--check"],
+            [sys.executable, str(ROOT / "scripts" / "common" / "export_requirements.py"), "--check"],
             capture_output=True, text=True, cwd=ROOT, env={**os.environ},
         )
         assert result.returncode == 0, result.stdout + result.stderr

@@ -132,4 +132,4 @@ class TestFindingTheDataDirectory:
 
     def test_the_repository_itself_resolves(self):
         root = Path(__file__).resolve().parent.parent
-        assert find_data_dir(root / "notebooks") == root / "data" / "MapRT"
+        assert find_data_dir(root / "notebooks" / "MapRT") == root / "data" / "MapRT"

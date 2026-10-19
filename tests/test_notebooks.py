@@ -18,7 +18,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-NOTEBOOK_DIR = ROOT / "notebooks"
+NOTEBOOK_DIR = ROOT / "notebooks" / "MapRT"
 
 nbformat = pytest.importorskip("nbformat")
 nbclient = pytest.importorskip("nbclient")
@@ -83,7 +83,7 @@ def test_the_notebook_runs_top_to_bottom(path, emulator, monkeypatch):
         notebook,
         timeout=600,
         kernel_name="python3",
-        # Run from notebooks/, as a student would — notebook 08 opens ../data/MapRT/plans/ relatively.
+        # Run from notebooks/MapRT/, as a student would — notebook 08 opens ../../data/MapRT/plans/ relatively.
         resources={"metadata": {"path": str(NOTEBOOK_DIR)}},
     )
     client.execute()
@@ -128,10 +128,10 @@ class TestTheNotebooksAreWellFormed:
             assert ".ipynb)" in text, f"{path.name} links nowhere"
 
     def test_they_are_up_to_date_with_their_source(self):
-        # The .ipynb files are generated from scripts/notebook_content. If someone edits a
+        # The .ipynb files are generated from scripts/MapRT/notebook_content. If someone edits a
         # notebook in Jupyter and does not mirror it there, the next build silently reverts them.
         result = subprocess.run(
-            [sys.executable, str(ROOT / "scripts" / "build_notebooks.py"), "--check"],
+            [sys.executable, str(ROOT / "scripts" / "common" / "build_notebooks.py"), "--check"],
             capture_output=True, text=True, cwd=ROOT,
             env={**os.environ, "PYTHONPATH": str(ROOT / "scripts")},
         )

@@ -103,7 +103,7 @@ handle both. `ANON003` exists for exactly that.
 ### Making a synthetic surface
 
 ```bash
-uv run python scripts/make_synthetic_surface.py \
+uv run python scripts/MapRT/make_synthetic_surface.py \
     data/MapRT/surfaces/$(python -c "import uuid; print(uuid.uuid4())").obj --seed 42
 ```
 
@@ -135,7 +135,7 @@ bytes instead — which is the only way to show anyone a map that came off a lin
 ### Recording from a real appliance
 
 ```bash
-uv run python scripts/record_map.py \
+uv run python scripts/MapRT/record_map.py \
     --from-url https://maprt.yoursite.local:5000 --token "$MAPRT_TOKEN" \
     --surface <surface-guid> --room <room-guid> \
     --isocenter 0 0 0 --couch-buffer 20 --patient-buffer 20 \
@@ -150,7 +150,7 @@ appliance sent. **Use `--out data/MapRT/local/maps`** — a real recording is pa
 For test data, or to exercise the recorded path without an appliance:
 
 ```bash
-uv run python scripts/record_map.py --surface <guid> --room <guid> --name demo_hfs_lowres
+uv run python scripts/MapRT/record_map.py --surface <guid> --room <guid> --name demo_hfs_lowres
 ```
 
 These are labelled as snapshots in their `note` field, and the label is not decoration — a
@@ -196,7 +196,7 @@ demo where every map must be real.
 Plans are not served by the API — the notebooks read them from disk. Put them in `data/MapRT/plans/`.
 
 ```bash
-uv run python scripts/make_synthetic_plan.py data/MapRT/plans/ANON002_plan.dcm \
+uv run python scripts/MapRT/make_synthetic_plan.py data/MapRT/plans/ANON002_plan.dcm \
     --patient-id ANON002 --position HFS
 ```
 
@@ -217,7 +217,7 @@ a notebook will fail partway:
 SURFACE=$(python -c "import uuid; print(uuid.uuid4())")
 
 # 2. Generate a surface.
-uv run python scripts/make_synthetic_surface.py data/MapRT/surfaces/$SURFACE.obj --seed 7
+uv run python scripts/MapRT/make_synthetic_surface.py data/MapRT/surfaces/$SURFACE.obj --seed 7
 
 # 3. List it. (Edit patients.json by hand, or:)
 python - <<PY

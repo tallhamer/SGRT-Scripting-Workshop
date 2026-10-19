@@ -17,7 +17,7 @@ This is a workshop for people new to scripting. Someone who finishes should be a
 MapRT call from the specification with no library at all.
 """
 
-from notebook_content import (
+from . import (
     nb00_index,
     nb01_setup,
     nb02_connect,

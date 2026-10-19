@@ -255,7 +255,7 @@ about it before you resolve it.*
 
 - **Notebook 07** — timeouts, throttling, truncated data. Do this before you write anything real.
 - Point it at your own appliance: change the URL, the token, add `verify=False`
-- `scripts/record_map.py --from-url` captures *real* appliance responses for your own demos
+- `scripts/MapRT/record_map.py --from-url` captures *real* appliance responses for your own demos
 
 **github.com/tallhamer/SGRT-Scripting-Workshop**
 

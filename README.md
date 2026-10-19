@@ -4,7 +4,7 @@ The **MapRT Emulator**, a local emulator of the Vision RT MapRT API 2.0, plus a 
 notebooks that walk you through scripting against it — the same calls, headers and wire formats you would use against
 a real MapRT appliance, with no appliance, no patient data and no network.
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tallhamer/SGRT-Scripting-Workshop/HEAD?urlpath=lab/tree/notebooks/00_start_here.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tallhamer/SGRT-Scripting-Workshop/HEAD?urlpath=lab/tree/notebooks/MapRT/00_start_here.ipynb)
 
 > **Not a medical device. Teaching use only.** The clearance maps this emulator returns are
 > plausible, not physical. Not affiliated with or endorsed by Vision RT.
@@ -24,10 +24,10 @@ your code in another, exactly like the real thing:
 
 ```bash
 uv run maprt-emulator        # terminal 1 — prints your API token. Leave it running.
-uv run jupyter lab      # terminal 2
+uv run jupyter lab notebooks/MapRT   # terminal 2
 ```
 
-Open **[`notebooks/00_start_here.ipynb`](notebooks/00_start_here.ipynb)**. It checks your setup and
+Open **[`notebooks/MapRT/00_start_here.ipynb`](notebooks/MapRT/00_start_here.ipynb)**. It checks your setup and
 links to everything else.
 
 ### One terminal, if you would rather
@@ -55,7 +55,7 @@ works with no configuration. If you are running from outside the repository, pas
 If uv will not install, or you are on a locked-down machine, **Binder** runs the whole thing in
 your browser — emulator included.
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tallhamer/SGRT-Scripting-Workshop/HEAD?urlpath=lab/tree/notebooks/00_start_here.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tallhamer/SGRT-Scripting-Workshop/HEAD?urlpath=lab/tree/notebooks/MapRT/00_start_here.ipynb)
 
 Nothing to set up: the emulator starts with the session and the notebooks find it. You land on
 the index.
@@ -78,15 +78,15 @@ and there is no build step to wait for.
 
 | | Notebook | |
 | --- | --- | --- |
-| 00 | Start here | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/00_start_here.ipynb) |
-| 01 | Setup and the token | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/01_setup_and_token.ipynb) |
-| 02 | Connecting, and what goes wrong | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/02_connect_and_errors.ipynb) |
-| 03 | Treatment rooms | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/03_treatment_rooms.ipynb) |
-| 04 | Patient surfaces | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/04_patient_surfaces.ipynb) |
-| 05 | Clearance maps | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/05_clearance_maps.ipynb) |
-| 06 | Beams and plans | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/06_beams_and_plans.ipynb) |
-| 07 | When things go wrong | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/07_robustness.ipynb) |
-| 08 | Capstone: plan QA | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/08_capstone_plan_qa.ipynb) |
+| 00 | Start here | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/00_start_here.ipynb) |
+| 01 | Setup and the token | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/01_setup_and_token.ipynb) |
+| 02 | Connecting, and what goes wrong | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/02_connect_and_errors.ipynb) |
+| 03 | Treatment rooms | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/03_treatment_rooms.ipynb) |
+| 04 | Patient surfaces | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/04_patient_surfaces.ipynb) |
+| 05 | Clearance maps | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/05_clearance_maps.ipynb) |
+| 06 | Beams and plans | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/06_beams_and_plans.ipynb) |
+| 07 | When things go wrong | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/07_robustness.ipynb) |
+| 08 | Capstone: plan QA | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/08_capstone_plan_qa.ipynb) |
 
 Each notebook's first cell installs the workshop and starts the emulator inside the Colab
 runtime, then works from the cloned checkout so relative paths behave as they do locally.
@@ -117,11 +117,11 @@ built and tested.
 | A `GetMap` cell seems to hang | It streams over a few seconds by design — a real appliance takes **minutes**. | Wait. Over ~30 s, interrupt the kernel and check terminal 1. `--map-seconds 0` removes the delay. |
 | Everything fails after notebook 07 | You left a fault armed. | Run the last cell of notebook 07, or `POST /emulator/scenario` with `{"name": "ok"}`, or restart the emulator. |
 | `jupyter: command not found` from `maprt-workshop` | The notebook dependencies are not installed. | `uv sync` — it installs Jupyter. If you used `--no-group workshop`, that is why. |
-| Notebook edits keep disappearing | **The notebooks are generated** — see *Development* below. | Edit `scripts/notebook_content/`, then `uv run python scripts/build_notebooks.py`. |
+| Notebook edits keep disappearing | **The notebooks are generated** — see *Development* below. | Edit `scripts/MapRT/notebook_content/`, then `uv run python scripts/common/build_notebooks.py`. |
 | Binder session died mid-workshop | Idle timeout, or the memory cap. | Relaunch from the badge. Nothing was saved, so start the notebook again. |
 | Binder is building and building | First launch after a push rebuilds the image. | Wait it out, or work locally. Pre-warm by opening the badge a day early. |
 | Colab: `InvalidClientToken` on the first call | The emulator and the notebook disagree about the token. | Runtime → Restart, then re-run the first cell. It passes the token to the emulator explicitly. |
-| Colab: `FileNotFoundError: ../data/...` | The first cell did not run, so the working directory was never moved into the checkout. | Run the first cell. Every notebook has one. |
+| Colab: `FileNotFoundError: ../../data/...` | The first cell did not run, so the working directory was never moved into the checkout. | Run the first cell. Every notebook has one. |
 
 The emulator's own state is readable at `/emulator/state`, and its interactive API docs at `/docs`.
 Neither exists on a real appliance.
@@ -134,7 +134,7 @@ Neither exists on a real appliance.
 | `src/maprt_workshop` | The client side: response parsing, request building, an HTTP client, an OBJ reader, beam-vs-map checking, plotting |
 | `data/` | One folder per Vision RT product — see [`data/README.md`](data/README.md). |
 | `data/MapRT/` | The catalog the emulator serves — rooms, patients, surfaces, recorded maps, a synthetic RT Plan. Adding your own: [`docs/adding-data.md`](docs/adding-data.md) |
-| `notebooks/` | The workshop, in order. Start at `00_start_here.ipynb`. |
+| `notebooks/MapRT/` | The workshop, in order. Start at `00_start_here.ipynb`. |
 | `scripts/` | Data generators, and the builders the notebooks and Binder requirements are generated from |
 | `binder/` | The Binder configuration — generated requirements, and the build/start hooks |
 
@@ -185,11 +185,11 @@ uv run maprt-emulator --check-data      # validate the data catalog without star
 [`docs/adding-data.md`](docs/adding-data.md). Anything patient-derived goes in `data/MapRT/local/`,
 which is git-ignored and overlays `data/MapRT/`.
 
-`binder/requirements.txt` is generated too — `uv run python scripts/export_requirements.py` —
+`binder/requirements.txt` is generated too — `uv run python scripts/common/export_requirements.py` —
 so a Binder session installs the same locked versions `uv sync` does. CI checks both.
 
-**The notebooks are generated.** Their content lives in `scripts/notebook_content/` as readable
-Python; `uv run python scripts/build_notebooks.py` writes the `.ipynb` files. This keeps them free
+**The notebooks are generated.** Their content lives in `scripts/MapRT/notebook_content/` as readable
+Python; `uv run python scripts/common/build_notebooks.py` writes the `.ipynb` files. This keeps them free
 of committed outputs and makes their diffs readable — but it means **an edit made in Jupyter and
 not mirrored into the content module will be overwritten by the next build.** CI checks the two
 are in sync.

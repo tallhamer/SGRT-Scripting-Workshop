@@ -28,5 +28,5 @@ folder here. A product's code and notebooks read only their own folder.
 1. Create `data/<Product>/` with a `README.md`, and keep its synthetic data there.
 2. Default the product's code to `data/<Product>/`, found by walking up from the working
    directory the way `maprt_emulator.settings.find_data_dir` does. Then it works the same from the
-   repository root and from `notebooks/`.
+   repository root and from `notebooks/<Product>/`.
 3. Add a row to the table above.

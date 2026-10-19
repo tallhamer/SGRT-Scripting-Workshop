@@ -22,7 +22,7 @@ data/*/local/
 # Notebooks
 .ipynb_checkpoints/
 # The capstone notebook saves its report beside itself when it runs. Output, not source.
-notebooks/plan_qa_report.png
+notebooks/*/plan_qa_report.png
 
 # The working plan for this project. Kept on disk and useful, but it is a development log full
 # of half-finished reasoning and next-step notes — not something a student cloning this should

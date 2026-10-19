@@ -190,7 +190,7 @@ def find_server(start=None):
 
     Reads ``.maprt_emulator/server.json``, found by walking up from ``start`` (the working directory by
     default) — so it works whether a notebook runs from the repository root or from
-    ``notebooks/``. The file carries the **URL** as well as the token, which is what makes a
+    ``notebooks/MapRT/``. The file carries the **URL** as well as the token, which is what makes a
     non-default port work: a student whose port 8000 is busy starts the emulator elsewhere, and
     nothing they typed tells the notebook where it went.
     """

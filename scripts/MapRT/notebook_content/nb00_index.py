@@ -56,14 +56,14 @@ Roughly three hours end to end. Notebooks 01–05 are the core; 06–08 build on
 > The links above open in JupyterLab and on Binder. On **Google Colab** they will not — Colab has
 > no shared file browser — so use these instead, one per notebook:
 >
-> [01](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/01_setup_and_token.ipynb) ·
-> [02](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/02_connect_and_errors.ipynb) ·
-> [03](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/03_treatment_rooms.ipynb) ·
-> [04](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/04_patient_surfaces.ipynb) ·
-> [05](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/05_clearance_maps.ipynb) ·
-> [06](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/06_beams_and_plans.ipynb) ·
-> [07](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/07_robustness.ipynb) ·
-> [08](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/08_capstone_plan_qa.ipynb)
+> [01](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/01_setup_and_token.ipynb) ·
+> [02](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/02_connect_and_errors.ipynb) ·
+> [03](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/03_treatment_rooms.ipynb) ·
+> [04](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/04_patient_surfaces.ipynb) ·
+> [05](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/05_clearance_maps.ipynb) ·
+> [06](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/06_beams_and_plans.ipynb) ·
+> [07](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/07_robustness.ipynb) ·
+> [08](https://colab.research.google.com/github/tallhamer/SGRT-Scripting-Workshop/blob/main/notebooks/MapRT/08_capstone_plan_qa.ipynb)
 >
 > Each one installs the workshop and starts the emulator in its first cell, so they work
 > independently — but **the first cell takes about 20 seconds**, every time, in every notebook.

@@ -8,6 +8,7 @@ emulator before Jupyter, and an emulator left running after the session.
 import sys
 
 import pytest
+
 from sgrt_workshop import launcher
 from sgrt_workshop.products import MAPRT, PRODUCTS, Product
 

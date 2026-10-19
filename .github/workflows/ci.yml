@@ -24,15 +24,15 @@ jobs:
       - name: Lint
         run: uv run ruff check
 
-      # Before the tests: the committed notebooks must match scripts/notebook_content, or a
+      # Before the tests: the committed notebooks must match scripts/MapRT/notebook_content, or a
       # change made in Jupyter and not mirrored there gets silently reverted by the next build.
       - name: Notebooks are up to date with their source
-        run: uv run python scripts/build_notebooks.py --check
+        run: uv run python scripts/common/build_notebooks.py --check
 
       # Binder installs from binder/requirements.txt, not from uv.lock. If the two drift, a
       # Binder session runs different code from every local clone.
       - name: Binder requirements are up to date with the lockfile
-        run: uv run python scripts/export_requirements.py --check
+        run: uv run python scripts/common/export_requirements.py --check
 
       # Runs everything, including the nine notebooks executed against a live emulator.
       - name: Test

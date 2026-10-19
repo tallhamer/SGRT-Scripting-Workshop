@@ -8,7 +8,7 @@ was first written and never run — each of which would have failed every sessio
    ``InvalidClientToken``.
 2. A fixed ``time.sleep(4)`` instead of waiting for the server: too short on a slow runtime, and
    the failure looks like nothing in particular.
-3. No ``chdir`` into the checkout, so the capstone's ``../data/MapRT/plans/...`` resolved to ``/data``
+3. No ``chdir`` into the checkout, so the capstone's ``../../data/MapRT/plans/...`` resolved to ``/data``
    and raised ``FileNotFoundError``.
 4. The index notebook had no bootstrap cell at all — and it is the entry point.
 
@@ -23,7 +23,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-NOTEBOOK_DIR = ROOT / "notebooks"
+NOTEBOOK_DIR = ROOT / "notebooks" / "MapRT"
 
 nbformat = pytest.importorskip("nbformat")
 
@@ -97,11 +97,11 @@ class TestTheBootstrapIsCorrect:
     def test_it_moves_into_the_checkout(self, source):
         """Colab opens a notebook detached from its repository.
 
-        Without this the capstone's `../data/MapRT/plans/...` resolves to `/data` and raises
+        Without this the capstone's `../../data/MapRT/plans/...` resolves to `/data` and raises
         FileNotFoundError. One chdir makes every relative path behave as it does locally,
         instead of special-casing paths in each notebook.
         """
-        assert 'os.chdir(f"{CHECKOUT}/notebooks")' in source
+        assert 'os.chdir(f"{CHECKOUT}/notebooks/MapRT")' in source
 
     def test_it_installs_the_package_with_the_notebook_extra(self, source):
         # The extra, not the dependency group: pip cannot install a dependency group.
@@ -142,4 +142,4 @@ class TestColabLinks:
     def test_the_readme_has_a_colab_badge_for_every_notebook(self):
         readme = (ROOT / "README.md").read_text()
         for path in NOTEBOOKS:
-            assert f"/notebooks/{path.name}" in readme, f"no Colab link for {path.name}"
+            assert f"/notebooks/MapRT/{path.name}" in readme, f"no Colab link for {path.name}"

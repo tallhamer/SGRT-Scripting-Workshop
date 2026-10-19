@@ -87,6 +87,9 @@ packages = [
 [tool.ruff]
 line-length = 120
 target-version = "py311"
+# Where this project's own packages live, so import sorting files them as first-party. One entry
+# per product folder under src/, like the wheel's `packages` list above.
+src = ["src/common", "src/MapRT"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "W"]
@@ -95,7 +98,7 @@ select = ["E", "F", "I", "UP", "B", "W"]
 # The notebook content modules are mostly Markdown held in Python strings. A table row cannot be
 # wrapped without breaking the table, and the 120-column rule is there to keep *code* readable.
 # Everything else in those files is still linted.
-"scripts/notebook_content/*" = ["E501"]
+"scripts/*/notebook_content/*" = ["E501"]
 
 # Ruff lints the generated notebooks too, which is worth keeping: an undefined name or a silent
 # `zip` truncation in a notebook breaks the workshop in front of a room. But several style rules
@@ -104,7 +107,7 @@ select = ["E", "F", "I", "UP", "B", "W"]
 #   E401      — a compact `import os, sys, time` in a bootstrap cell nobody is meant to read
 #   F811      — every "Your turn" stub is deliberately redefined by the answer cell below it
 #   E501      — a git URL in the Colab bootstrap cannot be wrapped
-"notebooks/*.ipynb" = ["E402", "I001", "E401", "F811", "E501"]
+"notebooks/*/*.ipynb" = ["E402", "I001", "E401", "F811", "E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -3,6 +3,7 @@
 import stat
 
 import pytest
+
 from maprt_emulator.cli import _elide, _parser, banner, settings_from_args
 from maprt_emulator.settings import EmulatorSettings
 from maprt_emulator.store import Catalog

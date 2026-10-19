@@ -134,7 +134,7 @@ can show progress. That is also why its errors are JSON and its successes are no
 **"How accurate is the emulator's map?"** It is not. Say so plainly. It is geometry chosen to
 behave correctly, not physics. Point at `data/MapRT/README.md`.
 
-**"Can we get real maps in here?"** Yes — `scripts/record_map.py --from-url` captures a real
+**"Can we get real maps in here?"** Yes — `scripts/MapRT/record_map.py --from-url` captures a real
 appliance's response verbatim into `data/MapRT/local/maps/`, which is git-ignored. That is the honest
 way to demo real data without putting it in a public repository.
 

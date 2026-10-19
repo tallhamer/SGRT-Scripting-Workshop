@@ -9,7 +9,7 @@ So this writes a genuine, parseable RT Plan whose *contents* are invented: a mad
 matching the emulator's catalog, a plausible isocenter, and a beam list with the shapes that
 matter for collision work — static beams, an arc, and a setup field.
 
-    uv run python scripts/make_synthetic_plan.py data/MapRT/plans/ANON001_plan.dcm
+    uv run python scripts/MapRT/make_synthetic_plan.py data/MapRT/plans/ANON001_plan.dcm
 
 Only the tags a clearance workflow reads are populated. It is not a deliverable plan and no
 planning system should be asked to open it.

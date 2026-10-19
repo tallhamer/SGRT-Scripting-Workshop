@@ -15,7 +15,7 @@ Two sources:
     ``data/MapRT/local/maps`` (git-ignored) — a real recording is patient-derived and does not belong
     in a public repository.
 
-    uv run python scripts/record_map.py --from-url https://maprt:5000 --token "$TOKEN" \
+    uv run python scripts/MapRT/record_map.py --from-url https://maprt:5000 --token "$TOKEN" \
         --surface <guid> --room <guid> --out data/MapRT/local/maps
 """
 

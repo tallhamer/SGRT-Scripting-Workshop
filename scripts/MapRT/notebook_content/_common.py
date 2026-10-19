@@ -28,11 +28,11 @@ if "COLAB_RELEASE_TAG" in os.environ:
     if not os.path.isdir(CHECKOUT):
         subprocess.run(["git", "clone", "-q", "--depth", "1", REPO, CHECKOUT], check=True)
 
-    # Work from the checkout's notebooks/ directory. Colab opens a notebook detached from its
-    # repository, so every relative path would otherwise be wrong — the capstone reads
-    # "../data/MapRT/plans/..." and would look in /data. One chdir makes Colab match a local clone
-    # instead of special-casing paths in each notebook.
-    os.chdir(f"{{CHECKOUT}}/notebooks")
+    # Work from the checkout's notebooks/MapRT/ directory. Colab opens a notebook detached from
+    # its repository, so every relative path would otherwise be wrong — the capstone reads
+    # "../../data/MapRT/plans/..." and would look in /data. One chdir makes Colab match a local
+    # clone instead of special-casing paths in each notebook.
+    os.chdir(f"{{CHECKOUT}}/notebooks/MapRT")
 
     os.environ["MAPRT_EMULATOR_TOKEN"] = "workshop-colab-token"
     os.environ["MAPRT_EMULATOR_URL"] = "http://127.0.0.1:8000"
