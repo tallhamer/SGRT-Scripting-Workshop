@@ -33,7 +33,7 @@ DEFAULT_USER_AGENT = "VisionRT.Integration.Saturn/2.0.workshop"
 
 # Where the simulator records itself at startup. Read rather than typed so the Binder and Colab
 # paths work, where the startup banner is in a log file nobody reads.
-STATE_DIR = Path(".maprt_sim")
+STATE_DIR = Path(".maprt_emulator")
 TOKEN_FILE = STATE_DIR / "token"
 SERVER_FILE = STATE_DIR / "server.json"
 
@@ -188,7 +188,7 @@ class MapRTClient:
 def find_server(start=None):
     """What the running simulator recorded about itself, or ``{}``.
 
-    Reads ``.maprt_sim/server.json``, found by walking up from ``start`` (the working directory by
+    Reads ``.maprt_emulator/server.json``, found by walking up from ``start`` (the working directory by
     default) — so it works whether a notebook runs from the repository root or from
     ``notebooks/``. The file carries the **URL** as well as the token, which is what makes a
     non-default port work: a student whose port 8000 is busy starts the simulator elsewhere, and
@@ -208,10 +208,10 @@ def find_server(start=None):
 def find_token(start=None):
     """The simulator's current token, or ``None``.
 
-    Resolution order: ``MAPRT_SIM_TOKEN`` in the environment (how Binder and Colab supply it),
-    then ``.maprt_sim/server.json``, then the plain ``.maprt_sim/token`` beside it.
+    Resolution order: ``MAPRT_EMULATOR_TOKEN`` in the environment (how Binder and Colab supply it),
+    then ``.maprt_emulator/server.json``, then the plain ``.maprt_emulator/token`` beside it.
     """
-    from_env = os.environ.get("MAPRT_SIM_TOKEN")
+    from_env = os.environ.get("MAPRT_EMULATOR_TOKEN")
     if from_env:
         return from_env.strip()
 
@@ -228,22 +228,22 @@ def find_token(start=None):
 
 
 def find_url(start=None):
-    """Where the simulator is: ``MAPRT_SIM_URL``, then what the server recorded, then the default."""
-    from_env = os.environ.get("MAPRT_SIM_URL")
+    """Where the simulator is: ``MAPRT_EMULATOR_URL``, then what the server recorded, then the default."""
+    from_env = os.environ.get("MAPRT_EMULATOR_URL")
     if from_env:
         return from_env.strip()
     return find_server(start).get("url") or DEFAULT_URL
 
 
-class SimulatorNotRunning(RuntimeError):
+class EmulatorNotRunning(RuntimeError):
     """:func:`connect` could not reach a simulator, with a message naming the likely fix."""
 
 
 def connect(api_url=None, token=None, user_agent=None, check=True):
     """A :class:`MapRTClient` pointed at the running simulator, verified with a ping.
 
-    Resolves the base URL from ``api_url``, then ``MAPRT_SIM_URL``, then whatever the running
-    simulator recorded in ``.maprt_sim/server.json``, then ``http://127.0.0.1:8000``; and the
+    Resolves the base URL from ``api_url``, then ``MAPRT_EMULATOR_URL``, then whatever the running
+    simulator recorded in ``.maprt_emulator/server.json``, then ``http://127.0.0.1:8000``; and the
     token the same way. One call that works unchanged in all three workshop environments — local,
     Binder and Colab — so a student whose session dies can switch without editing a cell.
 
@@ -253,14 +253,14 @@ def connect(api_url=None, token=None, user_agent=None, check=True):
     token = token or find_token()
 
     if token is None:
-        raise SimulatorNotRunning(
+        raise EmulatorNotRunning(
             "No API token found.\n\n"
             "Start the simulator in another terminal:\n"
-            "    uv run maprt-sim\n\n"
-            "It writes .maprt_sim/server.json, which this cell finds by walking up from the "
+            "    uv run maprt-emulator\n\n"
+            "It writes .maprt_emulator/server.json, which this cell finds by walking up from the "
             "notebook's directory. If you are running from somewhere else entirely, paste in "
-            "the MAPRT_SIM_TOKEN line the simulator printed:\n"
-            "    import os; os.environ['MAPRT_SIM_TOKEN'] = '...'"
+            "the MAPRT_EMULATOR_TOKEN line the simulator printed:\n"
+            "    import os; os.environ['MAPRT_EMULATOR_TOKEN'] = '...'"
         )
 
     client = MapRTClient(resolved_url, token, user_agent)
@@ -269,7 +269,7 @@ def connect(api_url=None, token=None, user_agent=None, check=True):
             client.get_api_version()
         except httpx2.HTTPError as exc:
             client.close()
-            raise SimulatorNotRunning(
+            raise EmulatorNotRunning(
                 _unreachable_message(resolved_url, api_url, exc)) from exc
     return client
 
@@ -278,10 +278,10 @@ def _unreachable_message(resolved_url, explicit_url, exc):
     """Say which URL was tried and *where it came from*, which is usually the actual problem."""
     if explicit_url:
         source = "the api_url you passed in"
-    elif os.environ.get("MAPRT_SIM_URL"):
-        source = "the MAPRT_SIM_URL environment variable"
+    elif os.environ.get("MAPRT_EMULATOR_URL"):
+        source = "the MAPRT_EMULATOR_URL environment variable"
     elif find_server().get("url"):
-        source = (".maprt_sim/server.json, written by a simulator that has since stopped — so "
+        source = (".maprt_emulator/server.json, written by a simulator that has since stopped — so "
                   "this is probably a stale file from an earlier run")
     else:
         source = "the default, because no running simulator was found to ask"
@@ -289,9 +289,9 @@ def _unreachable_message(resolved_url, explicit_url, exc):
     message = (
         f"Could not reach a MapRT simulator at {resolved_url} ({type(exc).__name__}).\n\n"
         f"That address came from: {source}.\n\n"
-        "Is `uv run maprt-sim` still running in the other terminal? If you started it on a "
+        "Is `uv run maprt-emulator` still running in the other terminal? If you started it on a "
         "different port it records that itself, so check you are running this notebook from "
-        "inside the repository where .maprt_sim/server.json can be found."
+        "inside the repository where .maprt_emulator/server.json can be found."
     )
 
     proxied = [name for name in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy")

@@ -1,7 +1,7 @@
 """Run every notebook against a live simulator.
 
 A notebook that does not execute is worse than no notebook: it fails in front of a room. So each
-one is run top to bottom with `nbclient`, against a real `maprt-sim` subprocess, exactly as a
+one is run top to bottom with `nbclient`, against a real `maprt-emulator` subprocess, exactly as a
 student would.
 
 This is the slowest file in the suite by a long way. `-m "not slow"` skips it when you are
@@ -34,7 +34,7 @@ def _free_port():
 
 @pytest.fixture(scope="module")
 def simulator(tmp_path_factory):
-    """A real `maprt-sim` process the notebooks talk to.
+    """A real `maprt-emulator` process the notebooks talk to.
 
     `--map-seconds 0` removes the deliberate streaming delay: the notebooks request several maps
     each and three seconds apiece would make this unbearable. Nothing else is changed, so the
@@ -45,15 +45,15 @@ def simulator(tmp_path_factory):
     token = "notebook-test-token"
 
     process = subprocess.Popen(
-        [sys.executable, "-m", "maprt_sim", "--port", str(port), "--token", token,
-         "--state-dir", str(workdir / ".maprt_sim"), "--map-seconds", "0"],
+        [sys.executable, "-m", "maprt_emulator", "--port", str(port), "--token", token,
+         "--state-dir", str(workdir / ".maprt_emulator"), "--map-seconds", "0"],
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
     )
 
     deadline = time.monotonic() + 60
     while time.monotonic() < deadline:
         if process.poll() is not None:
-            pytest.fail(f"maprt-sim exited early:\n{process.stdout.read()}")
+            pytest.fail(f"maprt-emulator exited early:\n{process.stdout.read()}")
         with socket.socket() as probe:
             probe.settimeout(0.5)
             if probe.connect_ex(("127.0.0.1", port)) == 0:
@@ -61,9 +61,9 @@ def simulator(tmp_path_factory):
         time.sleep(0.2)
     else:
         process.terminate()
-        pytest.fail("maprt-sim did not start")
+        pytest.fail("maprt-emulator did not start")
 
-    yield {"MAPRT_SIM_URL": f"http://127.0.0.1:{port}", "MAPRT_SIM_TOKEN": token}
+    yield {"MAPRT_EMULATOR_URL": f"http://127.0.0.1:{port}", "MAPRT_EMULATOR_TOKEN": token}
 
     process.terminate()
     try:

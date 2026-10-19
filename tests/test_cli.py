@@ -5,10 +5,10 @@ import sys
 
 import pytest
 
-from maprt_sim import cli
-from maprt_sim.cli import _elide, _parser, banner, settings_from_args
-from maprt_sim.settings import SimSettings
-from maprt_sim.store import Catalog
+from maprt_emulator import cli
+from maprt_emulator.cli import _elide, _parser, banner, settings_from_args
+from maprt_emulator.settings import EmulatorSettings
+from maprt_emulator.store import Catalog
 
 
 def parse(*argv):
@@ -17,22 +17,22 @@ def parse(*argv):
 
 class TestToken:
     def test_a_fresh_token_is_generated_when_none_is_given(self, tmp_path):
-        settings = SimSettings(token=None, state_dir=tmp_path / "state")
+        settings = EmulatorSettings(token=None, state_dir=tmp_path / "state")
         token = settings.resolve_token()
         assert token and len(token) > 20
 
     def test_two_starts_generate_different_tokens(self, tmp_path):
         # The point of generating one per start: a workshop credential is disposable, and nobody
         # should end up with a long-lived shared secret in their notes.
-        first = SimSettings(token=None, state_dir=tmp_path).resolve_token()
-        second = SimSettings(token=None, state_dir=tmp_path).resolve_token()
+        first = EmulatorSettings(token=None, state_dir=tmp_path).resolve_token()
+        second = EmulatorSettings(token=None, state_dir=tmp_path).resolve_token()
         assert first != second
 
     def test_an_explicit_token_is_respected(self, tmp_path):
-        assert SimSettings(token="pinned", state_dir=tmp_path).resolve_token() == "pinned"
+        assert EmulatorSettings(token="pinned", state_dir=tmp_path).resolve_token() == "pinned"
 
     def test_is_written_to_the_state_directory(self, tmp_path):
-        settings = SimSettings(token="pinned", state_dir=tmp_path / "state")
+        settings = EmulatorSettings(token="pinned", state_dir=tmp_path / "state")
         path = settings.write_token()
         assert path == tmp_path / "state" / "token"
         assert path.read_text(encoding="utf-8").strip() == "pinned"
@@ -40,28 +40,28 @@ class TestToken:
     def test_the_token_file_is_owner_readable_only(self, tmp_path):
         # It is a throwaway credential for a fake appliance, but a workshop that handles the
         # disposable one sloppily teaches handling the real one sloppily.
-        path = SimSettings(token="pinned", state_dir=tmp_path / "state").write_token()
+        path = EmulatorSettings(token="pinned", state_dir=tmp_path / "state").write_token()
         assert stat.S_IMODE(path.stat().st_mode) == 0o600
 
     def test_the_client_library_finds_it_by_walking_up(self, tmp_path, monkeypatch):
         from maprt_workshop.client import find_token
-        SimSettings(token="written-here", state_dir=tmp_path / ".maprt_sim").write_token()
+        EmulatorSettings(token="written-here", state_dir=tmp_path / ".maprt_emulator").write_token()
         nested = tmp_path / "notebooks" / "deeper"
         nested.mkdir(parents=True)
-        monkeypatch.delenv("MAPRT_SIM_TOKEN", raising=False)
+        monkeypatch.delenv("MAPRT_EMULATOR_TOKEN", raising=False)
         assert find_token(nested) == "written-here"
 
     def test_the_environment_variable_wins_over_the_file(self, tmp_path, monkeypatch):
         # How Binder and Colab supply it, where no one reads the banner.
         from maprt_workshop.client import find_token
-        SimSettings(token="from-file", state_dir=tmp_path / ".maprt_sim").write_token()
-        monkeypatch.setenv("MAPRT_SIM_TOKEN", "from-env")
+        EmulatorSettings(token="from-file", state_dir=tmp_path / ".maprt_emulator").write_token()
+        monkeypatch.setenv("MAPRT_EMULATOR_TOKEN", "from-env")
         assert find_token(tmp_path) == "from-env"
 
 
 class TestFlags:
     def test_defaults(self, monkeypatch):
-        monkeypatch.delenv("MAPRT_SIM_TOKEN", raising=False)
+        monkeypatch.delenv("MAPRT_EMULATOR_TOKEN", raising=False)
         settings = parse()
         # 127.0.0.1, not 0.0.0.0: a printed token and fake clinical data have no business being
         # reachable from the rest of the network by default.
@@ -88,27 +88,27 @@ class TestFlags:
 
     def test_unset_flags_leave_the_environment_in_charge(self, monkeypatch):
         # So the Binder/Colab bootstraps can configure by env var without passing flags.
-        monkeypatch.setenv("MAPRT_SIM_PORT", "7777")
+        monkeypatch.setenv("MAPRT_EMULATOR_PORT", "7777")
         assert parse().port == 7777
 
     def test_an_explicit_flag_beats_the_environment(self, monkeypatch):
-        monkeypatch.setenv("MAPRT_SIM_PORT", "7777")
+        monkeypatch.setenv("MAPRT_EMULATOR_PORT", "7777")
         assert parse("--port", "8123").port == 8123
 
 
 class TestBanner:
     def test_shows_the_url_token_and_data_summary(self, data_dir, tmp_path):
-        settings = SimSettings(token="shown-token", data_dir=data_dir, state_dir=tmp_path,
+        settings = EmulatorSettings(token="shown-token", data_dir=data_dir, state_dir=tmp_path,
                                port=8123)
         text = banner(settings, Catalog.load(data_dir), tmp_path / "token")
         assert "http://127.0.0.1:8123" in text
-        assert "MAPRT_SIM_TOKEN=shown-token" in text
+        assert "MAPRT_EMULATOR_TOKEN=shown-token" in text
         assert "3 patients" in text
         assert "NOT a medical device" in text
 
     def test_warns_about_non_default_behaviour(self, data_dir, tmp_path):
         # Someone debugging a confusing response needs to know the server was told to be weird.
-        settings = SimSettings(token="t", data_dir=data_dir, state_dir=tmp_path,
+        settings = EmulatorSettings(token="t", data_dir=data_dir, state_dir=tmp_path,
                                unlicensed=("map",), auth_401=True, open_ping=True)
         text = banner(settings, Catalog.load(data_dir), tmp_path / "token")
         assert "Unlicensed" in text and "map" in text
@@ -116,7 +116,7 @@ class TestBanner:
         assert "WITHOUT a token" in text
 
     def test_the_box_is_not_ragged(self, data_dir, tmp_path):
-        settings = SimSettings(token="t", data_dir=data_dir, state_dir=tmp_path)
+        settings = EmulatorSettings(token="t", data_dir=data_dir, state_dir=tmp_path)
         lines = [line for line in banner(settings, Catalog.load(data_dir), tmp_path).splitlines()
                  if line.startswith(("╭", "│", "╰"))]
         assert len({len(line) for line in lines}) == 1
@@ -158,7 +158,7 @@ class TestAsEnv:
     """
 
     def test_every_field_round_trips(self, monkeypatch, data_dir, tmp_path):
-        original = SimSettings(token="t", data_dir=data_dir, state_dir=tmp_path / "s",
+        original = EmulatorSettings(token="t", data_dir=data_dir, state_dir=tmp_path / "s",
                                host="0.0.0.0", port=9100, unlicensed=("surfaces", "map"),
                                latency_ms=25, auth_401=True, strict_user_agent=True,
                                open_ping=True)
@@ -167,22 +167,22 @@ class TestAsEnv:
         # into every later test and into the subprocesses they start.
         for key, value in original.as_env().items():
             monkeypatch.setenv(key, value)
-        restored = SimSettings()
+        restored = EmulatorSettings()
         for field in type(original).model_fields:
             assert getattr(restored, field) == getattr(original, field), field
 
     def test_false_booleans_round_trip_as_false(self, monkeypatch, tmp_path):
         # "False" must not come back truthy, which a naive str() export would produce.
-        for key, value in SimSettings(token="t", state_dir=tmp_path,
+        for key, value in EmulatorSettings(token="t", state_dir=tmp_path,
                                       auth_401=False).as_env().items():
             monkeypatch.setenv(key, value)
-        assert SimSettings().auth_401 is False
+        assert EmulatorSettings().auth_401 is False
 
     def test_an_empty_unlicensed_tuple_round_trips(self, monkeypatch, tmp_path):
-        for key, value in SimSettings(token="t", state_dir=tmp_path,
+        for key, value in EmulatorSettings(token="t", state_dir=tmp_path,
                                       unlicensed=()).as_env().items():
             monkeypatch.setenv(key, value)
-        assert SimSettings().unlicensed == ()
+        assert EmulatorSettings().unlicensed == ()
 
 
 class TestWorkshopUpForwardsItsFlags:
@@ -373,7 +373,7 @@ class TestConnectDiagnosesAProxy:
     def _message(self, monkeypatch, url="http://127.0.0.1:8000", **env):
         from maprt_workshop import client as workshop_client
         for name in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy",
-                     "MAPRT_SIM_URL", "MAPRT_SIM_TOKEN"):
+                     "MAPRT_EMULATOR_URL", "MAPRT_EMULATOR_TOKEN"):
             monkeypatch.delenv(name, raising=False)
         for name, value in env.items():
             monkeypatch.setenv(name, value)

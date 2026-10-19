@@ -74,18 +74,18 @@ class TestTheBootstrapIsCorrect:
     def test_it_gives_the_simulator_the_token_it_advertises(self, source):
         """**The bug that would have broken every session.**
 
-        Setting MAPRT_SIM_TOKEN tells the notebook what secret to send. Without passing the same
+        Setting MAPRT_EMULATOR_TOKEN tells the notebook what secret to send. Without passing the same
         value to the simulator, it mints a random one and rejects every call with
         InvalidClientToken — which reads as a configuration problem and is not.
         """
-        assert '"--token", os.environ["MAPRT_SIM_TOKEN"]' in source
+        assert '"--token", os.environ["MAPRT_EMULATOR_TOKEN"]' in source
 
     def test_it_sets_both_variables_connect_reads(self, source):
-        assert 'os.environ["MAPRT_SIM_TOKEN"]' in source
-        assert 'os.environ["MAPRT_SIM_URL"]' in source
+        assert 'os.environ["MAPRT_EMULATOR_TOKEN"]' in source
+        assert 'os.environ["MAPRT_EMULATOR_URL"]' in source
 
     def test_the_url_and_the_port_agree(self, source):
-        url_port = re.search(r'MAPRT_SIM_URL"\] = "http://127\.0\.0\.1:(\d+)"', source)
+        url_port = re.search(r'MAPRT_EMULATOR_URL"\] = "http://127\.0\.0\.1:(\d+)"', source)
         flag_port = re.search(r'"--port", "(\d+)"', source)
         assert url_port and flag_port and url_port.group(1) == flag_port.group(1)
 
@@ -122,7 +122,7 @@ class TestTheBootstrapIsCorrect:
 
     def test_the_simulator_output_goes_to_a_file(self, source):
         # uvicorn logs asynchronously; left on stdout they interleave with notebook output.
-        assert "maprt-sim.log" in source
+        assert "maprt-emulator.log" in source
         assert "stdout=log" in source
 
     def test_it_says_so_when_the_simulator_does_not_start(self, source):

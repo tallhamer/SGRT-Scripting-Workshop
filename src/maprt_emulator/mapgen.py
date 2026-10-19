@@ -44,7 +44,7 @@ import logging
 
 import numpy as np
 
-logger = logging.getLogger("maprt_sim.mapgen")
+logger = logging.getLogger("maprt_emulator.mapgen")
 
 # The gantry head is modelled as a sphere, so these two numbers only matter through their
 # difference: HEAD_DISTANCE - HEAD_RADIUS is how close the head's inner face comes to the
@@ -309,7 +309,7 @@ def transition_verdicts(surface, request, samples=24, seed=0):
     """``[(initial, final, is_safe), …]`` for each consecutive pair of beams.
 
     **The REST shape of GetMapAndBeamTransitions is not documented** (see
-    :mod:`maprt_sim.routes.transitions`), and neither is how a transition is assessed. The model
+    :mod:`maprt_emulator.routes.transitions`), and neither is how a transition is assessed. The model
     here: interpolate linearly from the last control point of one beam to the first of the next
     and require every sample along the way to be clear. That is the plausible reading of §4.5.4
     — "the transition from the initial beam to the final beam has been assessed as safely

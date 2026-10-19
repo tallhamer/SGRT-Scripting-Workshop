@@ -32,17 +32,17 @@ def _free_port():
 
 @pytest.fixture(scope="module")
 def server(tmp_path_factory):
-    """A real `maprt-sim` process with several non-default flags.
+    """A real `maprt-emulator` process with several non-default flags.
 
-    Yields ``(base_url, workdir)``. ``workdir`` holds the ``.maprt_sim/`` the server wrote its
+    Yields ``(base_url, workdir)``. ``workdir`` holds the ``.maprt_emulator/`` the server wrote its
     token into — named that way because it is what ``maprt_workshop.find_token`` walks up looking
     for, and a test asserts the two agree.
     """
     port = _free_port()
     workdir = tmp_path_factory.mktemp("workdir")
-    state = workdir / ".maprt_sim"
+    state = workdir / ".maprt_emulator"
     process = subprocess.Popen(
-        [sys.executable, "-m", "maprt_sim",
+        [sys.executable, "-m", "maprt_emulator",
          "--port", str(port),
          "--token", TOKEN,
          "--state-dir", str(state),
@@ -57,7 +57,7 @@ def server(tmp_path_factory):
     deadline = time.monotonic() + 30
     while time.monotonic() < deadline:
         if process.poll() is not None:
-            pytest.fail(f"maprt-sim exited early:\n{process.stdout.read()}")
+            pytest.fail(f"maprt-emulator exited early:\n{process.stdout.read()}")
         with socket.socket() as probe:
             probe.settimeout(0.5)
             if probe.connect_ex(("127.0.0.1", port)) == 0:
@@ -65,7 +65,7 @@ def server(tmp_path_factory):
         time.sleep(0.2)
     else:
         process.terminate()
-        pytest.fail("maprt-sim did not start within 30s")
+        pytest.fail("maprt-emulator did not start within 30s")
 
     yield base, workdir
 
@@ -188,8 +188,8 @@ class TestTokenFile:
         # agree on the location, and that agreement is only testable across the two together.
         from maprt_workshop.client import find_token
         _base, workdir = server
-        assert (workdir / ".maprt_sim" / "token").read_text(encoding="utf-8").strip() == TOKEN
-        monkeypatch.delenv("MAPRT_SIM_TOKEN", raising=False)
+        assert (workdir / ".maprt_emulator" / "token").read_text(encoding="utf-8").strip() == TOKEN
+        monkeypatch.delenv("MAPRT_EMULATOR_TOKEN", raising=False)
         nested = workdir / "notebooks"
         nested.mkdir(exist_ok=True)
         assert find_token(nested) == TOKEN

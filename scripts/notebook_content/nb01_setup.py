@@ -36,7 +36,7 @@ other terminal — you will see a box with `Base URL` in it."""),
     ("code", '''\
 import os
 
-BASE_URL = os.environ.get("MAPRT_SIM_URL", "http://127.0.0.1:8000")
+BASE_URL = os.environ.get("MAPRT_EMULATOR_URL", "http://127.0.0.1:8000")
 BASE_URL
 '''),
 
@@ -49,14 +49,14 @@ credential should be disposable, so nobody ends up with a long-lived shared secr
 It gets to you two ways. It is printed in that same box in the terminal:
 
 ```
-MAPRT_SIM_TOKEN=amIUvdlPP3AHAhx4dLH3vfW9sOjbK2KDM5E3pj-DahE
+MAPRT_EMULATOR_TOKEN=amIUvdlPP3AHAhx4dLH3vfW9sOjbK2KDM5E3pj-DahE
 ```
 
-...and it is written to a file, `.maprt_sim/token`, in the repository. The file matters: on Colab
+...and it is written to a file, `.maprt_emulator/token`, in the repository. The file matters: on Colab
 and Binder the simulator runs in the background and nobody ever sees its output, so a printed
 banner would be useless there.
 
-`find_token()` checks the `MAPRT_SIM_TOKEN` environment variable first, then walks up from this
+`find_token()` checks the `MAPRT_EMULATOR_TOKEN` environment variable first, then walks up from this
 notebook's directory looking for that file."""),
     ("code", '''\
 from maprt_workshop import find_token
@@ -68,7 +68,7 @@ print("it looks like:", TOKEN[:8] + "..." if TOKEN else "nothing")
 
     ("md", """\
 If that printed `False`, the simulator is not running or you are in a different directory from
-it. Start it with `uv run maprt-sim` and re-run the cell. You can also paste the token in by hand:
+it. Start it with `uv run maprt-emulator` and re-run the cell. You can also paste the token in by hand:
 
 ```python
 TOKEN = "paste-the-value-from-the-terminal-here"

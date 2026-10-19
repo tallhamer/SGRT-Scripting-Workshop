@@ -34,15 +34,15 @@ if "COLAB_RELEASE_TAG" in os.environ:
     # instead of special-casing paths in each notebook.
     os.chdir(f"{{CHECKOUT}}/notebooks")
 
-    os.environ["MAPRT_SIM_TOKEN"] = "workshop-colab-token"
-    os.environ["MAPRT_SIM_URL"] = "http://127.0.0.1:8000"
+    os.environ["MAPRT_EMULATOR_TOKEN"] = "workshop-colab-token"
+    os.environ["MAPRT_EMULATOR_URL"] = "http://127.0.0.1:8000"
 
     # --token matters: without it the simulator mints a random token, while the environment
     # above advertises a different one, and every call fails with InvalidClientToken. The
     # simulator must be given the same secret this notebook is going to send.
-    log = open("/content/maprt-sim.log", "w")
-    subprocess.Popen(["maprt-sim", "--port", "8000",
-                      "--token", os.environ["MAPRT_SIM_TOKEN"],
+    log = open("/content/maprt-emulator.log", "w")
+    subprocess.Popen(["maprt-emulator", "--port", "8000",
+                      "--token", os.environ["MAPRT_EMULATOR_TOKEN"],
                       "--data-dir", f"{{CHECKOUT}}/data/MapRT",
                       "--map-seconds", "1"],
                      stdout=log, stderr=subprocess.STDOUT)
@@ -51,13 +51,13 @@ if "COLAB_RELEASE_TAG" in os.environ:
     # fails for no visible reason) or wasted time on a fast one.
     for _attempt in range(60):
         try:
-            urllib.request.urlopen(os.environ["MAPRT_SIM_URL"] + "/sim/state", timeout=1)
+            urllib.request.urlopen(os.environ["MAPRT_EMULATOR_URL"] + "/sim/state", timeout=1)
             print("simulator ready")
             break
         except Exception:
             time.sleep(0.5)
     else:
-        print("The simulator did not start. See /content/maprt-sim.log")
+        print("The simulator did not start. See /content/maprt-emulator.log")
 
 print("Python", sys.version.split()[0])
 '''

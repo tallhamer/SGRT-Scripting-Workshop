@@ -22,9 +22,9 @@ SLIDES = DOCS / "slides-outline.md"
 @pytest.fixture(scope="module")
 def api_paths():
     """Every path the simulator actually serves, from its own OpenAPI document."""
-    from maprt_sim.app import create_app
-    from maprt_sim.settings import SimSettings
-    return set(create_app(SimSettings(token="t")).openapi()["paths"])
+    from maprt_emulator.app import create_app
+    from maprt_emulator.settings import EmulatorSettings
+    return set(create_app(EmulatorSettings(token="t")).openapi()["paths"])
 
 
 def documented_endpoints(text):
@@ -69,7 +69,7 @@ class TestTheHandoutMatchesTheAPI:
         assert "/sim/" not in HANDOUT.read_text()
 
     def test_the_envelope_keys_match_what_the_code_emits(self):
-        from maprt_sim import envelope
+        from maprt_emulator import envelope
         for key in envelope.ok("x"):
             assert key in HANDOUT.read_text(), f"the envelope key {key!r} is not on the handout"
 
@@ -82,7 +82,7 @@ class TestTheHandoutMatchesTheAPI:
         assert "not a medical device" in HANDOUT.read_text().lower()
 
     def test_it_names_the_error_code_types_the_code_uses(self):
-        from maprt_sim import envelope
+        from maprt_emulator import envelope
         text = HANDOUT.read_text()
         for error_type in (envelope.AUTH, envelope.LICENSE):
             assert error_type in text
@@ -90,7 +90,7 @@ class TestTheHandoutMatchesTheAPI:
     def test_it_does_not_quote_an_invented_error_code_as_real(self):
         # Codes this project made up to fill gaps in the specification must not appear on a
         # reference card people will match on in production.
-        from maprt_sim import envelope
+        from maprt_emulator import envelope
         text = HANDOUT.read_text()
         for code in envelope.INVENTED_CODES:
             assert code not in text, f"{code} is the simulator's invention, not MapRT's"
@@ -111,7 +111,7 @@ class TestTheRunSheet:
     def test_it_names_the_failures_the_code_actually_produces(self):
         # Each row of the "where people get stuck" table should match a real message.
         text = RUN_SHEET.read_text()
-        for symptom in ("Address already in use", "SimulatorNotRunning",
+        for symptom in ("Address already in use", "EmulatorNotRunning",
                         "nodename nor servname provided", "NO_PROXY"):
             assert symptom in text, f"the run-sheet does not cover {symptom!r}"
 
@@ -130,7 +130,7 @@ class TestTheSlides:
     def test_the_geometry_slide_matches_the_model(self):
         # If mapgen's geometry ever changes, this slide becomes a confident lie delivered to a
         # room of physicists.
-        from maprt_sim import mapgen
+        from maprt_emulator import mapgen
         slide = SLIDES.read_text()
         source = Path(mapgen.__file__).read_text()
 

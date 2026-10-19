@@ -17,8 +17,8 @@ has to treat them differently — see the handler below.
 
 from fastapi import APIRouter, Depends, Request
 
-from maprt_sim import envelope
-from maprt_sim.auth import require_token
+from maprt_emulator import envelope
+from maprt_emulator.auth import require_token
 
 router = APIRouter(prefix="/integration", tags=["integration"],
                    dependencies=[Depends(require_token)])
@@ -39,7 +39,7 @@ async def patient_surfaces(patient_id: str, request: Request):
     if not catalog.knows_patient(patient_id):
         # An unknown patient is an error (the C# client throws InvalidArgumentException, §4.2.1.8).
         # The code name here is this simulator's invention — the REST spec documents none for
-        # this case. Do not match on it in production code; see maprt_sim.envelope.
+        # this case. Do not match on it in production code; see maprt_emulator.envelope.
         raise envelope.MapRTFailure(
             envelope.PATIENT_NOT_FOUND,
             error_data=f"No patient {patient_id!r} in this server's database.",

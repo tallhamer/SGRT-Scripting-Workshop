@@ -1,9 +1,9 @@
-"""``maprt-sim`` and ``workshop-up`` — starting the simulator, and the token banner.
+"""``maprt-emulator`` and ``workshop-up`` — starting the simulator, and the token banner.
 
 The simulator mints a **fresh token every time it starts** and makes it available two ways:
 
 * printed in a banner, for someone watching a terminal;
-* written to ``.maprt_sim/token``, for everyone else.
+* written to ``.maprt_emulator/token``, for everyone else.
 
 The file is not a convenience, it is the only thing that works on Binder and Colab, where the
 server runs as a background process and nobody ever sees its output.
@@ -20,10 +20,10 @@ from pathlib import Path
 
 import uvicorn
 
-from maprt_sim.app import create_app
-from maprt_sim.maps import MapLibrary, MapLibraryError
-from maprt_sim.settings import LICENSABLE, SimSettings
-from maprt_sim.store import Catalog, CatalogError
+from maprt_emulator.app import create_app
+from maprt_emulator.maps import MapLibrary, MapLibraryError
+from maprt_emulator.settings import LICENSABLE, EmulatorSettings
+from maprt_emulator.store import Catalog, CatalogError
 
 BANNER_WIDTH = 74
 
@@ -89,7 +89,7 @@ def banner(settings, catalog, token_path, maps=None):
         "",
         "Copy this line into your notebook (or let it read the token file):",
         "",
-        f"    MAPRT_SIM_TOKEN={settings.resolve_token()}",
+        f"    MAPRT_EMULATOR_TOKEN={settings.resolve_token()}",
         "",
         "Press Ctrl+C to stop the server.",
         "",
@@ -98,7 +98,7 @@ def banner(settings, catalog, token_path, maps=None):
 
 def _parser():
     parser = argparse.ArgumentParser(
-        prog="maprt-sim",
+        prog="maprt-emulator",
         description="Run a local simulator of the Vision RT MapRT API 2.0. Teaching use only.",
     )
     parser.add_argument("--host", default=None, help="interface to bind (default 127.0.0.1)")
@@ -108,7 +108,7 @@ def _parser():
     parser.add_argument("--data-dir", default=None,
                         help="the catalog to serve (default: the nearest data/MapRT/ directory)")
     parser.add_argument("--state-dir", default=None,
-                        help="where to write the token file (default .maprt_sim)")
+                        help="where to write the token file (default .maprt_emulator)")
     parser.add_argument("--unlicensed", default=None,
                         help=f"comma-separated features to report as unlicensed: "
                              f"{', '.join(LICENSABLE)}")
@@ -139,7 +139,7 @@ def _parser():
 
 
 def settings_from_args(args):
-    """Turn parsed arguments into :class:`SimSettings`, leaving unset flags to the environment."""
+    """Turn parsed arguments into :class:`EmulatorSettings`, leaving unset flags to the environment."""
     overrides = {}
     if args.host is not None:
         overrides["host"] = args.host
@@ -163,14 +163,14 @@ def settings_from_args(args):
         features = tuple(f.strip() for f in args.unlicensed.split(",") if f.strip())
         unknown = [f for f in features if f not in LICENSABLE]
         if unknown:
-            raise SystemExit(f"maprt-sim: unknown feature(s) {', '.join(unknown)}. "
+            raise SystemExit(f"maprt-emulator: unknown feature(s) {', '.join(unknown)}. "
                              f"Choose from: {', '.join(LICENSABLE)}")
         overrides["unlicensed"] = features
     # Store-true flags: only pass them when set, so the environment can still turn them on.
     for flag in ("auth_401", "strict_user_agent", "open_ping", "shuffle_map"):
         if getattr(args, flag):
             overrides[flag] = True
-    return SimSettings(**overrides)
+    return EmulatorSettings(**overrides)
 
 
 def main(argv=None):
@@ -180,7 +180,7 @@ def main(argv=None):
     if args.check_data:
         # Before the catalog load below, because that one raises on the first problem it meets.
         # The checker reports everything at once, which is what you want while editing data.
-        from maprt_sim.check import main as check_main
+        from maprt_emulator.check import main as check_main
         raise SystemExit(check_main(settings.data_dir))
 
     # Load the catalog here, before uvicorn starts, so a data problem is a clear message at the
@@ -188,19 +188,19 @@ def main(argv=None):
     try:
         catalog = Catalog.load(settings.data_dir)
     except CatalogError as exc:
-        raise SystemExit(f"maprt-sim: {exc}") from exc
+        raise SystemExit(f"maprt-emulator: {exc}") from exc
 
     try:
         maps = MapLibrary.load(settings.data_dir)
     except MapLibraryError as exc:
-        raise SystemExit(f"maprt-sim: {exc}") from exc
+        raise SystemExit(f"maprt-emulator: {exc}") from exc
 
     token_path = settings.write_token()
     print(banner(settings, catalog, token_path, maps), flush=True)
 
     # Build the app HERE, from the settings we just parsed and just described in the banner, and
     # hand uvicorn the object. The alternative — giving uvicorn an import string and letting it
-    # call create_app() itself — re-resolves SimSettings from the environment in the server
+    # call create_app() itself — re-resolves EmulatorSettings from the environment in the server
     # process, so every command-line flag is silently dropped while the banner still claims it
     # is in effect. That is worse than not having the flags.
     #
@@ -209,7 +209,7 @@ def main(argv=None):
     # instead, which is why they all have to be environment-expressible.
     if args.reload:
         os.environ.update(settings.as_env())
-        target, factory = "maprt_sim.app:create_app", True
+        target, factory = "maprt_emulator.app:create_app", True
     else:
         target, factory = create_app(settings), False
 
@@ -242,7 +242,7 @@ def _wait_for_port(host, port, timeout=30.0):
 def up(argv=None):
     """Start the simulator in the background, wait for it, then launch Jupyter Lab.
 
-    The two-terminal version (``maprt-sim`` in one, ``jupyter lab`` in the other) is what the
+    The two-terminal version (``maprt-emulator`` in one, ``jupyter lab`` in the other) is what the
     workshop teaches, because that separation is what the real thing looks like: an appliance
     somewhere, and your code somewhere else. This exists for anyone fighting their terminal
     instead of learning the API. Ctrl+C stops both.
@@ -259,7 +259,7 @@ def up(argv=None):
     if shutil.which("jupyter") is None:
         raise SystemExit(
             "workshop-up: `jupyter` is not installed. Run `uv sync` first (it installs Jupyter), "
-            "or start the two pieces yourself: `uv run maprt-sim` and `uv run jupyter lab`."
+            "or start the two pieces yourself: `uv run maprt-emulator` and `uv run jupyter lab`."
         )
 
     notebooks = _notebooks_dir()
@@ -270,7 +270,7 @@ def up(argv=None):
     # to a dead appliance, which is the most confusing possible state to be in. This way the
     # simulator outlives Ctrl+C and is stopped by the `finally` below, once Jupyter has actually
     # exited.
-    server = subprocess.Popen([sys.executable, "-m", "maprt_sim", *forwarded],
+    server = subprocess.Popen([sys.executable, "-m", "maprt_emulator", *forwarded],
                               start_new_session=True)
     try:
         if not _wait_for_port(settings.host, settings.port):

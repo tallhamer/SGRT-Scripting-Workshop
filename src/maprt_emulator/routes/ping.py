@@ -8,9 +8,9 @@ in the ``Server`` header instead.
 
 from fastapi import APIRouter, Request
 
-from maprt_sim import envelope
-from maprt_sim.auth import require_token
-from maprt_sim.settings import API_VERSION
+from maprt_emulator import envelope
+from maprt_emulator.auth import require_token
+from maprt_emulator.settings import API_VERSION
 
 router = APIRouter(prefix="/integration", tags=["integration"])
 

@@ -31,11 +31,11 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import StreamingResponse
 
-from maprt_sim import envelope, mapgen
-from maprt_sim.auth import require_token
-from maprt_sim.schemas import GetMapRequest
+from maprt_emulator import envelope, mapgen
+from maprt_emulator.auth import require_token
+from maprt_emulator.schemas import GetMapRequest
 
-logger = logging.getLogger("maprt_sim.routes.getmap")
+logger = logging.getLogger("maprt_emulator.routes.getmap")
 
 router = APIRouter(prefix="/integration", tags=["integration"],
                    dependencies=[Depends(require_token)])
@@ -67,7 +67,7 @@ async def get_map(body: GetMapRequest, request: Request):
 
     if app.state.catalog.room_by_id(body.treatment_room_id) is None:
         # The spec documents no code for an unknown room id; this one is the simulator's
-        # invention (see maprt_sim.envelope). A real appliance would reject it somehow, and
+        # invention (see maprt_emulator.envelope). A real appliance would reject it somehow, and
         # silently computing a map for a room that does not exist would be worse than either.
         raise envelope.MapRTFailure(
             envelope.ROOM_NOT_FOUND,

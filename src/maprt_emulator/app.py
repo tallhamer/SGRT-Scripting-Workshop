@@ -7,15 +7,15 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from maprt_sim import envelope
-from maprt_sim.maps import MapLibrary
-from maprt_sim.routes import beams, getmap, ping, rooms, sim, surfaces, transitions
-from maprt_sim.routes.getmap import MapCache
-from maprt_sim.scenarios import ScenarioState
-from maprt_sim.settings import SERVER_VERSION, SimSettings
-from maprt_sim.store import Catalog
+from maprt_emulator import envelope
+from maprt_emulator.maps import MapLibrary
+from maprt_emulator.routes import beams, getmap, ping, rooms, sim, surfaces, transitions
+from maprt_emulator.routes.getmap import MapCache
+from maprt_emulator.scenarios import ScenarioState
+from maprt_emulator.settings import SERVER_VERSION, EmulatorSettings
+from maprt_emulator.store import Catalog
 
-logger = logging.getLogger("maprt_sim")
+logger = logging.getLogger("maprt_emulator")
 
 DESCRIPTION = """
 A **simulator** of the Vision RT MapRT API 2.0, for teaching and practice.
@@ -42,7 +42,7 @@ Two things to remember when reading responses:
 
 def create_app(settings=None):
     """Build the application. ``settings`` defaults to one resolved from the environment."""
-    settings = settings or SimSettings()
+    settings = settings or EmulatorSettings()
 
     app = FastAPI(
         title="MapRT API Simulator",

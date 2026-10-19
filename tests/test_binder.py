@@ -10,7 +10,7 @@ What was verified by hand (there is no way to assert it here, so it is recorded)
 * `pip install -r binder/requirements.txt` into a clean venv with **plain pip**, no uv — all 129
   packages, no conflicts.
 * `binder/postBuild` against that venv: the project installs, both packages import, and the
-  `maprt-sim` console script runs.
+  `maprt-emulator` console script runs.
 * `binder/start` launches the simulator, exports the environment a notebook needs, and
   `05_clearance_maps.ipynb` then executes all 58 cells in 10 seconds using only that venv.
 * `/docs` answers HTTP 200, which is what jupyter-server-proxy serves through the Binder URL.
@@ -132,24 +132,24 @@ class TestStartScript:
         assert 'exec "$@"' in start
 
     def test_it_does_not_abort_on_error(self, start):
-        """No `set -e`. A session whose first cell says "SimulatorNotRunning" explains itself;
+        """No `set -e`. A session whose first cell says "EmulatorNotRunning" explains itself;
         a container that refuses to start does not."""
         assert not re.search(r"(?m)^set -e", start)
 
     def test_it_exports_what_connect_reads(self, start):
         # On Binder the environment is the channel — the notebook server may start before the
-        # simulator has written .maprt_sim/server.json, so the file would be a race.
-        assert "export MAPRT_SIM_TOKEN" in start
-        assert "export MAPRT_SIM_URL" in start
+        # simulator has written .maprt_emulator/server.json, so the file would be a race.
+        assert "export MAPRT_EMULATOR_TOKEN" in start
+        assert "export MAPRT_EMULATOR_URL" in start
 
     def test_the_url_and_the_port_it_starts_agree(self, start):
-        url_port = re.search(r"MAPRT_SIM_URL=\"http://127\.0\.0\.1:(\d+)\"", start)
+        url_port = re.search(r"MAPRT_EMULATOR_URL=\"http://127\.0\.0\.1:(\d+)\"", start)
         flag_port = re.search(r"--port (\d+)", start)
         assert url_port and flag_port
         assert url_port.group(1) == flag_port.group(1), "the exported URL names a different port"
 
     def test_it_passes_the_token_it_exported(self, start):
-        assert '--token "$MAPRT_SIM_TOKEN"' in start
+        assert '--token "$MAPRT_EMULATOR_TOKEN"' in start
 
     def test_it_points_at_a_data_directory_that_exists(self, start):
         assert '--data-dir "$REPO_DIR/data/MapRT"' in start
@@ -175,8 +175,8 @@ class TestPostBuild:
 
     def test_it_verifies_the_install_rather_than_assuming_it(self, post_build):
         # Fail the build, not the student's first cell.
-        assert "import maprt_sim, maprt_workshop" in post_build
-        assert "maprt-sim --help" in post_build
+        assert "import maprt_emulator, maprt_workshop" in post_build
+        assert "maprt-emulator --help" in post_build
 
     def test_it_aborts_on_failure(self, post_build):
         # Opposite of `start`: a broken image should not be published at all.

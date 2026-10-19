@@ -6,7 +6,7 @@
 # so it runs here, in the background, for the life of the session.
 #
 # Deliberately NOT `set -e`. If the simulator fails to start, the notebook server must still
-# come up: a live session whose first cell reports "SimulatorNotRunning" is recoverable and
+# come up: a live session whose first cell reports "EmulatorNotRunning" is recoverable and
 # explains itself, whereas a container that refuses to start is a blank stare.
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -15,23 +15,23 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # for anyone to read a banner from, and each Binder session is a private throwaway container, so
 # a known value costs nothing and removes a step. Exported so maprt_workshop.connect() finds it
 # without touching the filesystem — which also sidesteps a race, since the notebook server may
-# start before the simulator has written .maprt_sim/server.json.
-export MAPRT_SIM_TOKEN="${MAPRT_SIM_TOKEN:-workshop-binder-token}"
-export MAPRT_SIM_URL="http://127.0.0.1:8000"
+# start before the simulator has written .maprt_emulator/server.json.
+export MAPRT_EMULATOR_TOKEN="${MAPRT_EMULATOR_TOKEN:-workshop-binder-token}"
+export MAPRT_EMULATOR_URL="http://127.0.0.1:8000"
 
-if ! command -v maprt-sim > /dev/null 2>&1; then
-    echo "start: maprt-sim is not installed — did postBuild run?" >&2
+if ! command -v maprt-emulator > /dev/null 2>&1; then
+    echo "start: maprt-emulator is not installed — did postBuild run?" >&2
 else
     # --map-seconds 1: the local default of 3 exists so students can watch a response stream in.
     # On shared Binder hardware that mostly reads as lag, so it is trimmed rather than removed.
-    nohup maprt-sim \
+    nohup maprt-emulator \
         --host 127.0.0.1 \
         --port 8000 \
-        --token "$MAPRT_SIM_TOKEN" \
+        --token "$MAPRT_EMULATOR_TOKEN" \
         --data-dir "$REPO_DIR/data/MapRT" \
-        --state-dir "$REPO_DIR/.maprt_sim" \
+        --state-dir "$REPO_DIR/.maprt_emulator" \
         --map-seconds 1 \
-        > "$REPO_DIR/maprt-sim.log" 2>&1 &
+        > "$REPO_DIR/maprt-emulator.log" 2>&1 &
 
     # Wait for it, and say plainly in the log whether it worked. The failure this catches is a
     # silent one: if the port is busy or the data directory is wrong, nohup returns happily and
@@ -39,16 +39,16 @@ else
     # leftover server on port 8000 answered instead, and the student-facing error was
     # "InvalidClientToken", which points nowhere near the actual problem.
     for _ in $(seq 1 60); do
-        if curl -sf -o /dev/null "$MAPRT_SIM_URL/sim/state" 2>/dev/null; then
-            echo "start: simulator is up on $MAPRT_SIM_URL"
+        if curl -sf -o /dev/null "$MAPRT_EMULATOR_URL/sim/state" 2>/dev/null; then
+            echo "start: simulator is up on $MAPRT_EMULATOR_URL"
             break
         fi
         sleep 0.5
     done
 
-    if ! curl -sf -o /dev/null "$MAPRT_SIM_URL/sim/state" 2>/dev/null; then
-        echo "start: WARNING — the simulator did not come up. See maprt-sim.log." >&2
-        tail -5 "$REPO_DIR/maprt-sim.log" >&2 2>/dev/null
+    if ! curl -sf -o /dev/null "$MAPRT_EMULATOR_URL/sim/state" 2>/dev/null; then
+        echo "start: WARNING — the simulator did not come up. See maprt-emulator.log." >&2
+        tail -5 "$REPO_DIR/maprt-emulator.log" >&2 2>/dev/null
     fi
 fi
 

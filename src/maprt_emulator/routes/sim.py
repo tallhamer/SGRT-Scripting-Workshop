@@ -12,8 +12,8 @@ using.
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, Field
 
-from maprt_sim import envelope, scenarios
-from maprt_sim.settings import API_VERSION, SERVER_VERSION
+from maprt_emulator import envelope, scenarios
+from maprt_emulator.settings import API_VERSION, SERVER_VERSION
 
 router = APIRouter(prefix="/sim", tags=["sim"])
 

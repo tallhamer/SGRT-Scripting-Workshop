@@ -9,8 +9,8 @@ from pathlib import Path
 
 import pytest
 
-from maprt_sim.settings import find_data_dir
-from maprt_sim.store import Catalog, CatalogError
+from maprt_emulator.settings import find_data_dir
+from maprt_emulator.store import Catalog, CatalogError
 
 
 def test_loads_the_shipped_catalog(data_dir):

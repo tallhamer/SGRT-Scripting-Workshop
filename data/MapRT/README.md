@@ -1,11 +1,11 @@
 # The simulator's data catalog
 
-`maprt_sim` serves everything in here. Adding data is a file drop plus a line of JSON — no code
+`maprt_emulator` serves everything in here. Adding data is a file drop plus a line of JSON — no code
 change, no restart flag beyond restarting the server.
 
 > **Adding your own rooms, patients, surfaces, maps or plans?**
 > → **[`docs/adding-data.md`](../../docs/adding-data.md)** is the step-by-step guide.
-> Then check it with `uv run maprt-sim --check-data`.
+> Then check it with `uv run maprt-emulator --check-data`.
 
 This file describes what is *here* and why.
 
@@ -40,7 +40,7 @@ The meshes here are **synthetic**. No patient data is in this repository.
 | --- | --- |
 | `recorded` | Every keyed field matched an entry in `maps/index.json`. These are real bytes from a real response. |
 | `recorded-nearest` | Same surface, room and resolution, different isocenter — the closest recording was served. The answer is **not** for the setup you asked about. |
-| `synthetic` | Nothing matched, so `maprt_sim.mapgen` computed one. |
+| `synthetic` | Nothing matched, so `maprt_emulator.mapgen` computed one. |
 
 The map shipped here is a **synthetic snapshot** — the simulator's own model, saved to a file so
 the recorded code path is exercised out of the box. Its `note` field says so, and so does the
@@ -80,7 +80,7 @@ not a deliverable plan and no planning system should be asked to open it.
 
 ## What the synthetic model is and is not
 
-`maprt_sim.mapgen` is **not a collision engine and its output is not physics.** It is a small
+`maprt_emulator.mapgen` is **not a collision engine and its output is not physics.** It is a small
 geometric model — gantry head as a sphere, couch as a board, the patient as their actual
 decimated surface mesh — chosen so the map *responds to a request the way a real one does*:
 

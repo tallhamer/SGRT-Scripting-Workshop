@@ -5,7 +5,7 @@ folder here. A product's code and notebooks read only their own folder.
 
 | Folder | Product | Status |
 | --- | --- | --- |
-| [`MapRT/`](MapRT/README.md) | MapRT, the collision-avoidance API the emulator in `src/maprt_sim` serves | **In use**: rooms, patients, surfaces, recorded clearance maps, a synthetic RT Plan |
+| [`MapRT/`](MapRT/README.md) | MapRT, the collision-avoidance API the emulator in `src/maprt_emulator` serves | **In use**: rooms, patients, surfaces, recorded clearance maps, a synthetic RT Plan |
 | `AlignRT/` | AlignRT | Planned. The folder will be added with its first notebook project |
 | `SimRT/` | SimRT | Planned |
 | `DoseRT/` | DoseRT | Planned |
@@ -27,6 +27,6 @@ folder here. A product's code and notebooks read only their own folder.
 
 1. Create `data/<Product>/` with a `README.md`, and keep its synthetic data there.
 2. Default the product's code to `data/<Product>/`, found by walking up from the working
-   directory the way `maprt_sim.settings.find_data_dir` does. Then it works the same from the
+   directory the way `maprt_emulator.settings.find_data_dir` does. Then it works the same from the
    repository root and from `notebooks/`.
 3. Add a row to the table above.

@@ -9,7 +9,7 @@ drop plus a line of JSON — no code change, and no restart flag beyond restarti
 **Check your work at any point:**
 
 ```bash
-uv run maprt-sim --check-data
+uv run maprt-emulator --check-data
 ```
 
 That loads everything the server would, reports what it found, and names the problems that are
@@ -231,10 +231,10 @@ p.write_text(json.dumps(catalog, indent=2) + "\n")
 PY
 
 # 4. Check it.
-uv run maprt-sim --check-data
+uv run maprt-emulator --check-data
 
 # 5. Restart the simulator and try it.
-uv run maprt-sim
+uv run maprt-emulator
 ```
 
 ```python

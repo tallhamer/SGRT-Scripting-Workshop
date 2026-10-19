@@ -83,7 +83,7 @@ class MapRTFailure(Exception):
     """A failure to render as a MapRT envelope.
 
     Raise it from anywhere in a route or dependency; the handler registered in
-    :mod:`maprt_sim.app` turns it into the envelope at ``status_code``. The default status is
+    :mod:`maprt_emulator.app` turns it into the envelope at ``status_code``. The default status is
     **200**, because that is how a real appliance reports a negative result — passing a 4xx is
     the deliberate exception, not the norm.
     """

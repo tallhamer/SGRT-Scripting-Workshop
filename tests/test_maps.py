@@ -4,8 +4,8 @@ import json
 
 import pytest
 
-from maprt_sim.maps import MapLibrary, MapLibraryError
-from maprt_sim.schemas import GetMapRequest
+from maprt_emulator.maps import MapLibrary, MapLibraryError
+from maprt_emulator.schemas import GetMapRequest
 
 SURFACE = "dad7394f-6893-4ce3-96ed-8bc3091cf4c3"
 ROOM = "96bbc235-0da9-e983-0783-5973a7d11144"

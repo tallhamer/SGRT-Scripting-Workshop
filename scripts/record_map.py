@@ -2,7 +2,7 @@
 
 Two sources:
 
-``--from-simulator`` (default)
+``--from-emulator`` (default)
     Snapshot the synthetic model. This is **circular** — the simulator serving back a map it
     computed — and exists only so the recorded-map code path is exercised by the shipped data and
     a notebook can see ``X-Sim-Map-Source: recorded`` without anyone owning an appliance. Such
@@ -23,8 +23,8 @@ import argparse
 import json
 from pathlib import Path
 
-from maprt_sim.mapgen import SurfaceModel, compute_map, map_text
-from maprt_sim.schemas import GetMapRequest
+from maprt_emulator.mapgen import SurfaceModel, compute_map, map_text
+from maprt_emulator.schemas import GetMapRequest
 
 
 def build_request(args):
@@ -39,13 +39,13 @@ def build_request(args):
     })
 
 
-def from_simulator(args, request):
+def from_emulator(args, request):
     surface_path = Path(args.data_dir) / "surfaces" / f"{args.surface}.obj"
     if not surface_path.is_file():
         raise SystemExit(f"record_map: no surface mesh at {surface_path}")
     model = SurfaceModel.from_obj_bytes(surface_path.read_bytes(), args.surface)
     couch, gantry, safe = compute_map(model, request, seed=args.seed)
-    note = (f"Synthetic snapshot from maprt_sim.mapgen (seed {args.seed}), NOT a real appliance "
+    note = (f"Synthetic snapshot from maprt_emulator.mapgen (seed {args.seed}), NOT a real appliance "
             f"response. {safe.mean():.1%} of angles clear.")
     return map_text(couch, gantry, safe), note
 
@@ -83,8 +83,8 @@ def main(argv=None):
     parser.add_argument("--isocenter", type=float, nargs=3, default=[0.0, 0.0, 0.0],
                         metavar=("X", "Y", "Z"), help="mm, DICOM patient coordinates")
     parser.add_argument("--high-resolution", action="store_true", help="1 degree instead of coarse")
-    parser.add_argument("--seed", type=int, default=0, help="--from-simulator only")
-    parser.add_argument("--data-dir", default="data/MapRT", help="--from-simulator only")
+    parser.add_argument("--seed", type=int, default=0, help="--from-emulator only")
+    parser.add_argument("--data-dir", default="data/MapRT", help="--from-emulator only")
     parser.add_argument("--from-url", default=None, help="capture from a real appliance instead")
     parser.add_argument("--token", default=None, help="API token, with --from-url")
     parser.add_argument("--out", default="data/MapRT/maps", help="directory to write into")
@@ -96,7 +96,7 @@ def main(argv=None):
 
     request = build_request(args)
     text, note = (from_url(args, request) if args.from_url
-                  else from_simulator(args, request))
+                  else from_emulator(args, request))
 
     resolution = "high" if args.high_resolution else "low"
     stem = args.name or (f"{args.surface[:8]}_{args.room[:8]}_{args.position.lower()}_"

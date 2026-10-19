@@ -1,8 +1,8 @@
 """How the simulator is configured, and how it finds its data and writes its token.
 
 Every field can be set three ways, in increasing priority: a default here, a
-``MAPRT_SIM_``-prefixed environment variable (how the Binder and Colab bootstraps do it), or a
-command-line flag (:mod:`maprt_sim.cli`).
+``MAPRT_EMULATOR_``-prefixed environment variable (how the Binder and Colab bootstraps do it), or a
+command-line flag (:mod:`maprt_emulator.cli`).
 """
 
 import datetime as dt
@@ -39,7 +39,7 @@ DATA_SUBDIR = Path("data") / "MapRT"
 def find_data_dir(start=None):
     """The ``data/MapRT/`` directory, found by walking up from ``start`` (cwd by default).
 
-    Walking up rather than trusting the working directory means ``maprt-sim`` behaves the same
+    Walking up rather than trusting the working directory means ``maprt-emulator`` behaves the same
     whether it is started from the repository root or from ``notebooks/``.
     """
     here = Path(start or Path.cwd()).resolve()
@@ -51,10 +51,10 @@ def find_data_dir(start=None):
     return Path.cwd() / DATA_SUBDIR
 
 
-class SimSettings(BaseSettings):
+class EmulatorSettings(BaseSettings):
     """Simulator configuration."""
 
-    model_config = SettingsConfigDict(env_prefix="MAPRT_SIM_", extra="ignore")
+    model_config = SettingsConfigDict(env_prefix="MAPRT_EMULATOR_", extra="ignore")
 
     # -- network ------------------------------------------------------------------------------
     # 127.0.0.1, not 0.0.0.0: this thing has a printed token and fake clinical data, and has no
@@ -63,7 +63,7 @@ class SimSettings(BaseSettings):
     port: int = 8000
 
     # -- auth ---------------------------------------------------------------------------------
-    # None means "generate a fresh one at startup". Set MAPRT_SIM_TOKEN to pin it, which is what
+    # None means "generate a fresh one at startup". Set MAPRT_EMULATOR_TOKEN to pin it, which is what
     # Binder and Colab do because neither has a terminal banner anyone will read.
     token: str | None = None
 
@@ -84,7 +84,7 @@ class SimSettings(BaseSettings):
 
     #: Where the generated token is written (``<state_dir>/token``). The client library finds it
     #: by walking up from the notebook's directory.
-    state_dir: Path = Path(".maprt_sim")
+    state_dir: Path = Path(".maprt_emulator")
 
     # -- behaviour ----------------------------------------------------------------------------
     #: Features to report as unlicensed; any of :data:`LICENSABLE`.
@@ -173,7 +173,7 @@ class SimSettings(BaseSettings):
         return feature not in self.unlicensed
 
     def as_env(self):
-        """Every field as a ``{"MAPRT_SIM_FIELD": "value"}`` mapping. **No side effects.**
+        """Every field as a ``{"MAPRT_EMULATOR_FIELD": "value"}`` mapping. **No side effects.**
 
         Only the ``--reload`` path needs this: reloading re-imports the app in a child process,
         so the settings have to survive the process boundary, and the environment is the only
@@ -186,7 +186,7 @@ class SimSettings(BaseSettings):
         A function whose whole job is to describe configuration should not reconfigure the
         process as a side effect of being asked.
 
-        Not used on the normal path, where :func:`maprt_sim.cli.main` builds the app itself and
+        Not used on the normal path, where :func:`maprt_emulator.cli.main` builds the app itself and
         hands uvicorn the object. Going through the environment there would silently drop any
         field this method forgot, which is exactly the bug it exists to avoid.
         """
@@ -202,5 +202,5 @@ class SimSettings(BaseSettings):
                 text = json.dumps(list(value))
             else:
                 text = str(value)
-            exported[f"MAPRT_SIM_{name.upper()}"] = text
+            exported[f"MAPRT_EMULATOR_{name.upper()}"] = text
         return exported

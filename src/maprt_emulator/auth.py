@@ -25,8 +25,8 @@ trusts the status code reads an auth failure as a success.
 
 from fastapi import Request
 
-from maprt_sim import envelope
-from maprt_sim.settings import USER_AGENT_PREFIX
+from maprt_emulator import envelope
+from maprt_emulator.settings import USER_AGENT_PREFIX
 
 
 def bearer_token(request):

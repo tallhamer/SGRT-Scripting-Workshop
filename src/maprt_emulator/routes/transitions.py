@@ -10,7 +10,7 @@ Everything about this route is therefore this simulator's invention:
 * the path;
 * the response format — the map stream exactly as GetMap sends it, then a ``TRANSITIONS`` marker
   line, then the transitions as a JSON envelope;
-* how a transition is assessed (see :func:`maprt_sim.mapgen.transition_verdicts`).
+* how a transition is assessed (see :func:`maprt_emulator.mapgen.transition_verdicts`).
 
 It is here because beam transitions are a real planning concern and worth a workshop
 conversation. It is labelled unofficial in the OpenAPI summary, in the ``X-Sim-Unofficial``
@@ -25,13 +25,13 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import StreamingResponse
 
-from maprt_sim import envelope, mapgen
-from maprt_sim.auth import require_token
-from maprt_sim.routes.beams import resolve_clearance_target
-from maprt_sim.routes.getmap import stream_map_body
-from maprt_sim.schemas import GetMapAndBeamTransitionsRequest
+from maprt_emulator import envelope, mapgen
+from maprt_emulator.auth import require_token
+from maprt_emulator.routes.beams import resolve_clearance_target
+from maprt_emulator.routes.getmap import stream_map_body
+from maprt_emulator.schemas import GetMapAndBeamTransitionsRequest
 
-logger = logging.getLogger("maprt_sim.routes.transitions")
+logger = logging.getLogger("maprt_emulator.routes.transitions")
 
 router = APIRouter(prefix="/integration", tags=["integration"],
                    dependencies=[Depends(require_token)])

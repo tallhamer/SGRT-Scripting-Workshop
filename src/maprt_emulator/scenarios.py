@@ -19,7 +19,7 @@ control surface nobody will risk using.
 import logging
 from dataclasses import dataclass, field
 
-logger = logging.getLogger("maprt_sim.scenarios")
+logger = logging.getLogger("maprt_emulator.scenarios")
 
 
 @dataclass(frozen=True)

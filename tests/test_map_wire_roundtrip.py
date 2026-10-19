@@ -14,9 +14,9 @@ parser's docstring. The two resolutions do not share a shape, and that is arithm
 import numpy as np
 import pytest
 
-from maprt_sim import mapgen
-from maprt_sim.mapgen import SurfaceModel, compute_map, map_text
-from maprt_sim.schemas import GetMapRequest
+from maprt_emulator import mapgen
+from maprt_emulator.mapgen import SurfaceModel, compute_map, map_text
+from maprt_emulator.schemas import GetMapRequest
 from maprt_workshop import wire
 
 # The display axes the parser lays a map out on.

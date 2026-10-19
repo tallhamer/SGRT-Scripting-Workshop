@@ -1,6 +1,6 @@
 """Recorded clearance maps: serving a real GetMap response body back out of a folder.
 
-The synthetic generator in :mod:`maprt_sim.mapgen` is plausible but invented. When you have a
+The synthetic generator in :mod:`maprt_emulator.mapgen` is plausible but invented. When you have a
 *real* appliance response, you can drop it in here and the simulator will serve the real bytes —
 which is what you want for a live demo, and the only way the workshop shows anyone a map that
 actually came off a linac.
@@ -33,7 +33,7 @@ import math
 from dataclasses import dataclass
 from pathlib import Path
 
-logger = logging.getLogger("maprt_sim.maps")
+logger = logging.getLogger("maprt_emulator.maps")
 
 #: Isocenter components are matched to the nearest mm, buffers to a tenth of a mm. Exact float
 #: equality would make an exact match essentially unreachable from a hand-typed notebook cell.

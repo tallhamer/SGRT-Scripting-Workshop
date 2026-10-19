@@ -3,7 +3,7 @@
 Given the text (and status) of an API response, this turns the response into plain Python and
 numpy values. Ported from ``maprt_client.wire`` in the surface_tools project, where these
 parsers are the clinically critical part of a live MapRT integration; the collision-map parser
-most of all. Keeping them verbatim is deliberate: the simulator in :mod:`maprt_sim` is written
+most of all. Keeping them verbatim is deliberate: the simulator in :mod:`maprt_emulator` is written
 to satisfy *these* parsers, so a notebook that works against the simulator is exercising the
 same code that works against a real appliance.
 

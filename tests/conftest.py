@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from maprt_sim.app import create_app
-from maprt_sim.settings import SimSettings
+from maprt_emulator.app import create_app
+from maprt_emulator.settings import EmulatorSettings
 
 TOKEN = "test-token-not-a-real-secret"
 
@@ -41,13 +41,13 @@ def data_dir(tmp_path):
 def make_settings(data_dir, tmp_path):
     """Build settings against the temporary catalog; kwargs override any field."""
     def _make(**overrides):
-        # env_prefix means a MAPRT_SIM_* variable in the developer's shell would otherwise leak
+        # env_prefix means a MAPRT_EMULATOR_* variable in the developer's shell would otherwise leak
         # into every test. Passing these explicitly pins them.
-        base = {"token": TOKEN, "data_dir": data_dir, "state_dir": tmp_path / ".maprt_sim",
+        base = {"token": TOKEN, "data_dir": data_dir, "state_dir": tmp_path / ".maprt_emulator",
                 "host": "127.0.0.1", "port": 8000, "unlicensed": (), "latency_ms": 0,
                 "auth_401": False, "strict_user_agent": False, "open_ping": False}
         base.update(overrides)
-        return SimSettings(**base)
+        return EmulatorSettings(**base)
     return _make
 
 
@@ -133,7 +133,7 @@ def shared_data_dir(tmp_path_factory):
 @pytest.fixture(scope="module")
 def shared_client(shared_data_dir, tmp_path_factory):
     """An authenticated client on one app for the whole module, with no stream pacing."""
-    settings = SimSettings(
+    settings = EmulatorSettings(
         token=TOKEN, data_dir=shared_data_dir,
         state_dir=tmp_path_factory.mktemp("shared-state"),
         host="127.0.0.1", port=8000, unlicensed=(), latency_ms=0, map_seconds=0.0,

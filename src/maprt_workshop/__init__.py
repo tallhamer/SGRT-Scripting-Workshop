@@ -7,7 +7,7 @@ reader (:mod:`~maprt_workshop.obj`) and client-side beam checking
 
 The parsers and request builders are ported from the live-verified ``maprt_client`` package in
 the surface_tools project, so what you learn here is what works against a real appliance. The
-simulator in :mod:`maprt_sim` is written to satisfy *these* parsers, not the other way round.
+simulator in :mod:`maprt_emulator` is written to satisfy *these* parsers, not the other way round.
 
 Not a medical device. Teaching use only. Not affiliated with or endorsed by Vision RT.
 """
@@ -15,8 +15,8 @@ Not a medical device. Teaching use only. Not affiliated with or endorsed by Visi
 from maprt_workshop import obj, request, wire
 from maprt_workshop.beams import ArcSegment, StaticBeamPlot, check_beams
 from maprt_workshop.client import (
+    EmulatorNotRunning,
     MapRTClient,
-    SimulatorNotRunning,
     connect,
     find_server,
     find_token,
@@ -42,7 +42,7 @@ __all__ = [
     "find_token",
     "find_url",
     "find_server",
-    "SimulatorNotRunning",
+    "EmulatorNotRunning",
     "build_map_request",
     "build_beam_delivery_status_request",
     "beam_entry",

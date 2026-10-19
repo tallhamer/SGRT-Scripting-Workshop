@@ -1,4 +1,4 @@
-"""`maprt-sim --check-data`: the validator someone leans on while adding data.
+"""`maprt-emulator --check-data`: the validator someone leans on while adding data.
 
 Its job is to catch the mistakes that are easy to make and hard to notice — a map recorded
 against a surface id that no longer exists, an `.obj` nobody references, a recording that was
@@ -11,7 +11,7 @@ import shutil
 
 import pytest
 
-from maprt_sim.check import check
+from maprt_emulator.check import check
 
 
 @pytest.fixture

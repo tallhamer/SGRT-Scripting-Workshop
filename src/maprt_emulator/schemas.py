@@ -157,7 +157,7 @@ class GetMapAndBeamTransitionsRequest(GetMapRequest):
 
     Documented in the C# interface (§4.2.1.4) with **no REST route in §5.2**, so both the path
     and the response shape this simulator serves are invented. See
-    :mod:`maprt_sim.routes.transitions`.
+    :mod:`maprt_emulator.routes.transitions`.
     """
 
     beam_list: list[Beam] = Field(default_factory=list, alias="BeamList")

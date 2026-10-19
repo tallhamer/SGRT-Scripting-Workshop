@@ -10,8 +10,8 @@ import json
 
 import pytest
 
-from maprt_sim.settings import API_VERSION, SERVER_VERSION
-from maprt_sim.store import EMPTY_GUID
+from maprt_emulator.settings import API_VERSION, SERVER_VERSION
+from maprt_emulator.store import EMPTY_GUID
 
 SURFACE_1 = "dad7394f-6893-4ce3-96ed-8bc3091cf4c3"   # ANON001, older
 SURFACE_2 = "a6f3fbee-6714-4f92-80c1-f5aadda4cbeb"   # ANON001, newer

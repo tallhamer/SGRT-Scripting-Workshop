@@ -23,7 +23,7 @@ Then **two terminals**, which is how the workshop is meant to be run — an appl
 your code in another, exactly like the real thing:
 
 ```bash
-uv run maprt-sim        # terminal 1 — prints your API token. Leave it running.
+uv run maprt-emulator        # terminal 1 — prints your API token. Leave it running.
 uv run jupyter lab      # terminal 2
 ```
 
@@ -44,11 +44,11 @@ The simulator generates a **new API token every time it starts** — a workshop 
 disposable. It reaches your notebook two ways, and you do not normally have to do anything:
 
 - it is printed in the box the simulator shows at startup, and
-- it is written to `.maprt_sim/server.json`, along with **the URL it is listening on**.
+- it is written to `.maprt_emulator/server.json`, along with **the URL it is listening on**.
 
 `connect()` finds that file by walking up from the notebook's directory, so a non-default port
 works with no configuration. If you are running from outside the repository, paste the
-`MAPRT_SIM_TOKEN=…` line the simulator printed.
+`MAPRT_EMULATOR_TOKEN=…` line the simulator printed.
 
 ## Running it without installing anything
 
@@ -109,9 +109,9 @@ built and tested.
 
 | Symptom | What is happening | Fix |
 | --- | --- | --- |
-| `Address already in use` when starting the simulator | Something else holds port 8000 — often another copy of this simulator. | `uv run maprt-sim --port 8001`. **You do not need to tell the notebooks** — the simulator records its port and they find it. |
-| `SimulatorNotRunning: No API token found` | No `.maprt_sim/` anywhere above the notebook. The simulator is not running, or you are outside the repository. | Start it: `uv run maprt-sim`. If you are deliberately elsewhere, `os.environ['MAPRT_SIM_TOKEN'] = '…'`. |
-| `SimulatorNotRunning: … came from .maprt_sim/server.json … stale file` | The simulator ran and has since stopped. | Restart it. The message tells you which address it tried and where that came from. |
+| `Address already in use` when starting the simulator | Something else holds port 8000 — often another copy of this simulator. | `uv run maprt-emulator --port 8001`. **You do not need to tell the notebooks** — the simulator records its port and they find it. |
+| `EmulatorNotRunning: No API token found` | No `.maprt_emulator/` anywhere above the notebook. The simulator is not running, or you are outside the repository. | Start it: `uv run maprt-emulator`. If you are deliberately elsewhere, `os.environ['MAPRT_EMULATOR_TOKEN'] = '…'`. |
+| `EmulatorNotRunning: … came from .maprt_emulator/server.json … stale file` | The simulator ran and has since stopped. | Restart it. The message tells you which address it tried and where that came from. |
 | `ConnectError: nodename nor servname provided` | A corporate/hospital **proxy** is set, and it is trying to route even `127.0.0.1` through itself. The error reads like DNS and is not. | `os.environ['NO_PROXY'] = '127.0.0.1,localhost'`, then re-run. `connect()` spots this and says so. |
 | macOS asks to allow incoming connections | The firewall prompt for a new listening process. | Allow it, or ignore it — the simulator binds `127.0.0.1` only and nothing outside your machine can reach it either way. |
 | A `GetMap` cell seems to hang | It streams over a few seconds by design — a real appliance takes **minutes**. | Wait. Over ~30 s, interrupt the kernel and check terminal 1. `--map-seconds 0` removes the delay. |
@@ -130,7 +130,7 @@ Neither exists on a real appliance.
 
 | Path | Contents |
 | --- | --- |
-| `src/maprt_sim` | The FastAPI simulator: the seven REST endpoints, Bearer auth, the streaming collision-map format, fault injection |
+| `src/maprt_emulator` | The FastAPI simulator: the seven REST endpoints, Bearer auth, the streaming collision-map format, fault injection |
 | `src/maprt_workshop` | The client side: response parsing, request building, an HTTP client, an OBJ reader, beam-vs-map checking, plotting |
 | `data/` | One folder per Vision RT product — see [`data/README.md`](data/README.md). |
 | `data/MapRT/` | The catalog the simulator serves — rooms, patients, surfaces, recorded maps, a synthetic RT Plan. Adding your own: [`docs/adding-data.md`](docs/adding-data.md) |
@@ -178,7 +178,7 @@ takes 5–15 minutes; pre-warming means the room gets a cached image instead of 
 uv run pytest                      # everything, including the notebooks
 uv run pytest -m "not slow"        # skip the notebook execution while iterating
 uv run ruff check
-uv run maprt-sim --check-data      # validate the data catalog without starting a server
+uv run maprt-emulator --check-data      # validate the data catalog without starting a server
 ```
 
 **Adding your own data** — rooms, patients, surfaces, recorded clearance maps, RT Plans — is

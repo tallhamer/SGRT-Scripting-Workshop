@@ -12,6 +12,6 @@
       0.0
     ],
     "highResolution": false,
-    "note": "Synthetic snapshot from maprt_sim.mapgen (seed 0), NOT a real appliance response. 76.9% of angles clear."
+    "note": "Synthetic snapshot from maprt_emulator.mapgen (seed 0), NOT a real appliance response. 76.9% of angles clear."
   }
 ]

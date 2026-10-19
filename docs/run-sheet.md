@@ -22,7 +22,7 @@
 cd SGRT-Scripting-Workshop
 git pull
 uv sync
-uv run maprt-sim
+uv run maprt-emulator
 ```
 
 You want the banner showing `3 patients · 3 surfaces · 4 rooms · 1 recorded map`. If the data
@@ -85,8 +85,8 @@ In rough order of how often you will see it.
 
 | | What they will say | What is happening | Fix |
 | --- | --- | --- | --- |
-| 1 | "Address already in use" | Something holds port 8000 — usually a simulator they started earlier and forgot | `uv run maprt-sim --port 8001`. **Nothing else to change** — the simulator records its port and the notebooks find it. |
-| 2 | "It says SimulatorNotRunning" | They closed terminal 1, or they are running Jupyter from outside the repo | Restart it. The error message names which address it tried and where that came from — read it to them rather than guessing. |
+| 1 | "Address already in use" | Something holds port 8000 — usually a simulator they started earlier and forgot | `uv run maprt-emulator --port 8001`. **Nothing else to change** — the simulator records its port and the notebooks find it. |
+| 2 | "It says EmulatorNotRunning" | They closed terminal 1, or they are running Jupyter from outside the repo | Restart it. The error message names which address it tried and where that came from — read it to them rather than guessing. |
 | 3 | "`nodename nor servname provided`" | **A hospital proxy** routing even 127.0.0.1 through itself. Reads like DNS, is not | `os.environ['NO_PROXY'] = '127.0.0.1,localhost'`. The error message says this too. |
 | 4 | "My numbers are all wrong" | Buffers in cm where the API wants mm | Factor of ten. Ask what units they typed. |
 | 5 | "Nothing happens / it's frozen" | GetMap streaming, which takes a few seconds by design | Wait. Over ~30 s, check terminal 1. |

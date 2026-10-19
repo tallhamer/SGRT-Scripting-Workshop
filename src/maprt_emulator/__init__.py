@@ -1,4 +1,4 @@
-"""maprt_sim — a local simulator of the Vision RT MapRT API 2.0.
+"""maprt_emulator — a local simulator of the Vision RT MapRT API 2.0.
 
 Serves the seven documented REST endpoints over FastAPI, with the same Bearer-token auth, the
 same JSON envelope, the same two-ways-to-fail error model and the same streaming collision-map

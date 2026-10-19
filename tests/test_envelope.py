@@ -1,6 +1,6 @@
 """The envelope shape, and the two-ways-to-fail error model."""
 
-from maprt_sim import envelope
+from maprt_emulator import envelope
 
 
 class TestOk:

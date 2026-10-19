@@ -15,9 +15,9 @@ GetMap and GetBeamDeliveryStatus want anyway.
 
 from fastapi import APIRouter, Depends, Request
 
-from maprt_sim import envelope
-from maprt_sim.auth import require_token
-from maprt_sim.store import EMPTY_GUID
+from maprt_emulator import envelope
+from maprt_emulator.auth import require_token
+from maprt_emulator.store import EMPTY_GUID
 
 router = APIRouter(prefix="/integration", tags=["integration"],
                    dependencies=[Depends(require_token)])

@@ -20,11 +20,11 @@ import logging
 from fastapi import APIRouter, Depends, Request
 from fastapi.concurrency import run_in_threadpool
 
-from maprt_sim import envelope, mapgen
-from maprt_sim.auth import require_token
-from maprt_sim.schemas import GetBeamDeliveryStatusRequest
+from maprt_emulator import envelope, mapgen
+from maprt_emulator.auth import require_token
+from maprt_emulator.schemas import GetBeamDeliveryStatusRequest
 
-logger = logging.getLogger("maprt_sim.routes.beams")
+logger = logging.getLogger("maprt_emulator.routes.beams")
 
 router = APIRouter(prefix="/integration", tags=["integration"],
                    dependencies=[Depends(require_token)])

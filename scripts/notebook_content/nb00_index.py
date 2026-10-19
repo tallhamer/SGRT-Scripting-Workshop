@@ -21,11 +21,11 @@ before it. **Start by making sure the simulator is running** — the cell below 
 
 Run this cell. If it is happy, open notebook 01 and begin."""),
     ("code", '''\
-from maprt_workshop import SimulatorNotRunning, connect
+from maprt_workshop import EmulatorNotRunning, connect
 
 try:
     maprt = connect()
-except SimulatorNotRunning as problem:
+except EmulatorNotRunning as problem:
     print("NOT READY\\n")
     print(problem)
 else:
@@ -114,9 +114,9 @@ has to look at the body before deciding how to parse it. → notebook 05"""),
 
 | Symptom | Fix |
 | --- | --- |
-| `SimulatorNotRunning` | Start it: `uv run maprt-sim` in another terminal, and leave it running. |
+| `EmulatorNotRunning` | Start it: `uv run maprt-emulator` in another terminal, and leave it running. |
 | `No API token found` | Same — the token file appears when the simulator starts. |
-| `Address already in use` | Something else holds port 8000. `uv run maprt-sim --port 8001`, then set `MAPRT_SIM_URL` to match. |
+| `Address already in use` | Something else holds port 8000. `uv run maprt-emulator --port 8001`, then set `MAPRT_EMULATOR_URL` to match. |
 | A cell hangs | `GetMap` takes a few seconds by design. If it is longer than ~30 s, interrupt the kernel and check the simulator's terminal. |
 | Everything fails after notebook 07 | You probably left a fault armed. Run `POST /sim/scenario` with `{{"name": "ok"}}`, or just restart the simulator. |
 

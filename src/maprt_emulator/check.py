@@ -1,4 +1,4 @@
-"""Validate a data directory without starting a server — ``maprt-sim --check-data``.
+"""Validate a data directory without starting a server — ``maprt-emulator --check-data``.
 
 The loaders refuse to start on anything they cannot read, which is the right behaviour for a
 server but a slow way to iterate when you are adding data: edit, start, read a traceback, stop,
@@ -11,8 +11,8 @@ Nothing here changes what the server will do. It tells you what it is about to d
 
 from pathlib import Path
 
-from maprt_sim.maps import MapLibrary, MapLibraryError
-from maprt_sim.store import Catalog, CatalogError
+from maprt_emulator.maps import MapLibrary, MapLibraryError
+from maprt_emulator.store import Catalog, CatalogError
 
 
 class Report:
