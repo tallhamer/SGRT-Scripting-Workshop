@@ -28,6 +28,9 @@ uv run maprt-emulator
 You want the banner showing `3 patients · 3 surfaces · 4 rooms · 1 recorded map`. If the data
 line is wrong, you are in the wrong directory.
 
+Then `uv run jupyter lab notebooks/MapRT` in a second terminal. (`uv run maprt-workshop` does both
+in one, if you would rather not demo the two-terminal setup.)
+
 ---
 
 ## Timing — a three-hour session

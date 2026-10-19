@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-DOCS = ROOT / "docs"
+DOCS = ROOT / "docs" / "MapRT"
 NOTEBOOK_DIR = ROOT / "notebooks" / "MapRT"
 
 HANDOUT = DOCS / "handout.md"
@@ -146,16 +146,31 @@ class TestTheSlides:
         assert "teaching emulator" in SLIDES.read_text().lower()
 
 
+def _markdown_files():
+    """Every Markdown file in the repository that a reader might follow a link from."""
+    skip = {".venv", ".pytest_cache", ".ruff_cache", "node_modules"}
+    return sorted(p for p in ROOT.rglob("*.md")
+                  if not skip.intersection(p.relative_to(ROOT).parts)
+                  and p.name != "WORKSHOP_PLAN.md")
+
+
 class TestCrossLinks:
-    @pytest.mark.parametrize("doc", [HANDOUT, RUN_SHEET, SLIDES], ids=lambda p: p.name)
+    @pytest.mark.parametrize("doc", _markdown_files(), ids=lambda p: str(p.relative_to(ROOT)))
     def test_every_relative_link_resolves(self, doc):
-        for target in re.findall(r"\]\((?!https?://)([^)#]+)\)", doc.read_text()):
-            assert (doc.parent / target).exists(), f"{doc.name} links to a missing {target}"
+        """Every folder moved at least once while this repository was split by product.
+
+        A relative link is the thing that silently breaks when a file moves, and GitHub renders
+        it as a 404 rather than an error. So every Markdown file is checked, not just the three
+        workshop materials.
+        """
+        for target in re.findall(r"\]\((?!https?://|#)([^)#]+)\)", doc.read_text()):
+            assert (doc.parent / target).exists(), \
+                f"{doc.relative_to(ROOT)} links to a missing {target}"
 
     def test_the_readme_points_at_the_materials(self):
         readme = (ROOT / "README.md").read_text()
         for doc in (HANDOUT, RUN_SHEET, SLIDES):
-            assert f"docs/{doc.name}" in readme, f"the README does not link {doc.name}"
+            assert f"docs/MapRT/{doc.name}" in readme, f"the README does not link {doc.name}"
 
     def test_every_document_names_the_same_repository(self):
         """One stale URL on a handout sends a room to a 404."""

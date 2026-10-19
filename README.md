@@ -1,15 +1,24 @@
-# MapRT Scripting Workshop
+# SGRT Scripting Workshops
 
-The **MapRT Emulator**, a local emulator of the Vision RT MapRT API 2.0, plus a set of Jupyter
-notebooks that walk you through scripting against it — the same calls, headers and wire formats you would use against
-a real MapRT appliance, with no appliance, no patient data and no network.
+Jupyter-notebook workshops on scripting for Vision RT's surface-guided radiotherapy products, one
+workshop per product. Everything runs on your own machine, or in a browser, with synthetic data:
+no appliance, no patient data, no network.
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tallhamer/SGRT-Scripting-Workshop/HEAD?urlpath=lab/tree/notebooks/MapRT/00_start_here.ipynb)
+> **Not a medical device. Teaching use only.** Not affiliated with or endorsed by Vision RT.
 
-> **Not a medical device. Teaching use only.** The clearance maps this emulator returns are
-> plausible, not physical. Not affiliated with or endorsed by Vision RT.
+## The workshops
 
-## Quick start
+| Product | Status | Open it with | What it covers |
+| --- | --- | --- | --- |
+| **[MapRT](#maprt-scripting-workshop)** | Ready | `uv run maprt-workshop` | Scripting against the MapRT API 2.0, using a local emulator of it: rooms, surfaces, clearance maps, beam checks, a plan-QA capstone. About three hours. |
+| AlignRT | Planned | `uv run alignrt-workshop` | Example data files (images, DICOM, CSV) in `data/AlignRT/` |
+| SimRT | Planned | `uv run simrt-workshop` | Example data files in `data/SimRT/` |
+| DoseRT | Planned | `uv run dosert-workshop` | Example data files in `data/DoseRT/` |
+
+Only MapRT has an API, so only MapRT has an emulator. The other workshops' notebooks will work on
+example files in their product's `data/` folder.
+
+## Getting started
 
 Requires [uv](https://docs.astral.sh/uv/). Nothing else — uv fetches the right Python itself.
 
@@ -19,26 +28,61 @@ cd SGRT-Scripting-Workshop
 uv sync
 ```
 
-Then **two terminals**, which is how the workshop is meant to be run — an appliance in one place,
-your code in another, exactly like the real thing:
+That installs every workshop. Then open the one you want with its command from the table above.
+Each opens Jupyter Lab in that product's notebooks folder, starting the product's emulator first if
+it has one. Ctrl+C stops everything it started.
+
+## Repository layout
+
+Every top-level folder has one subfolder per product, plus `common/` for what they share.
+
+| Folder | Holds |
+| --- | --- |
+| `notebooks/<Product>/` | The workshop, in order. Start at `00_start_here.ipynb`. **Generated**, see *Development* |
+| `data/<Product>/` | Example data the notebooks and emulators use. Synthetic only; real data goes in the git-ignored `data/<Product>/local/`. See [`data/README.md`](data/README.md) |
+| `docs/<Product>/` | Handout, facilitator run-sheet, slide outline, guides. Index: [`docs/README.md`](docs/README.md) |
+| `scripts/<Product>/` | Data generators, and the notebooks' source (`notebook_content/`) |
+| `scripts/common/` | The notebook builder and the Binder requirements exporter |
+| `src/<Product>/` | That product's Python packages. For MapRT: `maprt_emulator` (the FastAPI emulator) and `maprt_workshop` (the client library the notebooks use) |
+| `src/common/sgrt_workshop/` | The list of workshops, and the launcher behind every `<product>-workshop` command |
+| `tests/<Product>/`, `tests/common/` | The tests, split the same way |
+| `binder/` | One Binder configuration serving every workshop |
+
+## MapRT Scripting Workshop
+
+The **MapRT Emulator**, a local emulator of the Vision RT MapRT API 2.0, plus nine notebooks that
+walk you through scripting against it — the same calls, headers and wire formats you would use
+against a real MapRT appliance.
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tallhamer/SGRT-Scripting-Workshop/HEAD?urlpath=lab/tree/notebooks/MapRT/00_start_here.ipynb)
+
+> The clearance maps this emulator returns are plausible, not physical.
+
+### Running it
+
+After [Getting started](#getting-started), one command:
 
 ```bash
-uv run maprt-emulator        # terminal 1 — prints your API token. Leave it running.
-uv run jupyter lab notebooks/MapRT   # terminal 2
-```
-
-Open **[`notebooks/MapRT/00_start_here.ipynb`](notebooks/MapRT/00_start_here.ipynb)**. It checks your setup and
-links to everything else.
-
-### One terminal, if you would rather
-
-```bash
-uv run maprt-workshop  # starts the emulator, waits for it, then opens Jupyter Lab
+uv run maprt-workshop   # starts the emulator, waits for it, then opens Jupyter Lab in notebooks/MapRT/
 ```
 
 Ctrl+C stops both. (Jupyter will ask you to confirm; the emulator shuts down once it exits.)
+Emulator options pass straight through, e.g. `uv run maprt-workshop --port 8001`.
 
-### About the token
+Open **[`notebooks/MapRT/00_start_here.ipynb`](notebooks/MapRT/00_start_here.ipynb)**. It checks
+your setup and links to everything else.
+
+#### Two terminals, the way the real thing looks
+
+The workshop itself teaches with the emulator in one terminal and your code in another, because
+that is what the real thing looks like: an appliance in one place, your code somewhere else.
+
+```bash
+uv run maprt-emulator                 # terminal 1 — prints your API token. Leave it running.
+uv run jupyter lab notebooks/MapRT    # terminal 2
+```
+
+#### About the token
 
 The emulator generates a **new API token every time it starts** — a workshop credential should be
 disposable. It reaches your notebook two ways, and you do not normally have to do anything:
@@ -50,7 +94,7 @@ disposable. It reaches your notebook two ways, and you do not normally have to d
 works with no configuration. If you are running from outside the repository, paste the
 `MAPRT_EMULATOR_TOKEN=…` line the emulator printed.
 
-## Running it without installing anything
+### Running it without installing anything
 
 If uv will not install, or you are on a locked-down machine, **Binder** runs the whole thing in
 your browser — emulator included.
@@ -71,7 +115,7 @@ What to know before relying on it:
 
 The emulator's API docs are reachable in a session at `<your-binder-url>/proxy/8000/docs`.
 
-### Google Colab
+#### Google Colab
 
 Colab works too, and is the most reliable fallback — most people already have a Google account,
 and there is no build step to wait for.
@@ -102,7 +146,7 @@ What to know:
 **Recommended order:** local first (it is the only one that matches a real site), Binder as the
 no-install fallback, Google Colab if Binder is busy or still building.
 
-## Troubleshooting
+### Troubleshooting
 
 Everything in this table is something that actually went wrong while the workshop was being
 built and tested.
@@ -126,23 +170,7 @@ built and tested.
 The emulator's own state is readable at `/emulator/state`, and its interactive API docs at `/docs`.
 Neither exists on a real appliance.
 
-## What's here
-
-| Path | Contents |
-| --- | --- |
-| `src/maprt_emulator` | The FastAPI emulator: the seven REST endpoints, Bearer auth, the streaming collision-map format, fault injection |
-| `src/maprt_workshop` | The client side: response parsing, request building, an HTTP client, an OBJ reader, beam-vs-map checking, plotting |
-| `data/` | One folder per Vision RT product — see [`data/README.md`](data/README.md). |
-| `data/MapRT/` | The catalog the emulator serves — rooms, patients, surfaces, recorded maps, a synthetic RT Plan. Adding your own: [`docs/adding-data.md`](docs/adding-data.md) |
-| `notebooks/MapRT/` | The workshop, in order. Start at `00_start_here.ipynb`. |
-| `scripts/` | Data generators, and the builders the notebooks and Binder requirements are generated from |
-| `binder/` | The Binder configuration — generated requirements, and the build/start hooks |
-
-`src/maprt_workshop`'s parsers and request builders are ported from a live-verified MapRT
-integration, and the emulator is written to satisfy *those* parsers — so what you practice here is
-what works against a real appliance.
-
-## The workshop
+### The workshop
 
 | | Notebook | Covers |
 | --- | --- | --- |
@@ -158,16 +186,20 @@ what works against a real appliance.
 
 About three hours end to end.
 
-## Running the workshop
+`maprt_workshop`'s parsers and request builders are ported from a live-verified MapRT
+integration, and the emulator is written to satisfy *those* parsers — so what you practice here is
+what works against a real appliance.
+
+### Teaching it
 
 If you are teaching from this rather than working through it:
 
 | | |
 | --- | --- |
-| [`docs/handout.md`](docs/handout.md) | **Give this to attendees.** One page: the seven requests, the envelope, the error model, and the six things that catch people out. |
-| [`docs/run-sheet.md`](docs/run-sheet.md) | Timings for a three-hour session, what to demo live rather than let people read, and where they actually get stuck. |
-| [`docs/slides-outline.md`](docs/slides-outline.md) | One heading per slide, with what to say. ~25 minutes of talking across the session. |
-| [`docs/adding-data.md`](docs/adding-data.md) | Putting your own rooms, patients, surfaces, maps and plans into the emulator — including recording real appliance responses. |
+| [`docs/MapRT/handout.md`](docs/MapRT/handout.md) | **Give this to attendees.** One page: the seven requests, the envelope, the error model, and the six things that catch people out. |
+| [`docs/MapRT/run-sheet.md`](docs/MapRT/run-sheet.md) | Timings for a three-hour session, what to demo live rather than let people read, and where they actually get stuck. |
+| [`docs/MapRT/slides-outline.md`](docs/MapRT/slides-outline.md) | One heading per slide, with what to say. ~25 minutes of talking across the session. |
+| [`docs/MapRT/adding-data.md`](docs/MapRT/adding-data.md) | Putting your own rooms, patients, surfaces, maps and plans into the emulator — including recording real appliance responses. |
 
 **The day before: open the Binder badge once and let it finish.** The first build after a push
 takes 5–15 minutes; pre-warming means the room gets a cached image instead of a progress bar.
@@ -182,7 +214,7 @@ uv run maprt-emulator --check-data      # validate the data catalog without star
 ```
 
 **Adding your own data** — rooms, patients, surfaces, recorded clearance maps, RT Plans — is
-[`docs/adding-data.md`](docs/adding-data.md). Anything patient-derived goes in `data/MapRT/local/`,
+[`docs/MapRT/adding-data.md`](docs/MapRT/adding-data.md). Anything patient-derived goes in `data/MapRT/local/`,
 which is git-ignored and overlays `data/MapRT/`.
 
 `binder/requirements.txt` is generated too — `uv run python scripts/common/export_requirements.py` —

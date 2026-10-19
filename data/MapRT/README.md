@@ -4,7 +4,7 @@
 change, no restart flag beyond restarting the server.
 
 > **Adding your own rooms, patients, surfaces, maps or plans?**
-> → **[`docs/adding-data.md`](../../docs/adding-data.md)** is the step-by-step guide.
+> → **[`docs/MapRT/adding-data.md`](../../docs/MapRT/adding-data.md)** is the step-by-step guide.
 > Then check it with `uv run maprt-emulator --check-data`.
 
 This file describes what is *here* and why.

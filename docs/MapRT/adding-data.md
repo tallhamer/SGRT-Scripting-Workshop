@@ -4,7 +4,7 @@ Everything the emulator serves comes out of one folder, `data/MapRT/`. Adding da
 drop plus a line of JSON — no code change, and no restart flag beyond restarting the server.
 
 (`data/` itself holds one folder per Vision RT product; this guide is about MapRT's. See
-[`data/README.md`](../data/README.md).)
+[`data/README.md`](../../data/README.md).)
 
 **Check your work at any point:**
 
