@@ -14,8 +14,8 @@ a real MapRT appliance, with no appliance, no patient data and no network.
 Requires [uv](https://docs.astral.sh/uv/). Nothing else — uv fetches the right Python itself.
 
 ```bash
-git clone <this repo>
-cd maprt-scripting-workshop
+git clone https://github.com/tallhamer/SGRT-Scripting-Workshop.git
+cd SGRT-Scripting-Workshop
 uv sync
 ```
 
