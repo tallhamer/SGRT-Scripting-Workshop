@@ -1,4 +1,4 @@
-"""Record a GetMap response body into ``data/maps/`` so the simulator can serve it back.
+"""Record a GetMap response body into ``data/MapRT/maps/`` so the simulator can serve it back.
 
 Two sources:
 
@@ -12,11 +12,11 @@ Two sources:
 ``--from-url``
     Capture a **real** appliance's response. This is the one that matters. The bytes are written
     verbatim, so what the simulator later serves is exactly what the appliance sent. Point it at
-    ``data/local/maps`` (git-ignored) — a real recording is patient-derived and does not belong
+    ``data/MapRT/local/maps`` (git-ignored) — a real recording is patient-derived and does not belong
     in a public repository.
 
     uv run python scripts/record_map.py --from-url https://maprt:5000 --token "$TOKEN" \
-        --surface <guid> --room <guid> --out data/local/maps
+        --surface <guid> --room <guid> --out data/MapRT/local/maps
 """
 
 import argparse
@@ -84,10 +84,10 @@ def main(argv=None):
                         metavar=("X", "Y", "Z"), help="mm, DICOM patient coordinates")
     parser.add_argument("--high-resolution", action="store_true", help="1 degree instead of coarse")
     parser.add_argument("--seed", type=int, default=0, help="--from-simulator only")
-    parser.add_argument("--data-dir", default="data", help="--from-simulator only")
+    parser.add_argument("--data-dir", default="data/MapRT", help="--from-simulator only")
     parser.add_argument("--from-url", default=None, help="capture from a real appliance instead")
     parser.add_argument("--token", default=None, help="API token, with --from-url")
-    parser.add_argument("--out", default="data/maps", help="directory to write into")
+    parser.add_argument("--out", default="data/MapRT/maps", help="directory to write into")
     parser.add_argument("--name", default=None, help="filename stem (default: generated)")
     args = parser.parse_args(argv)
 

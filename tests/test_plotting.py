@@ -261,7 +261,7 @@ class TestSurfacePlot:
 
         from maprt_workshop.obj import parse_obj
         root = Path(__file__).resolve().parent.parent
-        path = next((root / "data" / "surfaces").glob("*.obj"))
+        path = next((root / "data" / "MapRT" / "surfaces").glob("*.obj"))
         vertices, faces, _normals = parse_obj(path.read_bytes())
         ax = plot_surface(vertices, faces, stride=40)
         # Equal aspect, or a 1.8 m body squashed into a cube reads as a different shape entirely.

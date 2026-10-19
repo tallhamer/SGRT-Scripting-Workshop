@@ -9,7 +9,7 @@ So this writes a genuine, parseable RT Plan whose *contents* are invented: a mad
 matching the simulator's catalog, a plausible isocenter, and a beam list with the shapes that
 matter for collision work — static beams, an arc, and a setup field.
 
-    uv run python scripts/make_synthetic_plan.py data/plans/ANON001_plan.dcm
+    uv run python scripts/make_synthetic_plan.py data/MapRT/plans/ANON001_plan.dcm
 
 Only the tags a clearance workflow reads are populated. It is not a deliverable plan and no
 planning system should be asked to open it.
@@ -157,7 +157,7 @@ def main(argv=None):
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("output", help="where to write the .dcm")
     parser.add_argument("--patient-id", default="ANON001",
-                        help="must match a patient in the simulator's data/patients.json")
+                        help="must match a patient in the simulator's data/MapRT/patients.json")
     parser.add_argument("--patient-name", default="WORKSHOP^SYNTHETIC")
     parser.add_argument("--position", default="HFS")
     args = parser.parse_args(argv)

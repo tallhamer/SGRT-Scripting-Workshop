@@ -15,7 +15,7 @@ SURFACE = "dad7394f-6893-4ce3-96ed-8bc3091cf4c3"
 OTHER_SURFACE = "a6f3fbee-6714-4f92-80c1-f5aadda4cbeb"
 ROOM = "96bbc235-0da9-e983-0783-5973a7d11144"
 
-# The setup the shipped recording in data/maps/ was made for.
+# The setup the shipped recording in data/MapRT/maps/ was made for.
 RECORDED = {"PatientSurfaceId": SURFACE, "TreatmentRoomId": ROOM, "PatientPosition": "HFS",
             "CouchBuffer": 20.0, "PatientBuffer": 20.0, "HighResolution": False,
             "Isocenter": {"x": 0.0, "y": 0.0, "z": 0.0}}

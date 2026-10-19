@@ -13,10 +13,11 @@ maprt-sim.log
 # even a throwaway one — it teaches the wrong habit.
 .maprt_sim/
 
-# Maintainer-only data overlay: real exported surfaces and recorded clearance maps. This is
-# where patient-derived data goes so that it can never become a commit candidate. Everything
-# the public repo needs is the synthetic data under data/ instead.
-data/local/
+# Maintainer-only data overlays, one per product (data/MapRT/local/, and later
+# data/AlignRT/local/ …): real exported surfaces and recorded clearance maps. This is where
+# patient-derived data goes so that it can never become a commit candidate. Everything the
+# public repo needs is the synthetic data beside each overlay instead.
+data/*/local/
 
 # Notebooks
 .ipynb_checkpoints/

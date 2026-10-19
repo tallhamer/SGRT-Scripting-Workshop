@@ -30,7 +30,7 @@ if "COLAB_RELEASE_TAG" in os.environ:
 
     # Work from the checkout's notebooks/ directory. Colab opens a notebook detached from its
     # repository, so every relative path would otherwise be wrong — the capstone reads
-    # "../data/plans/..." and would look in /data. One chdir makes Colab match a local clone
+    # "../data/MapRT/plans/..." and would look in /data. One chdir makes Colab match a local clone
     # instead of special-casing paths in each notebook.
     os.chdir(f"{{CHECKOUT}}/notebooks")
 
@@ -43,7 +43,7 @@ if "COLAB_RELEASE_TAG" in os.environ:
     log = open("/content/maprt-sim.log", "w")
     subprocess.Popen(["maprt-sim", "--port", "8000",
                       "--token", os.environ["MAPRT_SIM_TOKEN"],
-                      "--data-dir", f"{{CHECKOUT}}/data",
+                      "--data-dir", f"{{CHECKOUT}}/data/MapRT",
                       "--map-seconds", "1"],
                      stdout=log, stderr=subprocess.STDOUT)
 

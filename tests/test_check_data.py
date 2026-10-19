@@ -18,7 +18,7 @@ from maprt_sim.check import check
 def catalog(data_dir):
     """A copy of the shipped catalog plus the plans directory, which `data_dir` omits."""
     from pathlib import Path
-    source = Path(__file__).resolve().parent.parent / "data" / "plans"
+    source = Path(__file__).resolve().parent.parent / "data" / "MapRT" / "plans"
     if source.is_dir():
         shutil.copytree(source, data_dir / "plans")
     return data_dir

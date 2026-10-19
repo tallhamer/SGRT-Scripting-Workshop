@@ -152,8 +152,8 @@ class TestStartScript:
         assert '--token "$MAPRT_SIM_TOKEN"' in start
 
     def test_it_points_at_a_data_directory_that_exists(self, start):
-        assert '--data-dir "$REPO_DIR/data"' in start
-        assert (ROOT / "data" / "rooms.json").is_file()
+        assert '--data-dir "$REPO_DIR/data/MapRT"' in start
+        assert (ROOT / "data" / "MapRT" / "rooms.json").is_file()
 
     def test_it_waits_and_reports_whether_the_simulator_came_up(self, start):
         # The failure this catches is silent: nohup returns happily even when the port is busy,

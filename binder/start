@@ -28,7 +28,7 @@ else
         --host 127.0.0.1 \
         --port 8000 \
         --token "$MAPRT_SIM_TOKEN" \
-        --data-dir "$REPO_DIR/data" \
+        --data-dir "$REPO_DIR/data/MapRT" \
         --state-dir "$REPO_DIR/.maprt_sim" \
         --map-seconds 1 \
         > "$REPO_DIR/maprt-sim.log" 2>&1 &

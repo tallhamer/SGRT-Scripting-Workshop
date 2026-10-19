@@ -3,12 +3,12 @@
 Everything comes out of a folder, so adding data is a file drop and a line of JSON — no code
 change. The layout::
 
-    data/rooms.json        [{"id", "machineName", "name", "coordinateSystem"}, …]
-    data/patients.json     {"<patientId>": [{"id", "timeStamp", "timeZone"}, …], …}
-    data/surfaces/<id>.obj the mesh served for that surface id
-    data/local/            an optional overlay, git-ignored — see below
+    data/MapRT/rooms.json         [{"id", "machineName", "name", "coordinateSystem"}, …]
+    data/MapRT/patients.json      {"<patientId>": [{"id", "timeStamp", "timeZone"}, …], …}
+    data/MapRT/surfaces/<id>.obj  the mesh served for that surface id
+    data/MapRT/local/             an optional overlay, git-ignored — see below
 
-``data/local/`` shadows ``data/``: a ``rooms.json`` or ``patients.json`` there replaces the
+``data/MapRT/local/`` shadows ``data/MapRT/``: a ``rooms.json`` or ``patients.json`` there replaces the
 public one, and surfaces there are added to (and win over) the public ones. That is where real
 exported patient surfaces go on a machine that has them, so patient-derived data can never
 become a commit candidate.
@@ -136,7 +136,7 @@ class Catalog:
                 except KeyError as exc:
                     raise CatalogError(f"A surface of {patient_id} in {patients_path} has no id.") from exc
                 # The overlay directory is searched first, so a real surface dropped into
-                # data/local/surfaces/ replaces the synthetic one of the same id.
+                # data/MapRT/local/surfaces/ replaces the synthetic one of the same id.
                 path = _prefer(*(d / f"{surface_id}.obj" for d in surface_dirs))
                 if path is None:
                     searched = ", ".join(str(d) for d in surface_dirs)
@@ -200,7 +200,7 @@ class Catalog:
 
 
 def _prefer(*paths):
-    """The first path that exists, or None. How the ``data/local`` overlay shadows ``data``."""
+    """The first path that exists, or None. How the ``data/MapRT/local`` overlay shadows ``data/MapRT``."""
     for path in paths:
         if path is not None and path.is_file():
             return path

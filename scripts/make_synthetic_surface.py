@@ -10,7 +10,7 @@ cross-section is an ellipse whose semi-axes follow a head / neck / shoulders / t
 profile. Ends are capped. A seed varies the proportions so each "patient" has a distinguishable
 surface and a distinguishable clearance map.
 
-    uv run python scripts/make_synthetic_surface.py data/surfaces/<guid>.obj --seed 1
+    uv run python scripts/make_synthetic_surface.py data/MapRT/surfaces/<guid>.obj --seed 1
 """
 
 import argparse

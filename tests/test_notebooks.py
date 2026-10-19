@@ -83,7 +83,7 @@ def test_the_notebook_runs_top_to_bottom(path, simulator, monkeypatch):
         notebook,
         timeout=600,
         kernel_name="python3",
-        # Run from notebooks/, as a student would — notebook 08 opens ../data/plans/ relatively.
+        # Run from notebooks/, as a student would — notebook 08 opens ../data/MapRT/plans/ relatively.
         resources={"metadata": {"path": str(NOTEBOOK_DIR)}},
     )
     client.execute()

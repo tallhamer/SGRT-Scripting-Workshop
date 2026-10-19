@@ -106,7 +106,7 @@ def _parser():
     parser.add_argument("--token", default=None,
                         help="use this API token instead of generating a fresh one")
     parser.add_argument("--data-dir", default=None,
-                        help="the catalog to serve (default: the nearest data/ directory)")
+                        help="the catalog to serve (default: the nearest data/MapRT/ directory)")
     parser.add_argument("--state-dir", default=None,
                         help="where to write the token file (default .maprt_sim)")
     parser.add_argument("--unlicensed", default=None,

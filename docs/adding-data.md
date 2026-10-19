@@ -1,7 +1,10 @@
 # Adding data to the simulator
 
-Everything the simulator serves comes out of one folder. Adding data is a file drop plus a line
-of JSON — no code change, and no restart flag beyond restarting the server.
+Everything the simulator serves comes out of one folder, `data/MapRT/`. Adding data is a file
+drop plus a line of JSON — no code change, and no restart flag beyond restarting the server.
+
+(`data/` itself holds one folder per Vision RT product; this guide is about MapRT's. See
+[`data/README.md`](../data/README.md).)
 
 **Check your work at any point:**
 
@@ -14,20 +17,20 @@ That loads everything the server would, reports what it found, and names the pro
 
 ---
 
-## Where to put it: `data/` or `data/local/`
+## Where to put it: `data/MapRT/` or `data/MapRT/local/`
 
 | | |
 | --- | --- |
-| **`data/`** | Tracked by git. **Synthetic only.** This is what everyone who clones the repository gets. |
-| **`data/local/`** | **Git-ignored.** Real exported surfaces, real recorded maps, real plans. |
+| **`data/MapRT/`** | Tracked by git. **Synthetic only.** This is what everyone who clones the repository gets. |
+| **`data/MapRT/local/`** | **Git-ignored.** Real exported surfaces, real recorded maps, real plans. |
 
-`data/local/` **overlays** `data/`:
+`data/MapRT/local/` **overlays** `data/MapRT/`:
 
 - a `rooms.json` or `patients.json` there **replaces** the public one entirely
-- a surface or map there **wins** over one of the same name in `data/`
+- a surface or map there **wins** over one of the same name in `data/MapRT/`
 
 That is the mechanism that lets you demo real data without it ever becoming a commit candidate.
-If the data came off a clinical system, it goes in `data/local/`. There is no second judgement
+If the data came off a clinical system, it goes in `data/MapRT/local/`. There is no second judgement
 call to make.
 
 A third option: `--data-dir /somewhere/else` points the simulator at an entirely separate folder,
@@ -37,7 +40,7 @@ which is useful for keeping a per-site catalog outside the repository.
 
 ## Treatment rooms
 
-Edit `data/rooms.json`. It is a list.
+Edit `data/MapRT/rooms.json`. It is a list.
 
 ```json
 {
@@ -68,13 +71,13 @@ Sharing an **`id`** is an error: `GetMap` could then resolve to either room, arb
 
 Two steps: drop the mesh in, then list it.
 
-**1. Put the `.obj` in `data/surfaces/`, named for its surface id:**
+**1. Put the `.obj` in `data/MapRT/surfaces/`, named for its surface id:**
 
 ```
-data/surfaces/dad7394f-6893-4ce3-96ed-8bc3091cf4c3.obj
+data/MapRT/surfaces/dad7394f-6893-4ce3-96ed-8bc3091cf4c3.obj
 ```
 
-**2. Reference it from `data/patients.json`:**
+**2. Reference it from `data/MapRT/patients.json`:**
 
 ```json
 {
@@ -101,7 +104,7 @@ handle both. `ANON003` exists for exactly that.
 
 ```bash
 uv run python scripts/make_synthetic_surface.py \
-    data/surfaces/$(python -c "import uuid; print(uuid.uuid4())").obj --seed 42
+    data/MapRT/surfaces/$(python -c "import uuid; print(uuid.uuid4())").obj --seed 42
 ```
 
 `--seed` varies the body proportions, so each patient gets a distinguishable surface *and* a
@@ -115,11 +118,11 @@ the reader handles all of that. But a real export is also **patient-derived and 
 this project was built from is 19 MB, 265,857 vertices).
 
 ```bash
-mkdir -p data/local/surfaces
-cp /path/to/export.obj data/local/surfaces/<surface-guid>.obj
+mkdir -p data/MapRT/local/surfaces
+cp /path/to/export.obj data/MapRT/local/surfaces/<surface-guid>.obj
 ```
 
-Then list it in `data/local/patients.json`, which replaces the public one. Keep a copy of every
+Then list it in `data/MapRT/local/patients.json`, which replaces the public one. Keep a copy of every
 public patient you still want, because the overlay replaces rather than merges.
 
 ---
@@ -136,11 +139,11 @@ uv run python scripts/record_map.py \
     --from-url https://maprt.yoursite.local:5000 --token "$MAPRT_TOKEN" \
     --surface <surface-guid> --room <room-guid> \
     --isocenter 0 0 0 --couch-buffer 20 --patient-buffer 20 \
-    --out data/local/maps
+    --out data/MapRT/local/maps
 ```
 
 The response body is written verbatim, so what the simulator later serves is exactly what the
-appliance sent. **Use `--out data/local/maps`** — a real recording is patient-derived.
+appliance sent. **Use `--out data/MapRT/local/maps`** — a real recording is patient-derived.
 
 ### Snapshotting the model
 
@@ -155,7 +158,7 @@ student who cannot tell invented data from measured data has learnt the wrong th
 
 ### By hand
 
-Write the raw body to `data/maps/<name>.txt` and add an entry to `data/maps/index.json`:
+Write the raw body to `data/MapRT/maps/<name>.txt` and add an entry to `data/MapRT/maps/index.json`:
 
 ```json
 {
@@ -190,14 +193,14 @@ demo where every map must be real.
 
 ## RT Plans
 
-Plans are not served by the API — the notebooks read them from disk. Put them in `data/plans/`.
+Plans are not served by the API — the notebooks read them from disk. Put them in `data/MapRT/plans/`.
 
 ```bash
-uv run python scripts/make_synthetic_plan.py data/plans/ANON002_plan.dcm \
+uv run python scripts/make_synthetic_plan.py data/MapRT/plans/ANON002_plan.dcm \
     --patient-id ANON002 --position HFS
 ```
 
-For a real plan, use `data/local/plans/` and point the notebook at it. Two things must line up or
+For a real plan, use `data/MapRT/local/plans/` and point the notebook at it. Two things must line up or
 a notebook will fail partway:
 
 - the plan's **`PatientID`** must exist in `patients.json`
@@ -214,12 +217,12 @@ a notebook will fail partway:
 SURFACE=$(python -c "import uuid; print(uuid.uuid4())")
 
 # 2. Generate a surface.
-uv run python scripts/make_synthetic_surface.py data/surfaces/$SURFACE.obj --seed 7
+uv run python scripts/make_synthetic_surface.py data/MapRT/surfaces/$SURFACE.obj --seed 7
 
 # 3. List it. (Edit patients.json by hand, or:)
 python - <<PY
 import json, pathlib
-p = pathlib.Path("data/patients.json")
+p = pathlib.Path("data/MapRT/patients.json")
 catalog = json.loads(p.read_text())
 catalog["ANON004"] = [{"id": "$SURFACE",
                        "timeStamp": "2026-10-15T09:30:00",
@@ -265,8 +268,9 @@ which makes them worse, not better:
 
 ## Two rules worth repeating
 
-**Nothing patient-derived goes in `data/`.** It is a public repository. `data/local/` is
-git-ignored and overlays it; that is what it is for.
+**Nothing patient-derived goes in `data/MapRT/`** — or anywhere in `data/` outside a `local/`
+folder. It is a public repository. `data/MapRT/local/` is git-ignored and overlays it; that is
+what it is for.
 
 **Label invented data as invented.** The `note` field on a recorded map exists so nobody mistakes
 a model snapshot for a measurement. The simulator reports its own invented error codes at

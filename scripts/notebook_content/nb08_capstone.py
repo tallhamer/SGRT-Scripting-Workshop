@@ -34,7 +34,7 @@ Scripted, it is one function. Here it is, built in six steps."""),
     ("code", '''\
 import pydicom
 
-PLAN_PATH = "../data/plans/ANON001_plan.dcm"
+PLAN_PATH = "../data/MapRT/plans/ANON001_plan.dcm"
 
 plan = pydicom.dcmread(PLAN_PATH)
 

@@ -5,12 +5,12 @@ The synthetic generator in :mod:`maprt_sim.mapgen` is plausible but invented. Wh
 which is what you want for a live demo, and the only way the workshop shows anyone a map that
 actually came off a linac.
 
-    data/maps/index.json      [{"file", "surfaceId", "roomId", "patientPosition",
-                                "couchBuffer", "patientBuffer", "isocenter": [x, y, z],
-                                "highResolution": bool, "note": "..."}, …]
-    data/maps/<name>.txt      the raw GetMap response body, verbatim, including the DONE line
+    data/MapRT/maps/index.json   [{"file", "surfaceId", "roomId", "patientPosition",
+                                   "couchBuffer", "patientBuffer", "isocenter": [x, y, z],
+                                   "highResolution": bool, "note": "..."}, …]
+    data/MapRT/maps/<name>.txt   the raw GetMap response body, verbatim, including the DONE line
 
-``data/local/maps/`` overlays this, git-ignored, which is where patient-derived recordings belong.
+``data/MapRT/local/maps/`` overlays this, git-ignored, which is where patient-derived recordings belong.
 
 Resolution order for a request, reported back in the ``X-Sim-Map-Source`` response header:
 

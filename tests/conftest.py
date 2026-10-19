@@ -11,7 +11,7 @@ from maprt_sim.settings import SimSettings
 
 TOKEN = "test-token-not-a-real-secret"
 
-REPO_DATA = Path(__file__).resolve().parent.parent / "data"
+REPO_DATA = Path(__file__).resolve().parent.parent / "data" / "MapRT"
 
 
 @pytest.fixture

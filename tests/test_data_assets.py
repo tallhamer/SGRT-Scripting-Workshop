@@ -5,12 +5,13 @@ does not have, a surface that stopped parsing, a repo that grew until a conferen
 times out.
 """
 
+import re
 from pathlib import Path
 
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-PLAN = ROOT / "data" / "plans" / "ANON001_plan.dcm"
+PLAN = ROOT / "data" / "MapRT" / "plans" / "ANON001_plan.dcm"
 
 pydicom = pytest.importorskip("pydicom")
 
@@ -29,7 +30,7 @@ class TestTheSyntheticPlan:
         # A plan naming a patient the simulator has never heard of makes the capstone notebook
         # fail on its second cell, which is a miserable way to start the exercise.
         import json
-        patients = json.loads((ROOT / "data" / "patients.json").read_text(encoding="utf-8"))
+        patients = json.loads((ROOT / "data" / "MapRT" / "patients.json").read_text(encoding="utf-8"))
         assert plan.PatientID in patients
         assert patients[plan.PatientID], "the plan's patient has no surfaces to map against"
 
@@ -37,7 +38,7 @@ class TestTheSyntheticPlan:
         # It must be a room whose machineName is *unique*, or the capstone's room lookup returns
         # DuplicateKey and the notebook teaches that lesson in the wrong place.
         import json
-        rooms = json.loads((ROOT / "data" / "rooms.json").read_text(encoding="utf-8"))
+        rooms = json.loads((ROOT / "data" / "MapRT" / "rooms.json").read_text(encoding="utf-8"))
         machine = plan.BeamSequence[0].TreatmentMachineName
         matches = [r for r in rooms if r["machineName"] == machine]
         assert len(matches) == 1, f"{machine} matches {len(matches)} rooms"
@@ -78,10 +79,10 @@ class TestTheSurfaces:
         import json
 
         from maprt_workshop.obj import parse_obj
-        patients = json.loads((ROOT / "data" / "patients.json").read_text(encoding="utf-8"))
+        patients = json.loads((ROOT / "data" / "MapRT" / "patients.json").read_text(encoding="utf-8"))
         for surfaces in patients.values():
             for entry in surfaces:
-                path = ROOT / "data" / "surfaces" / f"{entry['id']}.obj"
+                path = ROOT / "data" / "MapRT" / "surfaces" / f"{entry['id']}.obj"
                 vertices, faces, _normals = parse_obj(path.read_bytes())
                 assert len(vertices) > 1000 and len(faces) > 1000
 
@@ -91,10 +92,10 @@ class TestTheSurfaces:
         import json
 
         from maprt_workshop.obj import bounding_box, parse_obj
-        patients = json.loads((ROOT / "data" / "patients.json").read_text(encoding="utf-8"))
+        patients = json.loads((ROOT / "data" / "MapRT" / "patients.json").read_text(encoding="utf-8"))
         first = next(iter(patients.values()))[0]["id"]
         vertices, _faces, _normals = parse_obj(
-            (ROOT / "data" / "surfaces" / f"{first}.obj").read_bytes())
+            (ROOT / "data" / "MapRT" / "surfaces" / f"{first}.obj").read_bytes())
         low, high = bounding_box(vertices)
         length, width, height = high - low
         assert 1400 < length < 2200, f"{length:.0f} mm long is not a person"
@@ -114,8 +115,15 @@ class TestRepositorySize:
                     if line.strip() and not line.startswith("#")]
 
         def ignored(relative):
-            return any(fnmatch.fnmatch(part, pattern.rstrip("/"))
-                       for pattern in patterns for part in Path(relative).parts)
+            # A bare name (".venv/") matches any one path component; a pattern with a slash in
+            # it ("data/*/local/") is anchored at the root and matches that directory's contents.
+            parts = Path(relative).parts
+            prefixes = ["/".join(parts[:i]) for i in range(1, len(parts) + 1)]
+            for pattern in (p.rstrip("/") for p in patterns):
+                candidates = prefixes if "/" in pattern else parts
+                if any(fnmatch.fnmatch(c, pattern) for c in candidates):
+                    return True
+            return False
 
         return [p for p in ROOT.rglob("*")
                 if p.is_file() and not ignored(str(p.relative_to(ROOT)))]
@@ -126,7 +134,7 @@ class TestRepositorySize:
 
     def test_no_single_committed_file_is_huge(self):
         # The 19 MB real surface export is the thing this is watching for: patient-derived and
-        # far too big. It belongs in data/local/, which is git-ignored.
+        # far too big. It belongs in data/MapRT/local/, which is git-ignored.
         for path in self.committed_files():
             size_mb = path.stat().st_size / 1e6
             assert size_mb < 5, f"{path.relative_to(ROOT)} is {size_mb:.1f} MB"
@@ -136,5 +144,6 @@ class TestRepositorySize:
         for path in self.committed_files():
             relative = str(path.relative_to(ROOT))
             assert not relative.startswith("_legacy"), relative
-            assert not relative.startswith("data/local"), relative
+            # Every product's local/ overlay — data/MapRT/local today, data/AlignRT/local later.
+            assert not re.match(r"data/[^/]+/local/", relative), relative
             assert path.suffix.lower() != ".pdf", f"{relative}: the spec PDF must not ship"

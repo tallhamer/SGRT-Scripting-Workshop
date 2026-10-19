@@ -8,7 +8,7 @@ was first written and never run — each of which would have failed every sessio
    ``InvalidClientToken``.
 2. A fixed ``time.sleep(4)`` instead of waiting for the server: too short on a slow runtime, and
    the failure looks like nothing in particular.
-3. No ``chdir`` into the checkout, so the capstone's ``../data/plans/...`` resolved to ``/data``
+3. No ``chdir`` into the checkout, so the capstone's ``../data/MapRT/plans/...`` resolved to ``/data``
    and raised ``FileNotFoundError``.
 4. The index notebook had no bootstrap cell at all — and it is the entry point.
 
@@ -97,7 +97,7 @@ class TestTheBootstrapIsCorrect:
     def test_it_moves_into_the_checkout(self, source):
         """Colab opens a notebook detached from its repository.
 
-        Without this the capstone's `../data/plans/...` resolves to `/data` and raises
+        Without this the capstone's `../data/MapRT/plans/...` resolves to `/data` and raises
         FileNotFoundError. One chdir makes every relative path behave as it does locally,
         instead of special-casing paths in each notebook.
         """
@@ -110,6 +110,11 @@ class TestTheBootstrapIsCorrect:
     def test_it_points_at_the_real_repository(self, source):
         assert "REPLACE-ME" not in source
         assert "github.com/tallhamer/SGRT-Scripting-Workshop" in source
+
+    def test_it_serves_the_maprt_catalog(self, source):
+        # data/ holds one folder per product; the emulator serves MapRT's, not data/ itself.
+        assert '"--data-dir", f"{CHECKOUT}/data/MapRT"' in source
+        assert (ROOT / "data" / "MapRT" / "rooms.json").is_file()
 
     def test_it_does_not_reclone_on_a_rerun(self, source):
         # Re-running the first cell is the standard "have you tried restarting it" move.

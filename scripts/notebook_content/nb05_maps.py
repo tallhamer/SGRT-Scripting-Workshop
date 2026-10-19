@@ -266,7 +266,7 @@ the head or feet — which is exactly where real collisions happen.
 
 > The map you are looking at came from a **model**, not a collision engine. It responds to the
 > inputs the way a real one does, which is what makes it worth reasoning about; the absolute
-> numbers are invented. See `data/README.md`.
+> numbers are invented. See `data/MapRT/README.md`.
 
 Check that claim about gantry 0 and 180 rather than taking it:"""),
     ("code", '''\

@@ -132,7 +132,8 @@ Neither exists on a real appliance.
 | --- | --- |
 | `src/maprt_sim` | The FastAPI simulator: the seven REST endpoints, Bearer auth, the streaming collision-map format, fault injection |
 | `src/maprt_workshop` | The client side: response parsing, request building, an HTTP client, an OBJ reader, beam-vs-map checking, plotting |
-| `data/` | The catalog the simulator serves — rooms, patients, surfaces, recorded maps, a synthetic RT Plan. Adding your own: [`docs/adding-data.md`](docs/adding-data.md) |
+| `data/` | One folder per Vision RT product — see [`data/README.md`](data/README.md). |
+| `data/MapRT/` | The catalog the simulator serves — rooms, patients, surfaces, recorded maps, a synthetic RT Plan. Adding your own: [`docs/adding-data.md`](docs/adding-data.md) |
 | `notebooks/` | The workshop, in order. Start at `00_start_here.ipynb`. |
 | `scripts/` | Data generators, and the builders the notebooks and Binder requirements are generated from |
 | `binder/` | The Binder configuration — generated requirements, and the build/start hooks |
@@ -181,8 +182,8 @@ uv run maprt-sim --check-data      # validate the data catalog without starting 
 ```
 
 **Adding your own data** — rooms, patients, surfaces, recorded clearance maps, RT Plans — is
-[`docs/adding-data.md`](docs/adding-data.md). Anything patient-derived goes in `data/local/`,
-which is git-ignored and overlays `data/`.
+[`docs/adding-data.md`](docs/adding-data.md). Anything patient-derived goes in `data/MapRT/local/`,
+which is git-ignored and overlays `data/MapRT/`.
 
 `binder/requirements.txt` is generated too — `uv run python scripts/export_requirements.py` —
 so a Binder session installs the same locked versions `uv sync` does. CI checks both.

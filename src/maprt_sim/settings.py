@@ -30,19 +30,25 @@ USER_AGENT_PREFIX = "VisionRT.Integration.Saturn/"
 LICENSABLE = ("surfaces", "map", "beams")
 
 
+#: Where this product's catalog lives, relative to the repository root. ``data/`` holds one
+#: folder per Vision RT product (MapRT, and later AlignRT, SimRT, …), each with its own
+#: git-ignored ``local/`` overlay — see ``data/README.md``.
+DATA_SUBDIR = Path("data") / "MapRT"
+
+
 def find_data_dir(start=None):
-    """The ``data/`` directory, found by walking up from ``start`` (cwd by default).
+    """The ``data/MapRT/`` directory, found by walking up from ``start`` (cwd by default).
 
     Walking up rather than trusting the working directory means ``maprt-sim`` behaves the same
     whether it is started from the repository root or from ``notebooks/``.
     """
     here = Path(start or Path.cwd()).resolve()
     for directory in [here, *here.parents]:
-        candidate = directory / "data"
+        candidate = directory / DATA_SUBDIR
         if (candidate / "rooms.json").is_file():
             return candidate
     # Nothing found: hand back the conventional location so the error names a real path.
-    return Path.cwd() / "data"
+    return Path.cwd() / DATA_SUBDIR
 
 
 class SimSettings(BaseSettings):

@@ -1,13 +1,15 @@
-"""The data catalog: loading, the ``data/local`` overlay, and startup error messages.
+"""The data catalog: loading, the ``data/MapRT/local`` overlay, and startup error messages.
 
 A data problem has to be a clear message at the prompt, not a traceback inside a worker during
 someone's first notebook cell — so these check the messages as well as the behaviour.
 """
 
 import json
+from pathlib import Path
 
 import pytest
 
+from maprt_sim.settings import find_data_dir
 from maprt_sim.store import Catalog, CatalogError
 
 
@@ -101,3 +103,33 @@ class TestStartupErrors:
         (data_dir / "patients.json").write_text(json.dumps(catalog), encoding="utf-8")
         with pytest.raises(CatalogError, match="missing-surface"):
             Catalog.load(data_dir)
+
+
+class TestFindingTheDataDirectory:
+    """``data/`` holds one folder per Vision RT product; the default is MapRT's."""
+
+    @pytest.fixture
+    def repo(self, tmp_path):
+        product = tmp_path / "data" / "MapRT"
+        product.mkdir(parents=True)
+        (product / "rooms.json").write_text("[]", encoding="utf-8")
+        (tmp_path / "notebooks").mkdir()
+        return tmp_path
+
+    def test_it_finds_the_maprt_folder_from_the_root(self, repo):
+        assert find_data_dir(repo) == (repo / "data" / "MapRT").resolve()
+
+    def test_it_walks_up_from_a_subdirectory(self, repo):
+        assert find_data_dir(repo / "notebooks") == (repo / "data" / "MapRT").resolve()
+
+    def test_a_catalog_directly_under_data_is_not_mistaken_for_it(self, tmp_path):
+        # The pre-2026-10-18 layout. Serving it would mean serving another product's folder.
+        (tmp_path / "data").mkdir()
+        (tmp_path / "data" / "rooms.json").write_text("[]", encoding="utf-8")
+        found = find_data_dir(tmp_path)
+        assert found != (tmp_path / "data").resolve()
+        assert found.parts[-2:] == ("data", "MapRT")
+
+    def test_the_repository_itself_resolves(self):
+        root = Path(__file__).resolve().parent.parent
+        assert find_data_dir(root / "notebooks") == root / "data" / "MapRT"
