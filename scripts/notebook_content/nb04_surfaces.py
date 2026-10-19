@@ -135,16 +135,104 @@ print(raw[:200].decode())
 '''),
 
     ("md", """\
-An **ASCII OBJ** file. `v` lines are vertices, `f` lines are triangular faces. (The `ps` and `fs`
-lines are vertex and face counts — not standard OBJ, but what the appliance emits, so a reader
-has to tolerate them.)
+## Parsing the OBJ by hand
 
-One thing that catches everyone: **OBJ face indices are 1-based.** An off-by-one here produces a
-mesh that looks almost right, which is worse than one that looks obviously wrong."""),
+An **ASCII OBJ** file: one record per line, and the first word of each line says what kind of
+record it is. Before parsing anything, find out which kinds this file actually contains."""),
+    ("code", '''\
+from collections import Counter
+
+text = raw.decode("ascii")
+lines = text.splitlines()
+
+Counter(line.split()[0] if line.strip() else "(blank)" for line in lines)
+'''),
+    ("md", """\
+| first word | what the line is |
+| --- | --- |
+| `#` | a comment — ignore it |
+| `ps`, `fs` | vertex and face **counts**. Not standard OBJ, but what the appliance emits, so a reader has to tolerate them |
+| `v` | one **vertex**: `x y z`, in millimetres |
+| `f` | one triangular **face**: the numbers of its three vertices |
+
+A real appliance export looks the same, only bigger, and OBJ files from other tools can carry
+more kinds (`vn` normals, `vt` texture coordinates). Two pieces matter for a mesh: the `v` lines
+and the `f` lines."""),
+
+    ("md", """\
+### Vertices
+
+Every `v` line becomes one row of an `N × 3` array. Match `"v "` *with the space*, or a `vn`
+normal line gets read as a vertex too."""),
+    ("code", '''\
+import numpy as np
+
+vertices = np.array([line.split()[1:4] for line in lines if line.startswith("v ")],
+                    dtype=float)
+
+print(vertices.shape)
+vertices[:3]
+'''),
+
+    ("md", """\
+### Faces
+
+Each `f` line names three vertices. A field can be written `7`, `7/2`, `7//3` or `7/2/3` (vertex,
+texture, normal), and the vertex is always the part before the first `/`.
+
+MapRT sends triangles only. Check that rather than assume it: a four-vertex face would otherwise
+be silently cut down to three."""),
+    ("code", '''\
+face_rows = [[field.split("/")[0] for field in line.split()[1:]]
+             for line in lines if line.startswith("f ")]
+
+assert all(len(row) == 3 for row in face_rows), "not every face is a triangle"
+
+faces_as_written = np.array(face_rows, dtype=int)
+print("smallest vertex number:", faces_as_written.min())
+print("largest vertex number: ", faces_as_written.max())
+print("number of vertices:    ", len(vertices))
+'''),
+    ("md", """\
+The numbers run from **1** to **N**. Python arrays run from **0** to **N − 1**.
+
+**OBJ face numbers are 1-based**, and this is the mistake that catches everyone. Use them as
+written and the largest one points past the end of the array. Worse, every *other* face quietly
+uses the wrong three vertices. The result is a mesh that looks *almost* right, which is worse than
+one that looks obviously broken. Subtract one:"""),
+    ("code", '''\
+faces = faces_as_written - 1
+
+assert faces.min() == 0 and faces.max() == len(vertices) - 1
+faces[:3]
+'''),
+
+    ("md", """\
+### Check against what the file promised
+
+The `ps` and `fs` lines say how many vertices and faces there should be. They are a free check
+that nothing was skipped. (Not every OBJ has them, hence `.get`.)"""),
+    ("code", '''\
+declared = {line.split()[0]: int(line.split()[1])
+            for line in lines if line.startswith(("ps ", "fs "))}
+
+print(f"vertices: file says {declared.get('ps')}, parsed {len(vertices)}")
+print(f"faces:    file says {declared.get('fs')}, parsed {len(faces)}")
+'''),
+
+    ("md", """\
+### The library version
+
+`maprt_workshop.obj.parse_obj` is these same steps in one function. It also reads `vn` normals
+when present and splits a four-sided face into two triangles instead of refusing it. Use it from
+here on. Writing it once by hand is how you know what it does."""),
     ("code", '''\
 from maprt_workshop.obj import describe, parse_obj
 
-vertices, faces, normals = parse_obj(raw)
+library_vertices, library_faces, normals = parse_obj(raw)
+
+print("same vertices:", np.array_equal(vertices, library_vertices))
+print("same faces:   ", np.array_equal(faces, library_faces))
 print(describe(vertices, faces))
 '''),
 
@@ -173,23 +261,64 @@ One more caveat from the same section: the returned mesh *"may have lower resolu
 for visualization only"*, depending on licensing. Do not measure things with it."""),
 
     ("md", """\
-## Look at it
+## Look at it, in 3D
 
-The cheapest check that a mesh loaded correctly is to draw it."""),
+The cheapest check that a mesh loaded correctly is to draw it. Plotly's `Mesh3d` takes exactly
+the two arrays you just built, split into columns:
+
+- `x`, `y`, `z`: one value per **vertex**
+- `i`, `j`, `k`: one value per **face**, the 0-based row numbers of its three vertices
+
+That is the second reason the subtraction mattered: `Mesh3d` counts from zero too."""),
     ("code", '''\
-%matplotlib inline
-from maprt_workshop.plotting import plot_surface
+import plotly.graph_objects as go
 
-ax = plot_surface(vertices, faces, stride=6,
-                  title=f"{PATIENT_ID} · acquired {surfaces[0]['timeStamp']}")
-ax.view_init(elev=22, azim=-60)
+x, y, z = vertices.T        # columns of the N × 3 vertex array
+i, j, k = faces.T           # columns of the M × 3 face array
+
+fig = go.Figure(go.Mesh3d(x=x, y=y, z=z, i=i, j=j, k=k, color="lightsteelblue"))
+fig
 '''),
     ("md", """\
-The long axis is superior-inferior. If that ever comes out as a cube, the aspect ratio is wrong
-and you are looking at a shape that does not exist.
+Drag to rotate, scroll to zoom, hover for coordinates.
 
-For anything more than a sanity check, use a real 3D viewer — this is matplotlib drawing 19,000
-triangles and it is not trying to be good at it."""),
+**It looks wrong, and it is wrong.** Plotly has stretched each axis to fill a cube, so a body
+1.7 m long and 0.2 m deep has been drawn about as deep as it is long. Nothing errored, and you are
+looking at a shape that does not exist. Tell it that a millimetre is the same length on every
+axis:"""),
+    ("code", '''\
+fig.update_layout(
+    title=f"{PATIENT_ID} · acquired {surfaces[0]['timeStamp']}",
+    scene=dict(aspectmode="data",                  # 1 mm is 1 mm on every axis
+               xaxis_title="x (mm)", yaxis_title="y (mm)", zaxis_title="z (mm)"),
+    height=500, margin=dict(l=0, r=0, t=40, b=0),
+)
+fig
+'''),
+    ("md", """\
+Now the long axis is superior-inferior, the way a person lies on a couch.
+
+A single flat colour makes the shape hard to read. Colour by height instead, and make the hover
+text say what the numbers are:"""),
+    ("code", '''\
+fig.update_traces(
+    intensity=z, colorscale="Blues", showscale=False,          # colour by height above the couch
+    lighting=dict(ambient=0.5, diffuse=0.8, specular=0.2),
+    hovertemplate="x %{x:.0f} mm<br>y %{y:.0f} mm<br>z %{z:.0f} mm<extra></extra>",
+)
+fig.update_layout(scene_camera=dict(eye=dict(x=-1.2, y=-1.6, z=0.9)))
+fig
+'''),
+    ("md", """\
+These are still **couch coordinates**, as the section above said. The picture tells you the mesh
+parsed. It does not tell you which way the patient was lying.
+
+This mesh has about 19,000 faces and turns smoothly. A real appliance export can have half a
+million, and any viewer that runs in a browser tab gets sluggish at that size. For those, thin the
+mesh out first (decimation). Tools such as VTK or trimesh can do it.
+
+For a report or a PDF, where an interactive figure cannot go,
+`maprt_workshop.plotting.plot_surface` draws the same mesh as a static matplotlib image."""),
 
     ("md", """\
 ## The bounding box is the useful number
