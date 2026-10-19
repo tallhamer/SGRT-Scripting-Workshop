@@ -13,5 +13,6 @@ pip install --no-deps .
 
 # Fail the build here rather than leave a student with a session that looks fine until the
 # first cell. A broken image is obvious; a broken session at 9am is not.
-python -c "import maprt_emulator, maprt_workshop; print('workshop packages import')"
+python -c "import sgrt_workshop, maprt_emulator, maprt_workshop; print('workshop packages import')"
 maprt-emulator --help > /dev/null && echo "maprt-emulator console script works"
+maprt-workshop --help > /dev/null && echo "maprt-workshop console script works"

@@ -33,7 +33,7 @@ links to everything else.
 ### One terminal, if you would rather
 
 ```bash
-uv run workshop-up      # starts the emulator, waits for it, then opens Jupyter Lab
+uv run maprt-workshop  # starts the emulator, waits for it, then opens Jupyter Lab
 ```
 
 Ctrl+C stops both. (Jupyter will ask you to confirm; the emulator shuts down once it exits.)
@@ -116,7 +116,7 @@ built and tested.
 | macOS asks to allow incoming connections | The firewall prompt for a new listening process. | Allow it, or ignore it — the emulator binds `127.0.0.1` only and nothing outside your machine can reach it either way. |
 | A `GetMap` cell seems to hang | It streams over a few seconds by design — a real appliance takes **minutes**. | Wait. Over ~30 s, interrupt the kernel and check terminal 1. `--map-seconds 0` removes the delay. |
 | Everything fails after notebook 07 | You left a fault armed. | Run the last cell of notebook 07, or `POST /emulator/scenario` with `{"name": "ok"}`, or restart the emulator. |
-| `jupyter: command not found` from `workshop-up` | The notebook dependencies are not installed. | `uv sync` — it installs Jupyter. If you used `--no-group workshop`, that is why. |
+| `jupyter: command not found` from `maprt-workshop` | The notebook dependencies are not installed. | `uv sync` — it installs Jupyter. If you used `--no-group workshop`, that is why. |
 | Notebook edits keep disappearing | **The notebooks are generated** — see *Development* below. | Edit `scripts/notebook_content/`, then `uv run python scripts/build_notebooks.py`. |
 | Binder session died mid-workshop | Idle timeout, or the memory cap. | Relaunch from the badge. Nothing was saved, so start the notebook again. |
 | Binder is building and building | First launch after a push rebuilds the image. | Wait it out, or work locally. Pre-warm by opening the badge a day early. |

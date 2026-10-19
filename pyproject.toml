@@ -43,10 +43,12 @@ notebooks = [
 ]
 
 [project.scripts]
-# Terminal 1 in the workshop: the emulated appliance.
+# Terminal 1 in the MapRT workshop: the emulated appliance.
 maprt-emulator = "maprt_emulator.cli:main"
-# The single-terminal fallback: starts the emulator, waits for it, then launches Jupyter Lab.
-workshop-up = "maprt_emulator.cli:up"
+# One command per workshop: starts the product's emulator if it has one, waits for it, then opens
+# Jupyter Lab in notebooks/<Product>/. Add a line here for each new product (see
+# src/common/sgrt_workshop/products.py).
+maprt-workshop = "sgrt_workshop.launcher:maprt"
 
 [dependency-groups]
 dev = [
@@ -74,7 +76,13 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/maprt_emulator", "src/maprt_workshop"]
+# One folder per product under src/, like data/ and notebooks/. The import names are the last
+# path component, so `import maprt_emulator` is unchanged by the nesting.
+packages = [
+    "src/common/sgrt_workshop",
+    "src/MapRT/maprt_emulator",
+    "src/MapRT/maprt_workshop",
+]
 
 [tool.ruff]
 line-length = 120

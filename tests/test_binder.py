@@ -175,8 +175,9 @@ class TestPostBuild:
 
     def test_it_verifies_the_install_rather_than_assuming_it(self, post_build):
         # Fail the build, not the student's first cell.
-        assert "import maprt_emulator, maprt_workshop" in post_build
+        assert "import sgrt_workshop, maprt_emulator, maprt_workshop" in post_build
         assert "maprt-emulator --help" in post_build
+        assert "maprt-workshop --help" in post_build
 
     def test_it_aborts_on_failure(self, post_build):
         # Opposite of `start`: a broken image should not be published at all.
