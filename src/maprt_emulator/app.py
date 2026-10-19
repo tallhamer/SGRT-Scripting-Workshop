@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse
 
 from maprt_emulator import envelope
 from maprt_emulator.maps import MapLibrary
-from maprt_emulator.routes import beams, getmap, ping, rooms, sim, surfaces, transitions
+from maprt_emulator.routes import beams, emulator, getmap, ping, rooms, surfaces, transitions
 from maprt_emulator.routes.getmap import MapCache
 from maprt_emulator.scenarios import ScenarioState
 from maprt_emulator.settings import SERVER_VERSION, EmulatorSettings
@@ -23,7 +23,7 @@ A **simulator** of the Vision RT MapRT API 2.0, for teaching and practice.
 > **Not a medical device. Teaching use only.** Surfaces are synthetic and clearance maps are
 > plausible rather than physical. Not affiliated with or endorsed by Vision RT.
 
-Endpoints under `/integration` mirror the documented REST API. Endpoints under `/sim` are this
+Endpoints under `/integration` mirror the documented REST API. Endpoints under `/emulator` are this
 simulator's own and have no counterpart on a real appliance.
 
 **A real MapRT appliance does not publish an OpenAPI document, so this page does not exist
@@ -50,7 +50,7 @@ def create_app(settings=None):
         description=DESCRIPTION,
         openapi_tags=[
             {"name": "integration", "description": "The documented MapRT REST API."},
-            {"name": "sim", "description": "Simulator-only. No counterpart on a real appliance."},
+            {"name": "emulator", "description": "Simulator-only. No counterpart on a real appliance."},
         ],
     )
 
@@ -92,7 +92,7 @@ def create_app(settings=None):
     async def _appliance_behaviour(request, call_next):
         """Latency, armed transport-level faults, and the ``Server`` header.
 
-        The faults are applied only to ``/integration`` paths. ``/sim`` has to keep working while
+        The faults are applied only to ``/integration`` paths. ``/emulator`` has to keep working while
         a fault is armed, or there would be no way to disarm one.
         """
         scenarios_state = app.state.scenarios
@@ -142,7 +142,7 @@ def create_app(settings=None):
     app.include_router(getmap.router)
     app.include_router(beams.router)
     app.include_router(transitions.router)
-    app.include_router(sim.router)
+    app.include_router(emulator.router)
 
     return app
 

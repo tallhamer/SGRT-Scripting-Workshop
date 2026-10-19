@@ -5,7 +5,7 @@ Two sources:
 ``--from-emulator`` (default)
     Snapshot the synthetic model. This is **circular** — the simulator serving back a map it
     computed — and exists only so the recorded-map code path is exercised by the shipped data and
-    a notebook can see ``X-Sim-Map-Source: recorded`` without anyone owning an appliance. Such
+    a notebook can see ``X-Emulator-Map-Source: recorded`` without anyone owning an appliance. Such
     entries are labelled as snapshots in ``index.json``, and the label is not decoration: a
     student who cannot tell invented data from measured data has learnt the wrong thing.
 

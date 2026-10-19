@@ -91,7 +91,7 @@ class TestTheBootstrapIsCorrect:
 
     def test_it_waits_for_the_server_rather_than_sleeping(self, source):
         # A fixed sleep is either too short on a slow runtime or wasted on a fast one.
-        assert "/sim/state" in source
+        assert "/emulator/state" in source
         assert not re.search(r"time\.sleep\(\d+\)\s*$", source, re.M)
 
     def test_it_moves_into_the_checkout(self, source):

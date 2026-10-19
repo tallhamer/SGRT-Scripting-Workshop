@@ -13,7 +13,7 @@ Everything about this route is therefore this simulator's invention:
 * how a transition is assessed (see :func:`maprt_emulator.mapgen.transition_verdicts`).
 
 It is here because beam transitions are a real planning concern and worth a workshop
-conversation. It is labelled unofficial in the OpenAPI summary, in the ``X-Sim-Unofficial``
+conversation. It is labelled unofficial in the OpenAPI summary, in the ``X-Emulator-Unofficial``
 response header and in the notebook, because **code written against this will not port**. If you
 need transitions against a real appliance, use the NuGet client, or ask Vision RT.
 """
@@ -72,9 +72,9 @@ async def get_map_and_beam_transitions(body: GetMapAndBeamTransitionsRequest, re
         body_stream(),
         media_type="text/plain",
         headers={
-            "X-Sim-Map-Source": source,
+            "X-Emulator-Map-Source": source,
             # Loudly, in the response itself: nothing about this route is specified.
-            "X-Sim-Unofficial": "GetMapAndBeamTransitions has no documented REST route; this "
+            "X-Emulator-Unofficial": "GetMapAndBeamTransitions has no documented REST route; this "
                                 "path and response shape are the simulator's invention",
         },
     )

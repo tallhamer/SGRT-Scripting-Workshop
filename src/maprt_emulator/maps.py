@@ -12,7 +12,7 @@ actually came off a linac.
 
 ``data/MapRT/local/maps/`` overlays this, git-ignored, which is where patient-derived recordings belong.
 
-Resolution order for a request, reported back in the ``X-Sim-Map-Source`` response header:
+Resolution order for a request, reported back in the ``X-Emulator-Map-Source`` response header:
 
 ``recorded``
     Every keyed field matches a recording. You are looking at real bytes.

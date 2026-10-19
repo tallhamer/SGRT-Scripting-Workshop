@@ -180,7 +180,7 @@ the header and that the terminator is there.
 
 ### How a request finds it
 
-| `X-Sim-Map-Source` | |
+| `X-Emulator-Map-Source` | |
 | --- | --- |
 | `recorded` | Surface, room, resolution, position, both buffers and isocenter (to 0.5 mm) all matched. |
 | `recorded-nearest` | Same surface, room and resolution; **different isocenter**. The closest recording was served — so it is not an answer to the question asked. |
@@ -274,4 +274,4 @@ what it is for.
 
 **Label invented data as invented.** The `note` field on a recorded map exists so nobody mistakes
 a model snapshot for a measurement. The simulator reports its own invented error codes at
-`/sim/state` for the same reason.
+`/emulator/state` for the same reason.

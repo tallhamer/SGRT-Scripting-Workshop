@@ -282,7 +282,7 @@ for gantry in (0, 180):
 The simulator tells you, in a header of its own. Recorded means real bytes from a real response;
 synthetic means the model computed it."""),
     ("code", '''\
-response.headers["X-Sim-Map-Source"]
+response.headers["X-Emulator-Map-Source"]
 '''),
     ("md", "`recorded-nearest` is the one to watch for: it means a recording existed for the same "
            "surface and room but a **different isocenter**, and you were given that instead. "

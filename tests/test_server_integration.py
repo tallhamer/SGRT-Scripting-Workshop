@@ -173,7 +173,7 @@ class TestGetMapReallyStreams:
         with httpx2.Client(timeout=120) as client:
             response = client.post(base + "/integration/GetMap",
                                    json=self.map_body(), headers=_map_headers())
-        assert response.headers["X-Sim-Map-Source"] in {"recorded", "recorded-nearest",
+        assert response.headers["X-Emulator-Map-Source"] in {"recorded", "recorded-nearest",
                                                         "synthetic"}
 
 

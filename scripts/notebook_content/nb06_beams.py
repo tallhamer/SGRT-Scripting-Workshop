@@ -285,7 +285,7 @@ response = httpx2.post(maprt.api_url + "/integration/GetMapAndBeamTransitions", 
                            static_beam(2, couch=90, gantry=180),
                        ]))
 
-print(response.headers["X-Sim-Unofficial"])
+print(response.headers["X-Emulator-Unofficial"])
 '''),
     ("code", '''\
 import json

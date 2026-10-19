@@ -7,10 +7,10 @@ at, and never exercised — and then they are what fails on a Friday afternoon.
 
 Arming a scenario makes the failure happen on the next request::
 
-    POST /sim/scenario  {"name": "unlicensed-map"}
-    POST /sim/scenario  {"name": "ok"}            # back to normal
+    POST /emulator/scenario  {"name": "unlicensed-map"}
+    POST /emulator/scenario  {"name": "ok"}            # back to normal
 
-**The /sim routes are deliberately unauthenticated.** The ``bad-token`` scenario makes the
+**The /emulator routes are deliberately unauthenticated.** The ``bad-token`` scenario makes the
 appliance reject every token, so if disarming it needed a working token there would be no way
 back out without restarting the server. A control surface you can lock yourself out of is a
 control surface nobody will risk using.
@@ -185,7 +185,7 @@ class ScenarioState:
         return True
 
     def describe(self):
-        """The armed scenario as JSON, for ``/sim/state``."""
+        """The armed scenario as JSON, for ``/emulator/state``."""
         return {
             "name": self.armed.name,
             "description": self.armed.description,
@@ -195,7 +195,7 @@ class ScenarioState:
 
 
 def catalogue():
-    """Every scenario as JSON, for ``GET /sim/scenarios``."""
+    """Every scenario as JSON, for ``GET /emulator/scenarios``."""
     return [
         {
             "name": s.name,

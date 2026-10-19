@@ -65,8 +65,8 @@ class TestTheHandoutMatchesTheAPI:
         assert "GetMapAndBeamTransitions" not in HANDOUT.read_text()
 
     def test_it_does_not_document_the_simulator_only_routes(self):
-        # /sim is this project's invention; nothing there transfers to an appliance.
-        assert "/sim/" not in HANDOUT.read_text()
+        # /emulator is this project's invention; nothing there transfers to an appliance.
+        assert "/emulator/" not in HANDOUT.read_text()
 
     def test_the_envelope_keys_match_what_the_code_emits(self):
         from maprt_emulator import envelope

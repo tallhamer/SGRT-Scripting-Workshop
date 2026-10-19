@@ -149,7 +149,7 @@ class TestTheUnofficialTransitionsRoute:
         # header's name carries the label; its value has to carry the reason, so someone reading
         # raw headers learns why rather than just that.
         response = api.post("/integration/GetMapAndBeamTransitions", json=body())
-        warning = response.headers["X-Sim-Unofficial"]
+        warning = response.headers["X-Emulator-Unofficial"]
         assert "no documented REST route" in warning
         assert "invention" in warning
 

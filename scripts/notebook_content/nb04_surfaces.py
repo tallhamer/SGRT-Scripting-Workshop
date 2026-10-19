@@ -94,7 +94,7 @@ for both would be wrong twice.
 > The error code there, `PatientNotFound`, is **invented by this simulator.** The REST
 > specification names codes only for authentication, licensing and room administration — it says
 > nothing about an unknown patient. Do not match on that string in production code. You can see
-> everything the simulator made up at `/sim/state` under `inventedErrorCodes`."""),
+> everything the simulator made up at `/emulator/state` under `inventedErrorCodes`."""),
 
     ("md", """\
 ## 2. Fetch the mesh
@@ -215,7 +215,7 @@ print(f"\\n  that is {extent.max() / 1000:.2f} m along the longest axis")
 
 Worth seeing once, so your code handles it."""),
     ("code", '''\
-httpx2.post(maprt.api_url + "/sim/scenario", json={"name": "unlicensed-surfaces"})
+httpx2.post(maprt.api_url + "/emulator/scenario", json={"name": "unlicensed-surfaces"})
 
 envelope = httpx2.get(maprt.api_url + f"/integration/surfaces/{SURFACE_ID}",
                       headers=headers).json()
@@ -227,7 +227,7 @@ listing = httpx2.get(maprt.api_url + f"/integration/patients/{PATIENT_ID}/surfac
 print("listing surfaces :", "success" if listing["success"] else "refused",
       f"({len(listing['data'])} surfaces)")
 
-httpx2.post(maprt.api_url + "/sim/scenario", json={"name": "ok"})
+httpx2.post(maprt.api_url + "/emulator/scenario", json={"name": "ok"})
 '''),
     ("md", """\
 So an unlicensed appliance will happily tell you a surface *exists* and then refuse to give it to

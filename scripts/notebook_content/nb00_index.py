@@ -118,10 +118,10 @@ has to look at the body before deciding how to parse it. → notebook 05"""),
 | `No API token found` | Same — the token file appears when the simulator starts. |
 | `Address already in use` | Something else holds port 8000. `uv run maprt-emulator --port 8001`, then set `MAPRT_EMULATOR_URL` to match. |
 | A cell hangs | `GetMap` takes a few seconds by design. If it is longer than ~30 s, interrupt the kernel and check the simulator's terminal. |
-| Everything fails after notebook 07 | You probably left a fault armed. Run `POST /sim/scenario` with `{{"name": "ok"}}`, or just restart the simulator. |
+| Everything fails after notebook 07 | You probably left a fault armed. Run `POST /emulator/scenario` with `{{"name": "ok"}}`, or just restart the simulator. |
 
 The simulator's own state is always readable at
-[`{{BASE}}/sim/state`](http://127.0.0.1:8000/sim/state), and its interactive API docs are at
+[`{{BASE}}/emulator/state`](http://127.0.0.1:8000/emulator/state), and its interactive API docs are at
 [`{{BASE}}/docs`](http://127.0.0.1:8000/docs). Neither of those exists on a real appliance — they
 are the simulator's own, and notebook 02 explains why that matters.
 

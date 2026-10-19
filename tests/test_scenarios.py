@@ -35,14 +35,14 @@ def api(client_factory):
 
 
 def arm(api, name):
-    response = api.post("/sim/scenario", json={"name": name})
+    response = api.post("/emulator/scenario", json={"name": name})
     assert response.status_code == 200, response.text
     return json.loads(response.text)
 
 
 class TestTheCatalogue:
     def test_lists_every_scenario_with_what_it_teaches(self, api):
-        listed = json.loads(api.get("/sim/scenarios").text)["scenarios"]
+        listed = json.loads(api.get("/emulator/scenarios").text)["scenarios"]
         assert {s["name"] for s in listed} == set(scenarios.SCENARIOS)
         for entry in listed:
             assert entry["description"]
@@ -55,30 +55,30 @@ class TestTheCatalogue:
         assert not ok.truncate_map and not ok.shuffle_map
 
     def test_an_unknown_name_is_refused_with_the_available_ones(self, api, envelope_of):
-        response = api.post("/sim/scenario", json={"name": "explode"})
+        response = api.post("/emulator/scenario", json={"name": "explode"})
         assert response.status_code == 400
         assert "unlicensed-map" in str(envelope_of(response)["errorData"])
 
 
-class TestTheSimRoutesStayReachable:
-    def test_sim_needs_no_token(self, client_factory):
+class TestTheEmulatorRoutesStayReachable:
+    def test_emulator_routes_need_no_token(self, client_factory):
         # Unauthenticated on purpose — see below for the reason it has to be.
         with client_factory(token=None) as client:
-            assert client.get("/sim/scenarios").status_code == 200
-            assert client.get("/sim/state").status_code == 200
+            assert client.get("/emulator/scenarios").status_code == 200
+            assert client.get("/emulator/state").status_code == 200
 
     def test_bad_token_can_be_disarmed_while_it_is_armed(self, api):
-        # The reason /sim is unauthenticated. If disarming needed a working token there would be
+        # The reason /emulator is unauthenticated. If disarming needed a working token there would be
         # no way out of this scenario short of restarting the server.
         arm(api, "bad-token")
         assert json.loads(api.get("/integration/ping").text)["success"] is False
         arm(api, "ok")
         assert json.loads(api.get("/integration/ping").text)["success"] is True
 
-    def test_server_error_does_not_affect_sim(self, api):
+    def test_server_error_does_not_affect_the_emulator_routes(self, api):
         arm(api, "server-error")
         assert api.get("/integration/ping").status_code == 500
-        assert api.get("/sim/state").status_code == 200
+        assert api.get("/emulator/state").status_code == 200
 
 
 class TestEachScenarioFires:
@@ -171,15 +171,15 @@ class TestEachScenarioFires:
                 break
         assert response.status_code == 200
 
-    def test_slow_delays_the_api_but_not_sim(self, api):
+    def test_slow_delays_the_api_but_not_the_emulator_routes(self, api):
         import time
         # 8 s would make the suite tedious, so check the delay is applied rather than its length:
         # the scenario's own field is the contract, and the middleware reads it.
         assert scenarios.SCENARIOS["slow"].extra_delay == 8.0
         arm(api, "slow")
         started = time.monotonic()
-        api.get("/sim/state")
-        assert time.monotonic() - started < 1.0, "/sim must stay responsive while slow is armed"
+        api.get("/emulator/state")
+        assert time.monotonic() - started < 1.0, "/emulator must stay responsive while slow is armed"
 
 
 class TestArmingAndDisarming:
@@ -190,7 +190,7 @@ class TestArmingAndDisarming:
 
     def test_state_reports_the_armed_scenario(self, api):
         arm(api, "truncate-map")
-        assert json.loads(api.get("/sim/state").text)["scenario"]["name"] == "truncate-map"
+        assert json.loads(api.get("/emulator/state").text)["scenario"]["name"] == "truncate-map"
 
     def test_ok_clears_whatever_was_armed(self, api, envelope_of):
         arm(api, "unlicensed-map")
@@ -210,14 +210,14 @@ class TestArmingAndDisarming:
         # A scenario adds to --unlicensed; arming `ok` must not quietly re-license something the
         # operator switched off at startup.
         with client_factory(map_seconds=0.0, unlicensed=("map",)) as client:
-            client.post("/sim/scenario", json={"name": "ok"})
+            client.post("/emulator/scenario", json={"name": "ok"})
             response = client.post("/integration/GetMap", json=map_body())
         assert envelope_of(response)["errorCode"] == "FeatureNotLicensed"
 
 
-class TestSimState:
+class TestEmulatorState:
     def test_reports_the_data_it_is_serving(self, api):
-        state = json.loads(api.get("/sim/state").text)
+        state = json.loads(api.get("/emulator/state").text)
         assert sorted(state["data"]["patients"]) == ["ANON001", "ANON002", "ANON003"]
         assert len(state["data"]["rooms"]) == 4
         assert state["data"]["recordedMaps"] == 1
@@ -225,12 +225,12 @@ class TestSimState:
     def test_declares_which_error_codes_are_invented(self, api):
         # Said out loud in the API itself, so nobody writes production code matching a string
         # this project made up to fill a gap in the specification.
-        state = json.loads(api.get("/sim/state").text)
+        state = json.loads(api.get("/emulator/state").text)
         assert "PatientNotFound" in state["inventedErrorCodes"]
         assert "InvalidClientToken" not in state["inventedErrorCodes"]
         assert state["notAMedicalDevice"] is True
 
     def test_reports_the_settings_in_force(self, api):
-        state = json.loads(api.get("/sim/state").text)
+        state = json.loads(api.get("/emulator/state").text)
         assert state["settings"]["mapSource"] == "auto"
         assert state["serverHeader"] == "Saturn/1.2.288.1"

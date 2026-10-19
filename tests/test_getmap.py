@@ -62,7 +62,7 @@ class TestASuccessfulCall:
 class TestTheMapSourceHeader:
     def test_the_shipped_recording_is_served_for_its_own_setup(self, fast_client):
         response = fast_client.post("/integration/GetMap", json=body())
-        assert response.headers["X-Sim-Map-Source"] == "recorded"
+        assert response.headers["X-Emulator-Map-Source"] == "recorded"
 
     def test_the_recorded_bytes_are_served_verbatim(self, fast_client, data_dir):
         response = fast_client.post("/integration/GetMap", json=body())
@@ -74,23 +74,23 @@ class TestTheMapSourceHeader:
         # is not for the setup they asked about, so the header has to say so.
         response = fast_client.post("/integration/GetMap",
                                     json=body(Isocenter={"x": 10.0, "y": 0.0, "z": 50.0}))
-        assert response.headers["X-Sim-Map-Source"] == "recorded-nearest"
+        assert response.headers["X-Emulator-Map-Source"] == "recorded-nearest"
 
     def test_a_different_resolution_is_computed_not_nearest_matched(self, fast_client):
         # Resolution is part of what makes a recording applicable: a coarse recording is not a
         # near-enough answer to a high-resolution question.
         response = fast_client.post("/integration/GetMap", json=body(HighResolution=True))
-        assert response.headers["X-Sim-Map-Source"] == "synthetic"
+        assert response.headers["X-Emulator-Map-Source"] == "synthetic"
 
     def test_a_surface_with_no_recording_is_computed(self, fast_client):
         response = fast_client.post("/integration/GetMap",
                                     json=body(PatientSurfaceId=OTHER_SURFACE))
-        assert response.headers["X-Sim-Map-Source"] == "synthetic"
+        assert response.headers["X-Emulator-Map-Source"] == "synthetic"
 
     def test_map_source_synthetic_ignores_the_recordings(self, client_factory):
         with client_factory(map_seconds=0.0, map_source="synthetic") as client:
             response = client.post("/integration/GetMap", json=body())
-        assert response.headers["X-Sim-Map-Source"] == "synthetic"
+        assert response.headers["X-Emulator-Map-Source"] == "synthetic"
 
     def test_map_source_recorded_refuses_to_invent_one(self, client_factory, envelope_of):
         # The point of --map-source recorded is "only ever show real data", so a missing
@@ -103,7 +103,7 @@ class TestTheMapSourceHeader:
     def test_map_source_recorded_still_serves_a_recording_it_has(self, client_factory):
         with client_factory(map_seconds=0.0, map_source="recorded") as client:
             response = client.post("/integration/GetMap", json=body())
-        assert response.headers["X-Sim-Map-Source"] == "recorded"
+        assert response.headers["X-Emulator-Map-Source"] == "recorded"
 
 
 class TestTheRequestBody:
@@ -111,7 +111,7 @@ class TestTheRequestBody:
         # Spec §5.2.6 asks for the enum value; 1 is HFS.
         response = fast_client.post("/integration/GetMap", json=body(PatientPosition=1))
         assert response.status_code == 200
-        assert response.headers["X-Sim-Map-Source"] == "recorded"   # same setup as "HFS"
+        assert response.headers["X-Emulator-Map-Source"] == "recorded"   # same setup as "HFS"
 
     def test_the_dicom_string_the_real_client_sends_is_accepted(self, fast_client):
         response = fast_client.post("/integration/GetMap", json=body(PatientPosition="HFS"))

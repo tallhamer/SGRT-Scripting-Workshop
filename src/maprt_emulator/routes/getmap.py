@@ -90,7 +90,7 @@ async def get_map(body: GetMapRequest, request: Request):
         headers={
             # Not a MapRT header. The simulator's own, so a notebook can always answer "am I
             # looking at a real recorded map or a computed one?".
-            "X-Sim-Map-Source": source,
+            "X-Emulator-Map-Source": source,
         },
     )
 

@@ -132,16 +132,16 @@ dropped connection — all real, none of them arrangeable at 4pm on a Tuesday. S
 gets written once, guessed at, and never exercised.
 
 The simulator has a control surface for exactly this. **It is not part of the MapRT API** — it
-lives under `/sim`, and nothing you learn from it transfers to a real appliance."""),
+lives under `/emulator`, and nothing you learn from it transfers to a real appliance."""),
     ("code", '''\
-scenarios = httpx2.get(maprt.api_url + "/sim/scenarios").json()["scenarios"]
+scenarios = httpx2.get(maprt.api_url + "/emulator/scenarios").json()["scenarios"]
 
 for scenario in scenarios:
     print(f"{scenario['name']:<22} {scenario['description']}")
 '''),
     ("md", "Arm one and watch it happen:"),
     ("code", '''\
-httpx2.post(maprt.api_url + "/sim/scenario", json={"name": "unlicensed-map"})
+httpx2.post(maprt.api_url + "/emulator/scenario", json={"name": "unlicensed-map"})
 
 body = {"PatientSurfaceId": "dad7394f-6893-4ce3-96ed-8bc3091cf4c3",
         "TreatmentRoomId": "96bbc235-0da9-e983-0783-5973a7d11144",
@@ -155,8 +155,8 @@ print("body  :", response.text[:120])
     ("md", "**Always disarm when you are done.** Every notebook that arms a scenario puts this at "
            "the end; forgetting is the most common way to confuse yourself later."),
     ("code", '''\
-httpx2.post(maprt.api_url + "/sim/scenario", json={"name": "ok"})
-print("armed:", httpx2.get(maprt.api_url + "/sim/state").json()["scenario"]["name"])
+httpx2.post(maprt.api_url + "/emulator/scenario", json={"name": "ok"})
+print("armed:", httpx2.get(maprt.api_url + "/emulator/state").json()["scenario"]["name"])
 '''),
 
     ("md", """\
@@ -201,12 +201,12 @@ Write a call that tells a 500 apart from a `success: false` — and prints a dif
 each. Think about which one is worth retrying."""),
     ("code", '''\
 # Your turn.
-# httpx2.post(maprt.api_url + "/sim/scenario", json={"name": "server-error"})
+# httpx2.post(maprt.api_url + "/emulator/scenario", json={"name": "server-error"})
 # ...
 '''),
     ("md", "<details><summary>Answer</summary>\n\nRun the next cell.\n\n</details>"),
     ("code", '''\
-httpx2.post(maprt.api_url + "/sim/scenario", json={"name": "server-error"})
+httpx2.post(maprt.api_url + "/emulator/scenario", json={"name": "server-error"})
 
 response = httpx2.get(maprt.api_url + "/integration/rooms", headers=headers)
 
@@ -222,7 +222,7 @@ elif not response.json()["success"]:
 else:
     print("fine")
 
-httpx2.post(maprt.api_url + "/sim/scenario", json={"name": "ok"})
+httpx2.post(maprt.api_url + "/emulator/scenario", json={"name": "ok"})
 '''),
     ("md", """\
 The retry distinction matters. A 5xx is worth retrying; a 4xx and a `success: false` are not —

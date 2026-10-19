@@ -1,7 +1,7 @@
-"""``/sim/*`` — the simulator's own control surface. **No counterpart on a real appliance.**
+"""``/emulator/*`` — the simulator's own control surface. **No counterpart on a real appliance.**
 
 Namespaced away from ``/integration`` so there is no chance of mistaking one for the other: if a
-path starts with ``/sim``, nothing you learn from it transfers.
+path starts with ``/emulator``, nothing you learn from it transfers.
 
 These routes are **unauthenticated**, on purpose. The ``bad-token`` scenario makes the appliance
 reject every token, so if disarming it required a valid token you would have to restart the
@@ -15,11 +15,11 @@ from pydantic import BaseModel, Field
 from maprt_emulator import envelope, scenarios
 from maprt_emulator.settings import API_VERSION, SERVER_VERSION
 
-router = APIRouter(prefix="/sim", tags=["sim"])
+router = APIRouter(prefix="/emulator", tags=["emulator"])
 
 
 class ArmScenario(BaseModel):
-    name: str = Field(..., description="a name from GET /sim/scenarios")
+    name: str = Field(..., description="a name from GET /emulator/scenarios")
 
 
 @router.get("/scenarios", summary="SIMULATOR ONLY — the faults you can arm")

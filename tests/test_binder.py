@@ -159,7 +159,7 @@ class TestStartScript:
         # The failure this catches is silent: nohup returns happily even when the port is busy,
         # and the student-facing error then points nowhere near the cause.
         assert "WARNING" in start
-        assert "/sim/state" in start
+        assert "/emulator/state" in start
 
 
 class TestPostBuild:

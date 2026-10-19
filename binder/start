@@ -39,14 +39,14 @@ else
     # leftover server on port 8000 answered instead, and the student-facing error was
     # "InvalidClientToken", which points nowhere near the actual problem.
     for _ in $(seq 1 60); do
-        if curl -sf -o /dev/null "$MAPRT_EMULATOR_URL/sim/state" 2>/dev/null; then
+        if curl -sf -o /dev/null "$MAPRT_EMULATOR_URL/emulator/state" 2>/dev/null; then
             echo "start: simulator is up on $MAPRT_EMULATOR_URL"
             break
         fi
         sleep 0.5
     done
 
-    if ! curl -sf -o /dev/null "$MAPRT_EMULATOR_URL/sim/state" 2>/dev/null; then
+    if ! curl -sf -o /dev/null "$MAPRT_EMULATOR_URL/emulator/state" 2>/dev/null; then
         echo "start: WARNING — the simulator did not come up. See maprt-emulator.log." >&2
         tail -5 "$REPO_DIR/maprt-emulator.log" >&2 2>/dev/null
     fi

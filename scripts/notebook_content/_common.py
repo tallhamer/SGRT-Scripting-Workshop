@@ -51,7 +51,7 @@ if "COLAB_RELEASE_TAG" in os.environ:
     # fails for no visible reason) or wasted time on a fast one.
     for _attempt in range(60):
         try:
-            urllib.request.urlopen(os.environ["MAPRT_EMULATOR_URL"] + "/sim/state", timeout=1)
+            urllib.request.urlopen(os.environ["MAPRT_EMULATOR_URL"] + "/emulator/state", timeout=1)
             print("simulator ready")
             break
         except Exception:

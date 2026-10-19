@@ -115,7 +115,7 @@ built and tested.
 | `ConnectError: nodename nor servname provided` | A corporate/hospital **proxy** is set, and it is trying to route even `127.0.0.1` through itself. The error reads like DNS and is not. | `os.environ['NO_PROXY'] = '127.0.0.1,localhost'`, then re-run. `connect()` spots this and says so. |
 | macOS asks to allow incoming connections | The firewall prompt for a new listening process. | Allow it, or ignore it — the simulator binds `127.0.0.1` only and nothing outside your machine can reach it either way. |
 | A `GetMap` cell seems to hang | It streams over a few seconds by design — a real appliance takes **minutes**. | Wait. Over ~30 s, interrupt the kernel and check terminal 1. `--map-seconds 0` removes the delay. |
-| Everything fails after notebook 07 | You left a fault armed. | Run the last cell of notebook 07, or `POST /sim/scenario` with `{"name": "ok"}`, or restart the simulator. |
+| Everything fails after notebook 07 | You left a fault armed. | Run the last cell of notebook 07, or `POST /emulator/scenario` with `{"name": "ok"}`, or restart the simulator. |
 | `jupyter: command not found` from `workshop-up` | The notebook dependencies are not installed. | `uv sync` — it installs Jupyter. If you used `--no-group workshop`, that is why. |
 | Notebook edits keep disappearing | **The notebooks are generated** — see *Development* below. | Edit `scripts/notebook_content/`, then `uv run python scripts/build_notebooks.py`. |
 | Binder session died mid-workshop | Idle timeout, or the memory cap. | Relaunch from the badge. Nothing was saved, so start the notebook again. |
@@ -123,7 +123,7 @@ built and tested.
 | Colab: `InvalidClientToken` on the first call | The simulator and the notebook disagree about the token. | Runtime → Restart, then re-run the first cell. It passes the token to the simulator explicitly. |
 | Colab: `FileNotFoundError: ../data/...` | The first cell did not run, so the working directory was never moved into the checkout. | Run the first cell. Every notebook has one. |
 
-The simulator's own state is readable at `/sim/state`, and its interactive API docs at `/docs`.
+The simulator's own state is readable at `/emulator/state`, and its interactive API docs at `/docs`.
 Neither exists on a real appliance.
 
 ## What's here

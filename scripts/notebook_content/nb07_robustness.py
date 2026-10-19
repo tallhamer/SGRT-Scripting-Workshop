@@ -23,7 +23,7 @@ The simulator can be *told* to fail. Everything below is armed deliberately.""")
 import httpx2
 
 headers = dict(maprt.headers)
-SIM = maprt.api_url + "/sim"
+SIM = maprt.api_url + "/emulator"
 
 
 def arm(name):
@@ -41,7 +41,7 @@ for scenario in httpx2.get(SIM + "/scenarios").json()["scenarios"]:
     print(f"{scenario['name']:<22} {scenario['description']}")
 '''),
     ("md", """\
-> `/sim` is **not part of the MapRT API.** It is the simulator's own control surface, and it is
+> `/emulator` is **not part of the MapRT API.** It is the simulator's own control surface, and it is
 > deliberately unauthenticated — the `bad-token` scenario rejects every token, so if disarming it
 > needed a working one you would have to restart the server to get out."""),
 

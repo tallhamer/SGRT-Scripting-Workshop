@@ -34,7 +34,7 @@ The meshes here are **synthetic**. No patient data is in this repository.
 ## Clearance maps
 
 `GetMap` resolves a request in three steps, and reports which one it took in the
-`X-Sim-Map-Source` response header:
+`X-Emulator-Map-Source` response header:
 
 | Header value | Meaning |
 | --- | --- |

@@ -44,7 +44,7 @@ class TestMapRTFailure:
 
 class TestInventedCodesAreDeclared:
     def test_the_codes_this_project_made_up_are_listed(self):
-        # So /sim/state and the notebooks can say which codes are not real. A code added to
+        # So /emulator/state and the notebooks can say which codes are not real. A code added to
         # SIMULATED without being listed here would quietly look authoritative — which is why
         # this test is written as an exact list and is *meant* to fail when a code is added.
         assert envelope.INVENTED_CODES == [
