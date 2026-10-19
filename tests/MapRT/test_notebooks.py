@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 NOTEBOOK_DIR = ROOT / "notebooks" / "MapRT"
 
 nbformat = pytest.importorskip("nbformat")

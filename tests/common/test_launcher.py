@@ -55,7 +55,7 @@ class TestTheRegistry:
     def test_every_command_is_a_console_script(self):
         import tomllib
         from pathlib import Path
-        scripts = tomllib.loads((Path(__file__).resolve().parents[1] / "pyproject.toml")
+        scripts = tomllib.loads((Path(__file__).resolve().parents[2] / "pyproject.toml")
                                 .read_text())["project"]["scripts"]
         for product in PRODUCTS.values():
             assert product.command in scripts, f"{product.command} is not in pyproject.toml"

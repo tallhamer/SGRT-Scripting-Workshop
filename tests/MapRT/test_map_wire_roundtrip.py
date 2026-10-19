@@ -29,7 +29,7 @@ SURFACE_ID = "dad7394f-6893-4ce3-96ed-8bc3091cf4c3"
 @pytest.fixture(scope="module")
 def surface():
     from pathlib import Path
-    root = Path(__file__).resolve().parent.parent
+    root = Path(__file__).resolve().parents[2]
     data = (root / "data" / "MapRT" / "surfaces" / f"{SURFACE_ID}.obj").read_bytes()
     return SurfaceModel.from_obj_bytes(data, SURFACE_ID)
 
@@ -220,7 +220,7 @@ class TestTheModelIsPhysicallySensible:
 
     def test_different_surfaces_give_different_maps(self, default_high_res):
         from pathlib import Path
-        root = Path(__file__).resolve().parent.parent
+        root = Path(__file__).resolve().parents[2]
         others = [p for p in sorted((root / "data" / "MapRT" / "surfaces").glob("*.obj"))
                   if p.stem != SURFACE_ID]
         _, mine = default_high_res
@@ -263,7 +263,7 @@ class TestTheShippedRecording:
         # recorded code path hands a notebook something broken.
         import json
         from pathlib import Path
-        maps_dir = Path(__file__).resolve().parent.parent / "data" / "MapRT" / "maps"
+        maps_dir = Path(__file__).resolve().parents[2] / "data" / "MapRT" / "maps"
         entries = json.loads((maps_dir / "index.json").read_text(encoding="utf-8"))
         assert entries, "no recorded maps are shipped"
         for entry in entries:
@@ -276,6 +276,6 @@ class TestTheShippedRecording:
         # A student who cannot tell invented data from measured data has learnt the wrong thing.
         import json
         from pathlib import Path
-        maps_dir = Path(__file__).resolve().parent.parent / "data" / "MapRT" / "maps"
+        maps_dir = Path(__file__).resolve().parents[2] / "data" / "MapRT" / "maps"
         for entry in json.loads((maps_dir / "index.json").read_text(encoding="utf-8")):
             assert "NOT a real appliance response" in entry["note"], entry["file"]

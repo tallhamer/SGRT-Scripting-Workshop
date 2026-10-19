@@ -260,7 +260,7 @@ class TestSurfacePlot:
         from pathlib import Path
 
         from maprt_workshop.obj import parse_obj
-        root = Path(__file__).resolve().parent.parent
+        root = Path(__file__).resolve().parents[2]
         path = next((root / "data" / "MapRT" / "surfaces").glob("*.obj"))
         vertices, faces, _normals = parse_obj(path.read_bytes())
         ax = plot_surface(vertices, faces, stride=40)

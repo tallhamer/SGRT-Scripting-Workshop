@@ -131,5 +131,5 @@ class TestFindingTheDataDirectory:
         assert found.parts[-2:] == ("data", "MapRT")
 
     def test_the_repository_itself_resolves(self):
-        root = Path(__file__).resolve().parent.parent
+        root = Path(__file__).resolve().parents[2]
         assert find_data_dir(root / "notebooks" / "MapRT") == root / "data" / "MapRT"

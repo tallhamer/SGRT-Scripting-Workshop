@@ -11,7 +11,7 @@ from maprt_emulator.settings import EmulatorSettings
 
 TOKEN = "test-token-not-a-real-secret"
 
-REPO_DATA = Path(__file__).resolve().parent.parent / "data" / "MapRT"
+REPO_DATA = Path(__file__).resolve().parents[2] / "data" / "MapRT"
 
 
 @pytest.fixture

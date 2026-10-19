@@ -111,7 +111,9 @@ select = ["E", "F", "I", "UP", "B", "W"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra"
+# importlib mode: tests/<Product>/ folders will hold same-named files (each product will have a
+# test_notebooks.py, say), which the default import mode cannot load side by side.
+addopts = "-ra --import-mode=importlib"
 # Starlette deprecates things loudly and we want to act on them rather than read past them — the
 # test client's httpx-vs-httpx2 warning is what moved this project to httpx2. Promoted to an
 # error so the next one is not scrolled past either. Scoped to this one category on purpose:
